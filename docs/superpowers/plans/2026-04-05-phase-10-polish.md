@@ -127,9 +127,7 @@
     SheetHeader,
     SheetTitle,
   } from "@/components/ui/sheet"
-
-  // Import the existing ChatPanel component (adjust path based on actual location)
-  // import { ChatPanel } from "@/components/Chat/ChatPanel"
+  import { ChatPanel } from "@/components/Chat/ChatPanel"
 
   interface MobileChatSheetProps {
     open: boolean
@@ -148,9 +146,7 @@
             <SheetTitle className="text-lg">jan sona</SheetTitle>
           </SheetHeader>
           <div className="flex-1 overflow-hidden">
-            {/* Render the existing ChatPanel here, passing a flag or class for mobile mode */}
-            {/* <ChatPanel variant="mobile" /> */}
-            {/* TODO: Wire up actual ChatPanel once its location is confirmed */}
+            <ChatPanel variant="mobile" />
           </div>
         </SheetContent>
       </Sheet>
@@ -158,7 +154,7 @@
   }
   ```
 
-  **Important:** The actual ChatPanel import path depends on where it was created in earlier phases. The implementer must find the existing ChatPanel component (likely `frontend/src/components/Chat/ChatPanel.tsx` or similar) and wire it in. The ChatPanel should accept a `variant?: "desktop" | "mobile"` prop to adjust its internal padding and input sizing.
+  **Important:** The ChatPanel component lives at `frontend/src/components/Chat/ChatPanel.tsx` (created in a prior phase). It must accept a `variant?: "desktop" | "mobile"` prop to adjust its internal padding and input sizing. If the component does not yet accept this prop, add it: when `variant === "mobile"`, reduce horizontal padding to `px-2`, use `text-base` for input fields, and set `gap-2` between messages. Before implementing, run `grep -r "export.*ChatPanel" frontend/src/` to confirm the actual export name and path.
 
 - [ ] **Step 5: Make the chat sidebar desktop-only**
 
@@ -1201,11 +1197,31 @@
           users = session.exec(statement).all()
 
           for user in users:
-              # TODO: Check if user has practiced today using progress API
-              # TODO: Get streak and words_known from progress data
-              # For now, placeholder logic:
-              streak = 0  # Replace with actual streak lookup
-              words_known = 0  # Replace with actual count
+              # Look up the user's progress record.
+              # The UserProgress model (added in a prior phase) stores streak and
+              # vocabulary stats per user.  If no progress routes/models exist yet,
+              # the implementer must first read backend/app/models.py and
+              # backend/app/api/routes/ to find the actual progress table name and
+              # fields.  The query below assumes:
+              #   - Model: UserProgress (table "userprogress")
+              #   - Fields: user_id (FK -> user.id), current_streak (int),
+              #             words_learned (int), last_practice_date (date)
+              from app.models import UserProgress  # noqa: E402
+
+              progress = session.exec(
+                  select(UserProgress).where(UserProgress.user_id == user.id)
+              ).first()
+
+              if progress is None:
+                  continue
+
+              # Skip users who already practiced today
+              today = datetime.now(timezone.utc).date()
+              if progress.last_practice_date and progress.last_practice_date >= today:
+                  continue
+
+              streak = progress.current_streak
+              words_known = progress.words_learned
               if streak > 0:
                   await send_streak_reminder(
                       user.telegram_chat_id, streak, words_known
@@ -1230,16 +1246,30 @@
           await check_and_send_reminders()
   ```
 
-  In `backend/app/main.py`, start the loop on app startup (only if Telegram is enabled):
+  In `backend/app/main.py`, start the loop on app startup using the `lifespan` context manager pattern (`@app.on_event("startup")` is deprecated in FastAPI >= 0.93). Find the existing `app = FastAPI(...)` call and wrap it with a lifespan:
 
   ```python
-  @app.on_event("startup")
-  async def startup_event():
+  import asyncio
+  from contextlib import asynccontextmanager
+
+  from app.services.telegram import is_telegram_enabled
+
+  @asynccontextmanager
+  async def lifespan(app: FastAPI):
+      # Startup
       if is_telegram_enabled():
-          import asyncio
           from app.services.streak_reminder import streak_reminder_loop
-          asyncio.create_task(streak_reminder_loop())
+          task = asyncio.create_task(streak_reminder_loop())
+      yield
+      # Shutdown
+      if is_telegram_enabled():
+          task.cancel()
+
+  # Then pass lifespan to the FastAPI constructor:
+  # app = FastAPI(..., lifespan=lifespan)
   ```
+
+  If `backend/app/main.py` already defines a `lifespan` function, merge the Telegram startup logic into the existing one rather than replacing it.
 
 - [ ] **Step 9: Add "Connect Telegram" section to frontend settings**
 
@@ -1308,9 +1338,14 @@
   }
   ```
 
-  The section should only render when Telegram is enabled on the backend. Either:
-  - Add a `/api/v1/features` endpoint that returns `{ telegram: true/false }`
-  - Or check if the user model has `telegram_chat_id` field (it will be null but present)
+  The section should only render when Telegram is enabled on the backend. **Decision: check the user model field.** The `UserPublic` response (from `GET /api/v1/users/me`) already includes the `telegram_chat_id` field (added in Step 3 of this task). If the field key is present in the response JSON (even if its value is `null`), Telegram is enabled on the backend. If the key is absent, the backend was built without Telegram support. Use this check:
+
+  ```tsx
+  // In the settings page, after fetching the current user:
+  const showTelegram = user && "telegram_chat_id" in user
+  ```
+
+  Do **not** create a separate `/api/v1/features` endpoint for this.
 
 - [ ] **Step 10: Commit**
 
@@ -1334,6 +1369,32 @@
 - ADD `frontend/tests/mobile-layout.spec.ts`
 - ADD `frontend/tests/loading-states.spec.ts`
 - ADD `frontend/tests/error-states.spec.ts`
+
+### Prerequisites: Required `data-testid` attributes
+
+The E2E tests below assume the following `data-testid` values exist on components from previous phases. Before running tests, verify these are present and add any that are missing:
+
+| `data-testid` value | Component / Location | Added in |
+|---|---|---|
+| `app-sidebar` | `AppSidebar.tsx` root element | Phase 2 |
+| `user-menu` | User dropdown in sidebar/header | Phase 2 |
+| `skill-tree-skeleton` | `SkillTreeSkeleton.tsx` root | This phase (Task 3) |
+| `skill-tree-node-{index}` | Each unit node in the skill tree | Phase 4 |
+| `lesson-skeleton` | `LessonSkeleton.tsx` root | This phase (Task 3) |
+| `dictionary-skeleton` | `DictionarySkeleton.tsx` root | This phase (Task 3) |
+| `grammar-skeleton` | `GrammarSkeleton.tsx` root | This phase (Task 3) |
+| `exercise-area` | Exercise container in lesson view | Phase 4 |
+| `exercise-input` | Text input in translation exercises | Phase 4 |
+| `word-bank` | Word bank container in exercises | Phase 4 |
+| `choice-{index}` | Multiple choice options | Phase 4 |
+| `submit-answer` | Exercise submit button | Phase 4 |
+| `grading-spinner` | `GradingSpinner.tsx` root | This phase (Task 3) |
+| `chat-typing-indicator` | `ChatTypingIndicator.tsx` root | This phase (Task 3) |
+| `error-banner-{type}` | `ErrorBanner.tsx` root | This phase (Task 4) |
+| `offline-banner` | `OfflineBanner.tsx` root | This phase (Task 4) |
+| `mobile-chat-button` | `MobileChatButton.tsx` button | This phase (Task 1) |
+| `mobile-chat-sheet` | `MobileChatSheet.tsx` sheet content | This phase (Task 1) |
+| `dark-mode-toggle` | Theme toggle button in settings | Phase 2 |
 
 ### Steps
 
@@ -1384,6 +1445,45 @@
   ```
 
   Key change: uncommented `mobile-chrome` project using Pixel 5 device profile (360x640 viewport, mobile user agent).
+
+- [ ] **Step 1b: Create auth setup file**
+
+  Create `frontend/tests/auth.setup.ts`. This file runs before all other tests (via the `setup` project dependency) and saves an authenticated browser state to `playwright/.auth/user.json`:
+
+  ```ts
+  import { test as setup, expect } from "@playwright/test"
+
+  const authFile = "playwright/.auth/user.json"
+
+  setup("authenticate", async ({ page }) => {
+    // Navigate to the login page
+    await page.goto("/login")
+
+    // Fill in test user credentials (from environment or hardcoded test user)
+    await page.getByLabel(/email/i).fill(process.env.TEST_USER_EMAIL ?? "test@example.com")
+    await page.getByLabel(/password/i).fill(process.env.TEST_USER_PASSWORD ?? "changethis")
+
+    // Submit the login form
+    await page.getByRole("button", { name: /log in|sign in/i }).click()
+
+    // Wait for navigation to the authenticated app (skill tree / home page)
+    await page.waitForURL("/", { timeout: 10000 })
+
+    // Verify we are logged in (sidebar or user menu is visible)
+    await expect(page.locator("[data-testid='app-sidebar']").or(page.locator("[data-testid='user-menu']"))).toBeVisible({
+      timeout: 5000,
+    })
+
+    // Save the authenticated state
+    await page.context().storageState({ path: authFile })
+  })
+  ```
+
+  Also ensure `playwright/.auth/` is in `.gitignore`:
+  ```
+  # Playwright auth state
+  playwright/.auth/
+  ```
 
 - [ ] **Step 2: Write skill tree E2E tests**
 
@@ -2061,8 +2161,10 @@
 
   test.describe("Loading States", () => {
     test("skill tree shows skeleton while loading", async ({ page }) => {
-      // Intercept API to add delay
-      await page.route("**/api/v1/lessons/**", async (route) => {
+      // Intercept the units endpoint (skill tree data) to add delay.
+      // The skill tree fetches from /api/v1/units (or /api/v1/lessons/units).
+      // Use a broad glob that matches either path.
+      await page.route("**/api/v1/**/units**", async (route) => {
         await new Promise((resolve) => setTimeout(resolve, 2000))
         await route.continue()
       })
@@ -2086,6 +2188,20 @@
       await page.goto("/dictionary")
 
       const skeleton = page.getByTestId("dictionary-skeleton")
+      await expect(skeleton).toBeVisible()
+
+      await expect(skeleton).not.toBeVisible({ timeout: 15000 })
+    })
+
+    test("grammar page shows skeleton while loading", async ({ page }) => {
+      await page.route("**/api/v1/grammar/**", async (route) => {
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+        await route.continue()
+      })
+
+      await page.goto("/grammar")
+
+      const skeleton = page.getByTestId("grammar-skeleton")
       await expect(skeleton).toBeVisible()
 
       await expect(skeleton).not.toBeVisible({ timeout: 15000 })
@@ -2365,7 +2481,15 @@
           # The exact assertion depends on the progress data structure
   ```
 
-  **Note:** The exact API paths and request/response shapes depend on what was built in earlier phases. The implementer must read the actual route files (`backend/app/api/routes/`) to determine the correct endpoints, HTTP methods, and payloads. The test above is a template -- adapt it to the real API.
+  **IMPORTANT -- discovering the real API paths:** The paths above (`/lessons/units`, `/progress/`) are guesses. Before writing this test, the implementer **must** do the following:
+
+  1. Read `backend/app/api/main.py` to see which routers are included and their prefixes.
+  2. Read each route file under `backend/app/api/routes/` to find the actual endpoint paths.
+  3. As of the current codebase, the existing routers are: `login`, `users`, `utils`, `items`, `private`. Earlier phases should have added routers for `units`/`lessons`, `progress`, `dictionary`, `grammar`, and `chat`. The progress endpoints from Phase 6 are expected to be:
+     - `GET  {API_V1_STR}/progress/me` -- get current user's progress
+     - `PUT  {API_V1_STR}/progress/me` -- update progress after exercise completion
+     - `POST {API_V1_STR}/progress/sync` -- sync offline progress
+  4. Adapt all URLs, HTTP methods, and JSON payloads in this test to match the real routes found in step 2.
 
 - [ ] **Step 3: Create data validation script (if not present)**
 

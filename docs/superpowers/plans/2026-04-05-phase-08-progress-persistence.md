@@ -692,11 +692,18 @@
     // Clamp quality to 0-5
     const q = Math.max(0, Math.min(5, Math.round(quality)));
 
+    // Update easiness factor unconditionally (standard SM-2 formula)
+    // EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+    const newEase = Math.max(
+      1.3,
+      ease + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)),
+    );
+
     if (q < 3) {
-      // Failed: reset repetition count and interval
+      // Failed: reset repetition count and interval, but keep updated ease
       return {
         reps: 0,
-        ease: Math.max(1.3, ease - 0.2),
+        ease: newEase,
         interval: 1,
       };
     }
@@ -710,13 +717,6 @@
     } else {
       newInterval = Math.round(interval * ease);
     }
-
-    // Update easiness factor
-    // EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
-    const newEase = Math.max(
-      1.3,
-      ease + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)),
-    );
 
     return {
       reps: reps + 1,
@@ -797,13 +797,113 @@
   ```
   Fix any type errors.
 
-- [ ] **Step 3: Commit**
-  ```bash
-  git add frontend/src/lib/srs.ts
-  git commit -m "Add SM-2 spaced repetition algorithm (client-side)"
+- [ ] **Step 3: Add unit tests for the SM-2 algorithm**
+
+  Create `frontend/src/lib/__tests__/srs.test.ts`:
+
+  ```typescript
+  import { describe, expect, it } from "vitest";
+  import { sm2, scoreToQuality, reviewWord, defaultSRSEntry } from "../srs";
+
+  describe("sm2", () => {
+    it("resets reps to 0 and interval to 1 on quality 0", () => {
+      const result = sm2(0, 3, 2.5, 10);
+      expect(result.reps).toBe(0);
+      expect(result.interval).toBe(1);
+    });
+
+    it("resets reps to 0 and interval to 1 on quality 1", () => {
+      const result = sm2(1, 5, 2.5, 20);
+      expect(result.reps).toBe(0);
+      expect(result.interval).toBe(1);
+    });
+
+    it("resets reps to 0 and interval to 1 on quality 2", () => {
+      const result = sm2(2, 2, 2.5, 6);
+      expect(result.reps).toBe(0);
+      expect(result.interval).toBe(1);
+    });
+
+    it("advances reps and sets interval to 1 on quality 3 with reps=0", () => {
+      const result = sm2(3, 0, 2.5, 0);
+      expect(result.reps).toBe(1);
+      expect(result.interval).toBe(1);
+    });
+
+    it("advances reps and sets interval to 6 on quality 4 with reps=1", () => {
+      const result = sm2(4, 1, 2.5, 1);
+      expect(result.reps).toBe(2);
+      expect(result.interval).toBe(6);
+    });
+
+    it("advances reps and multiplies interval by ease on quality 5 with reps>=2", () => {
+      const result = sm2(5, 2, 2.5, 6);
+      expect(result.reps).toBe(3);
+      expect(result.interval).toBe(Math.round(6 * 2.5)); // 15
+    });
+
+    it("clamps ease factor to minimum 1.3", () => {
+      // quality 0 with already-low ease should not go below 1.3
+      const result = sm2(0, 3, 1.3, 10);
+      expect(result.ease).toBeGreaterThanOrEqual(1.3);
+    });
+
+    it("applies the EF formula unconditionally (same formula for pass and fail)", () => {
+      // For quality=0: EF' = EF + (0.1 - 5*(0.08 + 5*0.02)) = EF + (0.1 - 0.9) = EF - 0.8
+      const result = sm2(0, 3, 2.5, 10);
+      // 2.5 - 0.8 = 1.7, but should still apply formula not flat -0.2
+      expect(result.ease).toBeCloseTo(1.7, 5);
+    });
+
+    it("interval progression: 1 -> 6 -> prev*EF", () => {
+      const r1 = sm2(4, 0, 2.5, 0);
+      expect(r1.interval).toBe(1);
+
+      const r2 = sm2(4, r1.reps, r1.ease, r1.interval);
+      expect(r2.interval).toBe(6);
+
+      const r3 = sm2(4, r2.reps, r2.ease, r2.interval);
+      expect(r3.interval).toBe(Math.round(6 * r2.ease));
+    });
+  });
+
+  describe("scoreToQuality", () => {
+    it("maps score ranges to quality values", () => {
+      expect(scoreToQuality(1.0)).toBe(5);
+      expect(scoreToQuality(0.9)).toBe(5);
+      expect(scoreToQuality(0.7)).toBe(4);
+      expect(scoreToQuality(0.5)).toBe(3);
+      expect(scoreToQuality(0.3)).toBe(2);
+      expect(scoreToQuality(0.1)).toBe(1);
+      expect(scoreToQuality(0)).toBe(0);
+    });
+  });
+
+  describe("reviewWord", () => {
+    it("returns updated SRS entry with new due date", () => {
+      const entry = defaultSRSEntry();
+      const updated = reviewWord(entry, 5);
+      expect(updated.reps).toBe(1);
+      expect(updated.interval).toBe(1);
+      expect(updated.due).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    });
+  });
   ```
 
-- [ ] **Step 4:** Record learnings to `.claude/learnings-srs-algorithm.md` using the surfacing-subagent-learnings skill.
+  Run the tests:
+  ```bash
+  cd /home/claude/workdirs/toki-pona-dojo/frontend
+  npx vitest run src/lib/__tests__/srs.test.ts
+  ```
+  All tests should pass. Fix any failures before proceeding.
+
+- [ ] **Step 4: Commit**
+  ```bash
+  git add frontend/src/lib/srs.ts frontend/src/lib/__tests__/srs.test.ts
+  git commit -m "Add SM-2 spaced repetition algorithm with unit tests"
+  ```
+
+- [ ] **Step 5:** Record learnings to `.claude/learnings-srs-algorithm.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -1042,11 +1142,39 @@
 
   Write the complete file:
 
+  **Important:** This hook MUST use the project's auto-generated API client (`@/client`)
+  instead of raw `fetch`. The generated SDK (via `@hey-api/openapi-ts`) handles auth tokens,
+  base URL, and error handling automatically through the `OpenAPI` config and `__request` helper.
+  Once the backend progress endpoints are registered and the OpenAPI schema is regenerated
+  (`npm run generate-client`), a `ProgressService` class will be available in `sdk.gen.ts`.
+  Use it the same way other hooks use `UsersService`, `ItemsService`, etc.
+
+  If the client has not been regenerated yet, create a temporary `ProgressService` in
+  `frontend/src/client/sdk.gen.ts` (or a separate file) following the existing pattern:
+
+  ```typescript
+  // In sdk.gen.ts (or a temporary progress-service.ts until client is regenerated)
+  export class ProgressService {
+    public static getMyProgress(): CancelablePromise<ProgressPublic> {
+      return __request(OpenAPI, { method: "GET", url: "/api/v1/progress/me" });
+    }
+    public static updateMyProgress(data: { requestBody: ProgressUpdate }): CancelablePromise<ProgressPublic> {
+      return __request(OpenAPI, { method: "PUT", url: "/api/v1/progress/me", body: data.requestBody });
+    }
+    public static syncProgress(data: { requestBody: ProgressSync }): CancelablePromise<ProgressPublic> {
+      return __request(OpenAPI, { method: "POST", url: "/api/v1/progress/sync", body: data.requestBody });
+    }
+  }
+  ```
+
+  Now the hook itself:
+
   ```typescript
   import { useCallback, useSyncExternalStore } from "react";
   import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
   import { isLoggedIn } from "./useAuth";
+  import { ProgressService } from "@/client";
   import {
     type ProgressData,
     type ErrorEntry,
@@ -1059,7 +1187,6 @@
     getStreak,
     type StreakData,
   } from "@/lib/progress-store";
-  import { scoreToQuality } from "@/lib/srs";
 
   // --- Types ---
 
@@ -1104,31 +1231,18 @@
     // Subscribe to localStorage changes for re-renders
     useSyncExternalStore(subscribeProgress, getProgressSnapshot);
 
-    // Fetch server progress for authenticated users
+    // Fetch server progress for authenticated users (uses generated API client)
     const { data: serverProgress, isLoading } = useQuery<ProgressData>({
       queryKey: ["progress"],
-      queryFn: async () => {
-        const token = localStorage.getItem("access_token");
-        const res = await fetch("/api/v1/progress/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error("Failed to fetch progress");
-        return res.json();
-      },
+      queryFn: () => ProgressService.getMyProgress(),
       enabled: authenticated,
     });
 
-    // Mutation to update server progress
+    // Mutation to update server progress (uses generated API client)
     const updateServerMutation = useMutation({
-      mutationFn: async (data: Partial<ProgressData>) => {
-        const token = localStorage.getItem("access_token");
-        const res = await fetch("/api/v1/progress/me", {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+      mutationFn: (data: Partial<ProgressData>) =>
+        ProgressService.updateMyProgress({
+          requestBody: {
             completed_units: data.completedUnits,
             completed_lessons: data.completedLessons,
             current_unit: data.currentUnit,
@@ -1137,30 +1251,21 @@
             known_words: data.knownWords,
             recent_errors: data.recentErrors,
             srs_data: data.completedUnits !== undefined ? undefined : getSRS(),
-          }),
-        });
-        if (!res.ok) throw new Error("Failed to update progress");
-        return res.json();
-      },
+          },
+        }),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["progress"] });
       },
     });
 
-    // Sync mutation for post-login merge
+    // Sync mutation for post-login merge (uses generated API client)
     const syncMutation = useMutation({
-      mutationFn: async () => {
+      mutationFn: () => {
         const progress = getProgress();
         const srs = getSRS();
         const streak = getStreak();
-        const token = localStorage.getItem("access_token");
-        const res = await fetch("/api/v1/progress/sync", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        return ProgressService.syncProgress({
+          requestBody: {
             completed_units: progress.completedUnits,
             completed_lessons: progress.completedLessons,
             current_unit: progress.currentUnit,
@@ -1173,10 +1278,8 @@
             last_activity: streak.lastActivityDate
               ? new Date(streak.lastActivityDate).toISOString()
               : null,
-          }),
+          },
         });
-        if (!res.ok) throw new Error("Failed to sync progress");
-        return res.json();
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["progress"] });
@@ -1201,10 +1304,15 @@
         }
         const newKnownWords = [...knownSet].sort();
 
-        // Update SRS for each word
-        const quality = scoreToQuality(result.score);
+        // Update SRS for each word with per-word quality.
+        // Words that appear in result.errors are incorrect (quality 1);
+        // all other words are correct (quality 5).
+        const errorWords = new Set(
+          (result.errors ?? []).map((e) => e.word),
+        );
         for (const word of result.words) {
           ensureWordInSRS(word);
+          const quality = errorWords.has(word) ? 1 : 5;
           updateWordSRS(word, quality);
         }
 
@@ -1246,8 +1354,12 @@
       [authenticated, updateServerMutation],
     );
 
+    // NOTE: totalLessonsInUnit is derived from the curriculum data.
+    // Import the curriculum config (e.g., `import { units } from "@/data/curriculum"`)
+    // and look up `units[unitId].lessons.length`. If no curriculum module exists yet,
+    // the caller must pass the count until one is created.
     const updateAfterLesson = useCallback(
-      (unitId: number, lessonId: number, totalLessonsInUnit: number) => {
+      (unitId: number, lessonId: number) => {
         const current = getProgress();
 
         // Add lesson to completed set
@@ -1256,7 +1368,12 @@
         lessonsSet.add(lessonKey);
         const newCompletedLessons = [...lessonsSet].sort();
 
-        // Check if all lessons in the unit are now complete
+        // Check if all lessons in the unit are now complete.
+        // Derive totalLessonsInUnit from curriculum data. Example:
+        //   import { getLessonCountForUnit } from "@/data/curriculum";
+        //   const totalLessonsInUnit = getLessonCountForUnit(unitId);
+        // TODO: Replace this placeholder with actual curriculum lookup.
+        const totalLessonsInUnit = 3; // placeholder — wire to curriculum data
         const unitLessons = newCompletedLessons.filter((l) =>
           l.startsWith(`${unitId}:`),
         );
@@ -1381,8 +1498,11 @@
   // --- Hook ---
 
   export function useSRS() {
-    // Subscribe to localStorage changes for re-renders
-    useSyncExternalStore(subscribeSRS, getSRSSnapshot);
+    // Subscribe to localStorage changes for re-renders.
+    // srsVersion is a stable number that increments on each change,
+    // so we use it as the useMemo dependency instead of the srsData
+    // object (which is a new reference every time getSRS() is called).
+    const version = useSyncExternalStore(subscribeSRS, getSRSSnapshot);
 
     const srsData: SRSData = getSRS();
 
@@ -1400,7 +1520,8 @@
       }
       due.sort((a, b) => b.overdue - a.overdue);
       return due;
-    }, [srsData]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [version]);
 
     /** Review a word with a given SM-2 quality (0-5). */
     function reviewWord(word: string, quality: number): void {
@@ -1423,7 +1544,8 @@
         dueToday,
         averageEase: Math.round(averageEase * 100) / 100,
       };
-    }, [srsData]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [version]);
 
     return {
       dueWords,
@@ -1498,7 +1620,7 @@
 
   // After all exercises in a lesson are done:
   // (This should be called once when the lesson finishes, not after each exercise)
-  updateAfterLesson(unitId, lessonId, totalLessonsInUnit);
+  updateAfterLesson(unitId, lessonId);
   ```
 
   If the file does NOT exist, create `frontend/src/routes/_layout/learn/$unit.$lesson.tsx` with a minimal lesson view that demonstrates the wiring:
@@ -1522,9 +1644,7 @@
     }
 
     function handleLessonComplete() {
-      // totalLessonsInUnit should come from unit data / curriculum config
-      const totalLessonsInUnit = 3; // placeholder — wire to actual curriculum
-      updateAfterLesson(unitId, lessonId, totalLessonsInUnit);
+      updateAfterLesson(unitId, lessonId);
     }
 
     return (
@@ -1785,9 +1905,8 @@
       const completeBtn = page.getByRole("button", {
         name: /complete lesson/i,
       });
-      if (await completeBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await completeBtn.click();
-      }
+      await expect(completeBtn).toBeVisible({ timeout: 3000 });
+      await completeBtn.click();
 
       // Check localStorage was updated
       const progress = await page.evaluate(() => {
@@ -1795,11 +1914,10 @@
         return raw ? JSON.parse(raw) : null;
       });
 
-      // Progress should exist after interaction
-      // (If the dev placeholder button was clicked, completedLessons should include "1:1")
-      if (progress) {
-        expect(progress.completedLessons).toBeDefined();
-      }
+      // Progress must exist after clicking complete
+      expect(progress).not.toBeNull();
+      expect(progress.completedLessons).toBeDefined();
+      expect(progress.completedLessons).toContain("1:1");
     });
 
     test("Completing all lessons in a unit marks unit complete", async ({
@@ -1855,13 +1973,12 @@
       // Navigate to a lesson to trigger activity recording
       await page.goto("/learn/1/1");
 
-      // If there's a complete button, click it to trigger recordActivity
+      // Click the complete button to trigger recordActivity
       const completeBtn = page.getByRole("button", {
         name: /complete lesson/i,
       });
-      if (await completeBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await completeBtn.click();
-      }
+      await expect(completeBtn).toBeVisible({ timeout: 3000 });
+      await completeBtn.click();
 
       // Go back home to check streak
       await page.goto("/");
@@ -1872,9 +1989,8 @@
         return raw ? JSON.parse(raw) : null;
       });
 
-      if (streak) {
-        expect(streak.currentStreak).toBe(4);
-      }
+      expect(streak).not.toBeNull();
+      expect(streak.currentStreak).toBe(4);
     });
   });
 

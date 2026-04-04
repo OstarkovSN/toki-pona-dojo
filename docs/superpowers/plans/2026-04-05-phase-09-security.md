@@ -121,12 +121,14 @@ Internet -> Traefik -> ForwardAuth middleware -> CrowdSec Bouncer -> App
         CROWDSEC_AGENT_HOST: crowdsec:8080
       networks:
         - traefik-public
+      expose:
+        - "8080"
       depends_on:
         - crowdsec
   ```
 
   Key points:
-  - No host port mapping -- the bouncer is only accessed by Traefik via ForwardAuth within the Docker network.
+  - `expose: ["8080"]` makes the bouncer's port visible to other containers (Traefik calls it via ForwardAuth). No host port mapping.
   - `CROWDSEC_AGENT_HOST` points to the CrowdSec LAPI on port 8080 (internal Docker DNS).
   - `CROWDSEC_BOUNCER_API_KEY` comes from the `.env` file (set up in Step 5).
   - `depends_on: crowdsec` ensures CrowdSec starts before the bouncer.
@@ -149,7 +151,7 @@ Internet -> Traefik -> ForwardAuth middleware -> CrowdSec Bouncer -> App
 
   The `traefik-logs` volume is shared between the proxy service (writes access logs) and the crowdsec service (reads access logs). Both services mount this same named volume.
 
-- [ ] **Step 5: Add `CROWDSEC_BOUNCER_KEY` to `.env`**
+- [ ] **Step 5: Add `CROWDSEC_BOUNCER_KEY` to `.env` and `.env.example`**
 
   Append the following to the end of `.env`:
   ```env
@@ -158,6 +160,11 @@ Internet -> Traefik -> ForwardAuth middleware -> CrowdSec Bouncer -> App
   #   docker exec crowdsec cscli bouncers add traefik-bouncer
   # Then paste the generated key here and restart the bouncer:
   #   docker compose restart crowdsec-bouncer
+  CROWDSEC_BOUNCER_KEY=changethis
+  ```
+
+  Also append the following to `.env.example` so new checkouts know about this variable:
+  ```env
   CROWDSEC_BOUNCER_KEY=changethis
   ```
 
@@ -175,7 +182,7 @@ Internet -> Traefik -> ForwardAuth middleware -> CrowdSec Bouncer -> App
 
 - [ ] **Step 8: Commit**
   ```bash
-  git add compose.yml .env
+  git add compose.yml .env .env.example
   git commit -m "Add CrowdSec agent and bouncer services to Docker Compose"
   ```
 
@@ -188,6 +195,8 @@ Internet -> Traefik -> ForwardAuth middleware -> CrowdSec Bouncer -> App
 **Files:**
 - MODIFY: `compose.override.yml` (proxy service: add access log filepath, volume mount, ForwardAuth labels)
 - MODIFY: `compose.traefik.yml` (production traefik: add access log filepath, volume mount, ForwardAuth labels)
+
+> **Note:** `compose.traefik.yml` modifications are a plan-level addition beyond the original spec's file list. These changes are needed to ensure CrowdSec protection applies to the production Traefik deployment, not just the development overlay.
 
 ### Steps
 
@@ -236,6 +245,15 @@ Internet -> Traefik -> ForwardAuth middleware -> CrowdSec Bouncer -> App
   ```
 
   This is the same named volume that `crowdsec` mounts as read-only. The proxy writes to it; CrowdSec reads from it.
+
+- [ ] **Step 3b: Add `traefik-logs` to the top-level `volumes:` section in `compose.override.yml`**
+
+  If `compose.override.yml` does not already have a top-level `volumes:` section, add one at the end of the file:
+  ```yaml
+  volumes:
+    traefik-logs:
+  ```
+  If a `volumes:` section already exists, append `traefik-logs:` to it. This is required because `compose.override.yml` references the volume in the `proxy` service, and Docker Compose requires it to be declared at the top level in each file that uses it.
 
 - [ ] **Step 4: Add ForwardAuth middleware labels to the proxy service in `compose.override.yml`**
 
@@ -327,11 +345,13 @@ Internet -> Traefik -> ForwardAuth middleware -> CrowdSec Bouncer -> App
       - traefik.http.middlewares.crowdsec.forwardauth.trustForwardHeader=true
   ```
 
-  Add `traefik-logs` to the production volumes section:
+  Add volumes to the production volumes section. Since `compose.traefik.yml` can be used standalone (not always merged with `compose.yml`), it must declare all volumes it references -- including `crowdsec-config:` and `crowdsec-data:` used by the CrowdSec services defined in `compose.yml`:
   ```yaml
   volumes:
     traefik-public-certificates:
     traefik-logs:
+    crowdsec-config:
+    crowdsec-data:
   ```
 
 - [ ] **Step 7: Verify the `traefik-logs` volume is now shared correctly**
@@ -629,5 +649,7 @@ Task 2 --/
 ```
 
 Tasks 1 and 2 can be dispatched in parallel. Tasks 3, 4, and 5 are sequential.
+
+**Future improvement -- log rotation:** The `traefik-logs` volume will grow unbounded. Consider configuring Traefik's built-in log rotation via `--accesslog.maxsize` (max file size in MB before rotation) and `--accesslog.maxbackups` (number of rotated files to keep). This is not critical for initial deployment but should be addressed before production traffic ramps up.
 
 **Chicken-and-egg note:** The `CROWDSEC_BOUNCER_KEY` in `.env` starts as a placeholder (`changethis`). After the first `docker compose up`, the operator must run `cscli bouncers add` inside the CrowdSec container to generate the real key, update `.env`, and restart the bouncer. This is documented in Task 5, Steps 3-4. The bouncer will fail to authenticate until this is done, but this does not block other services.

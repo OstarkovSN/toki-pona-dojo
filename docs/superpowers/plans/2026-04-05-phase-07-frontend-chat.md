@@ -271,19 +271,31 @@
   ): Promise<void> {
     const url = `${config.baseUrl}/chat/completions`;
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${config.apiKey}`,
-      },
-      body: JSON.stringify({
-        model: config.model,
-        messages,
-        stream: true,
-      }),
-      signal,
-    });
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${config.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: config.model,
+          messages,
+          stream: true,
+        }),
+        signal,
+      });
+    } catch (err) {
+      // A CORS failure manifests as a TypeError with no response body.
+      if (err instanceof TypeError) {
+        throw new Error(
+          "Request blocked — your provider may not allow browser requests (CORS). " +
+          "Try a provider that supports CORS or use the server proxy.",
+        );
+      }
+      throw err;
+    }
 
     if (!response.ok) {
       const errorBody = await response.text().catch(() => "");
@@ -441,7 +453,7 @@
   Create `frontend/src/hooks/useChat.ts`:
 
   ```typescript
-  import { useState, useCallback, useRef, useEffect } from "react";
+  import { useState, useCallback, useRef, useEffect, useMemo } from "react";
   import {
     type ChatMessage,
     type ChatContext,
@@ -450,6 +462,9 @@
     buildSystemPrompt,
     callProviderDirect,
     callServerProxy,
+    BYOM_URL_KEY,
+    BYOM_KEY_KEY,
+    BYOM_MODEL_KEY,
   } from "@/lib/llm-client";
   import { useChatContext } from "@/contexts/ChatContext";
 
@@ -501,8 +516,16 @@
     const [error, setError] = useState<string | null>(null);
     const abortRef = useRef<AbortController | null>(null);
 
-    // Check BYOM config on each render (cheap localStorage reads)
-    const byomConfig = getBYOMConfig();
+    // Memoize BYOM config based on serialized localStorage values to avoid
+    // creating a new object reference every render (which would destabilize
+    // any dependency array that includes it).
+    const byomConfig = useMemo(() => getBYOMConfig(), [
+      // Re-derive when the underlying localStorage values change.
+      // Reading localStorage is cheap; the strings serve as stable cache keys.
+      localStorage.getItem(BYOM_URL_KEY),
+      localStorage.getItem(BYOM_KEY_KEY),
+      localStorage.getItem(BYOM_MODEL_KEY),
+    ]);
     const isBYOM = byomConfig !== null;
 
     // Persist messages to sessionStorage whenever they change
@@ -537,14 +560,18 @@
 
         setError(null);
 
-        // Append user message
+        // Append user message using functional update to avoid stale closure.
+        // Capture the messages-with-user-msg for the API call via a variable
+        // populated inside the functional updater.
         const userMsg: ChatMessage = { role: "user", content: content.trim() };
-        const updatedMessages = [...messages, userMsg];
-        setMessages(updatedMessages);
+        let messagesForApi: ChatMessage[] = [];
+        setMessages((prev) => {
+          messagesForApi = [...prev, userMsg];
+          return messagesForApi;
+        });
 
         // Add empty assistant message that we will stream into
-        const assistantMsg: ChatMessage = { role: "assistant", content: "" };
-        setMessages([...updatedMessages, assistantMsg]);
+        setMessages((prev) => [...prev, { role: "assistant" as const, content: "" }]);
         setIsStreaming(true);
 
         const controller = new AbortController();
@@ -578,7 +605,7 @@
             const systemPrompt = buildSystemPrompt(chatCtx);
             const fullMessages: ChatMessage[] = [
               { role: "system", content: systemPrompt },
-              ...updatedMessages,
+              ...messagesForApi,
             ];
             await callProviderDirect(
               byomConfig,
@@ -589,7 +616,7 @@
           } else {
             // Path 1: Server proxy
             await callServerProxy(
-              updatedMessages,
+              messagesForApi,
               chatCtx,
               onChunk,
               controller.signal,
@@ -618,7 +645,6 @@
         }
       },
       [
-        messages,
         isStreaming,
         options.mode,
         options.knownWords,
@@ -1489,9 +1515,10 @@
 
   function UserSettings() {
     const { user: currentUser } = useAuth()
+    // Superusers see all tabs; regular users see everything except "Danger zone"
     const finalTabs = currentUser?.is_superuser
-      ? tabsConfig.slice(0, 4)
-      : tabsConfig
+      ? tabsConfig
+      : tabsConfig.filter((t) => t.value !== "danger-zone")
 
     if (!currentUser) {
       return null
@@ -1566,8 +1593,12 @@
 
   test.describe("ChatPanel", () => {
     test.beforeEach(async ({ page }) => {
-      // Navigate to the app (assumes login or a test route is accessible)
-      // The test setup may need to handle auth — adapt to existing test patterns
+      // Set up auth state before navigating — the app checks localStorage
+      // for access_token to determine login status (see useAuth.ts).
+      await page.goto("/");
+      await page.evaluate(() => {
+        localStorage.setItem("access_token", "test-token");
+      });
       await page.goto("/");
     });
 
@@ -1690,6 +1721,11 @@
 
   test.describe("ProviderSettings", () => {
     test.beforeEach(async ({ page }) => {
+      // Set up auth state — settings page requires login
+      await page.goto("/");
+      await page.evaluate(() => {
+        localStorage.setItem("access_token", "test-token");
+      });
       await page.goto("/settings");
     });
 
@@ -1853,3 +1889,9 @@
 - Task 7 depends on 2
 - Task 8 depends on 1, 6, 7
 - Tasks 9, 10 are sequential after 8
+
+---
+
+## Follow-up: Route context wiring
+
+This phase creates `ChatContext` with `setRouteContext`, but the actual calls to `setRouteContext` from lesson, dictionary, and grammar pages are **not** wired here. Each page should call `setRouteContext({ page: "lesson", detail: "unit 3" })` (or equivalent) in a `useEffect` on mount/route change. This wiring will happen in **Phase 10** (or whichever phase touches those pages). Until then, the chat will always see `{ page: "home", detail: "" }` as the route context.

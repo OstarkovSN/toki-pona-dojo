@@ -132,7 +132,37 @@ These facts were gathered during plan creation and are essential context for eac
   openssl rand -hex 32                                             # -> ENCRYPTION_KEY
   ```
 
-- [ ] **2.3** Verify `.env` parses correctly --- no stray quotes, no duplicated keys:
+- [ ] **2.3** Create or update `.env.example` with all LangFuse-related environment variables (placeholder values, no real secrets). If the file already exists, append the LangFuse section; if not, create it. The block should mirror the `.env` LangFuse section but with safe placeholder values:
+  ```bash
+  # =============================================================================
+  # Langfuse --- self-hosted LLM tracing
+  # =============================================================================
+
+  LANGFUSE_DB_USER=postgres
+  LANGFUSE_DB_PASSWORD=changeme
+  LANGFUSE_DB_NAME=postgres
+
+  LANGFUSE_CLICKHOUSE_USER=clickhouse
+  LANGFUSE_CLICKHOUSE_PASSWORD=changeme
+
+  LANGFUSE_MINIO_USER=minio
+  LANGFUSE_MINIO_PASSWORD=changeme
+
+  NEXTAUTH_URL=http://localhost:3100
+  NEXTAUTH_SECRET=GENERATE_ME
+  SALT=GENERATE_ME
+  ENCRYPTION_KEY=GENERATE_ME
+
+  LANGFUSE_INIT_USER_EMAIL=admin@example.com
+  LANGFUSE_INIT_USER_NAME=Admin
+  LANGFUSE_INIT_USER_PASSWORD=changeme
+
+  LANGFUSE_SECRET_KEY=
+  LANGFUSE_PUBLIC_KEY=
+  LANGFUSE_HOST=http://langfuse-server:3000
+  ```
+
+- [ ] **2.4** Verify `.env` parses correctly --- no stray quotes, no duplicated keys:
   ```bash
   grep -c 'LANGFUSE_HOST' .env        # should be exactly 1
   grep -c 'LANGFUSE_BASE_URL' .env    # should be 0 (old name removed)
@@ -140,7 +170,7 @@ These facts were gathered during plan creation and are essential context for eac
   grep -c 'REDIS_URL' .env            # should still be 1 (app's own Redis, unrelated)
   ```
 
-- [ ] **2.4** Record learnings to `.claude/learnings-env-variables.md` using the surfacing-subagent-learnings skill.
+- [ ] **2.5** Record learnings to `.claude/learnings-env-variables.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -318,6 +348,7 @@ These facts were gathered during plan creation and are essential context for eac
       environment:
         DATABASE_URL: postgresql://${LANGFUSE_DB_USER:-postgres}:${LANGFUSE_DB_PASSWORD:-postgres}@langfuse-db:5432/${LANGFUSE_DB_NAME:-postgres}
         NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3100}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
         SALT: ${SALT}
         ENCRYPTION_KEY: ${ENCRYPTION_KEY}
         CLICKHOUSE_URL: http://langfuse-clickhouse:8123
@@ -341,7 +372,8 @@ These facts were gathered during plan creation and are essential context for eac
         LANGFUSE_S3_MEDIA_UPLOAD_REGION: auto
         LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: ${LANGFUSE_MINIO_USER:-minio}
         LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: ${LANGFUSE_MINIO_PASSWORD:-miniosecret}
-        LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://localhost:9190
+        # NOTE: Worker runs inside Docker, so use the internal hostname (not localhost)
+        LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://langfuse-minio:9000
         LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: "true"
         LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: "media/"
   ```
@@ -369,7 +401,17 @@ These facts were gathered during plan creation and are essential context for eac
       - LANGFUSE_HOST=http://langfuse-server:3000
   ```
 
-- [ ] **3.5** In `compose.override.yml`, add restart policy overrides for LangFuse services (matching the pattern used by existing services like `db`, `adminer`, `backend`). Port mappings are already defined in `compose.yml` (step 3.1) so they do NOT need to be repeated here. Add after the `playwright` service block, before the `networks:` section:
+- [ ] **3.5** In `compose.override.yml`, add restart policy overrides for LangFuse services (matching the pattern used by existing services like `db`, `adminer`, `backend`). Port mappings are already defined in `compose.yml` (step 3.1) so they do NOT need to be repeated here. Insert BETWEEN the `playwright` service block (which ends around line 130 with `- 9323:9323`) and the `networks:` section. The surrounding context looks like:
+  ```yaml
+      # ... end of playwright service ...
+      - 9323:9323
+
+    # >>> INSERT HERE <<<
+
+  networks:
+    traefik-public:
+  ```
+  Add the following block in that position:
   ```yaml
     langfuse-server:
       restart: "no"
@@ -701,6 +743,7 @@ These facts were gathered during plan creation and are essential context for eac
 **Files:**
 - `backend/app/tests/services/__init__.py` (CREATE)
 - `backend/app/tests/services/test_tracing.py` (CREATE)
+- `backend/app/tests/services/test_llm.py` (CREATE)
 
 **Depends on:** Tasks 4, 5, 6, 7
 
@@ -842,13 +885,63 @@ These facts were gathered during plan creation and are essential context for eac
                   assert check_langfuse_auth() is True
   ```
 
-- [ ] **8.3** Run the tests:
+- [ ] **8.3** Create `backend/app/tests/services/test_llm.py` with the following COMPLETE content:
+  ```python
+  """Tests for LLM client factory --- verifies LangFuse drop-in replacement."""
+
+  from unittest.mock import MagicMock, patch
+
+  from openai import OpenAI
+
+
+  class TestGetLlmClient:
+      """get_llm_client() returns the correct client type based on config."""
+
+      def test_returns_langfuse_openai_when_configured(self) -> None:
+          """When LANGFUSE_SECRET_KEY is set, should return LangfuseOpenAI."""
+          mock_langfuse_openai_cls = MagicMock()
+          mock_langfuse_openai_instance = MagicMock()
+          mock_langfuse_openai_cls.return_value = mock_langfuse_openai_instance
+
+          with (
+              patch("app.services.llm._configure_langfuse_env", return_value=True),
+              patch("app.services.llm.settings") as mock_settings,
+              patch.dict(
+                  "sys.modules",
+                  {"langfuse.openai": MagicMock(OpenAI=mock_langfuse_openai_cls)},
+              ),
+          ):
+              mock_settings.OPENAI_BASE_URL = "http://test:1234"
+              mock_settings.OPENAI_API_TOKEN = "test-token"
+
+              from app.services.llm import get_llm_client
+
+              client = get_llm_client()
+              assert client is mock_langfuse_openai_instance
+              mock_langfuse_openai_cls.assert_called_once()
+
+      def test_returns_plain_openai_when_not_configured(self) -> None:
+          """When LANGFUSE_SECRET_KEY is empty, should return plain OpenAI."""
+          with (
+              patch("app.services.llm._configure_langfuse_env", return_value=False),
+              patch("app.services.llm.settings") as mock_settings,
+          ):
+              mock_settings.OPENAI_BASE_URL = "http://test:1234"
+              mock_settings.OPENAI_API_TOKEN = "test-token"
+
+              from app.services.llm import get_llm_client
+
+              client = get_llm_client()
+              assert isinstance(client, OpenAI)
+  ```
+
+- [ ] **8.4** Run the tests:
   ```bash
-  cd backend && python -m pytest app/tests/services/test_tracing.py -v
+  cd backend && python -m pytest app/tests/services/test_tracing.py app/tests/services/test_llm.py -v
   ```
   All tests should pass. If import errors occur due to missing `settings` fields or other Phase 3 dependencies, fix them before proceeding.
 
-- [ ] **8.4** Record learnings to `.claude/learnings-testing.md` using the surfacing-subagent-learnings skill.
+- [ ] **8.5** Record learnings to `.claude/learnings-testing.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -946,7 +1039,9 @@ These facts were gathered during plan creation and are essential context for eac
 | CREATE | `backend/app/services/llm.py` |
 | CREATE | `backend/app/tests/services/__init__.py` |
 | CREATE | `backend/app/tests/services/test_tracing.py` |
+| CREATE | `backend/app/tests/services/test_llm.py` |
 | MODIFY | `.env` (replace LangFuse section, add secrets) |
+| CREATE/MODIFY | `.env.example` (add LangFuse placeholder variables) |
 | MODIFY | `compose.yml` (add 7 services, 6 volumes, LANGFUSE_HOST overrides) |
 | MODIFY | `compose.override.yml` (add restart: "no" for LangFuse services) |
 | MODIFY | `backend/app/core/config.py` (add LANGFUSE_* fields to Settings) |

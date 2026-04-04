@@ -27,7 +27,9 @@ mkdir -p backend/app/data
 touch backend/app/data/__init__.py
 ```
 
-- [ ] **Step 2:** Create `backend/app/data/words.json` with sample entries covering all units. Include at least 50 words so unit word lists are satisfied. Each entry must have `word`, `ku`, `pos`, `definitions`, and `note` fields.
+- [ ] **Step 2:** Create `backend/app/data/words.json` with sample entries covering all units. Include at least 85 words so unit word lists are satisfied and there are enough distractors for multichoice exercises. Each entry must have `word`, `ku`, `pos`, `definitions`, and `note` fields.
+
+**Note:** The full toki pona vocabulary has 137 words. This sample data includes ~85 representative words. When the extraction script (Task 5) runs against the real HTML artifacts, it will produce the complete 137-word dataset that overwrites this file. Ensure all words referenced by any unit in `units.py` are included in this sample.
 
 Write to `backend/app/data/words.json`:
 
@@ -344,7 +346,7 @@ for f in ['app/data/words.json', 'app/data/exercises.json', 'app/data/grammar.js
 
 Expected output:
 ```
-app/data/words.json: OK (list, 85 top-level)
+app/data/words.json: OK (list, 86 top-level)
 app/data/exercises.json: OK (dict, 8 top-level)
 app/data/grammar.json: OK (dict, 3 top-level)
 ```
@@ -359,10 +361,94 @@ app/data/grammar.json: OK (dict, 3 top-level)
 
 **Files:**
 - `backend/app/data/units.py` (new)
+- `backend/tests/data/test_units.py` (new)
 
 **Context:** This defines the 10-unit skill tree as a hardcoded Python list. Units reference words from `words.json`. Units 2 & 3 are parallel (both require only unit 1). Units 6 & 7 are parallel (both require unit 5). Unit 4 requires both 2 and 3. Unit 8 requires both 6 and 7.
 
-- [ ] **Step 1:** Create `backend/app/data/units.py` with the complete UNITS list and Pydantic response models.
+- [ ] **Step 1:** Write failing tests in `backend/tests/data/test_units.py` (TDD red phase).
+
+Write to `backend/tests/data/test_units.py`:
+
+```python
+"""Tests for unit structure definition."""
+
+import pytest
+
+
+def test_units_count():
+    """There are exactly 10 units."""
+    from app.data.units import UNITS
+    assert len(UNITS) == 10
+
+
+def test_units_have_required_fields():
+    """Each unit has all required fields."""
+    from app.data.units import UNITS
+    required = {"id", "name", "topic", "words", "exercise_types", "requires"}
+    for unit in UNITS:
+        missing = required - set(unit.keys())
+        assert not missing, f"Unit {unit.get('id', '?')}: missing {missing}"
+
+
+def test_unit_ids_are_sequential():
+    """Unit IDs are 1 through 10."""
+    from app.data.units import UNITS
+    ids = [u["id"] for u in UNITS]
+    assert ids == list(range(1, 11))
+
+
+def test_get_unit_by_id_found():
+    """get_unit_by_id returns the correct unit."""
+    from app.data.units import get_unit_by_id
+    unit = get_unit_by_id(1)
+    assert unit is not None
+    assert unit["name"] == "toki!"
+
+
+def test_get_unit_by_id_not_found():
+    """get_unit_by_id returns None for unknown ID."""
+    from app.data.units import get_unit_by_id
+    assert get_unit_by_id(99) is None
+
+
+def test_get_words_up_to_unit_1():
+    """Words for unit 1 are just unit 1's words."""
+    from app.data.units import get_words_up_to_unit, get_unit_by_id
+    words = get_words_up_to_unit(1)
+    unit1 = get_unit_by_id(1)
+    assert words == set(unit1["words"])
+
+
+def test_get_words_up_to_unit_4_includes_prerequisites():
+    """Words up to unit 4 include units 1, 2, 3, and 4."""
+    from app.data.units import get_words_up_to_unit
+    words = get_words_up_to_unit(4)
+    # Unit 4 requires 2 and 3, both require 1
+    assert "mi" in words      # unit 1
+    assert "jan" in words      # unit 2
+    assert "lukin" in words    # unit 3
+    assert "li" in words       # unit 4
+    assert "pi" not in words   # unit 6, should NOT be included
+
+
+def test_parallel_units_have_correct_prereqs():
+    """Units 2 & 3 are parallel (both require 1); units 6 & 7 are parallel (both require 5)."""
+    from app.data.units import get_unit_by_id
+    assert get_unit_by_id(2)["requires"] == [1]
+    assert get_unit_by_id(3)["requires"] == [1]
+    assert get_unit_by_id(6)["requires"] == [5]
+    assert get_unit_by_id(7)["requires"] == [5]
+```
+
+Run the tests and confirm they fail:
+
+```bash
+cd backend && python -m pytest tests/data/test_units.py -v 2>&1 | tail -20
+```
+
+Expected: ImportError because `app.data.units` does not exist yet.
+
+- [ ] **Step 2:** Create `backend/app/data/units.py` with the complete UNITS list and Pydantic response models.
 
 Write to `backend/app/data/units.py`:
 
@@ -520,32 +606,17 @@ def get_words_up_to_unit(unit_id: int) -> set[str]:
     return available
 ```
 
-- [ ] **Step 2:** Verify the module loads and helper functions work.
+- [ ] **Step 3:** Run the unit tests and verify they all pass (TDD green phase).
 
 ```bash
-cd backend && python -c "
-from app.data.units import UNITS, get_unit_by_id, get_words_up_to_unit
-print(f'Units: {len(UNITS)}')
-print(f'Unit 1: {get_unit_by_id(1)[\"name\"]}')
-words_u4 = get_words_up_to_unit(4)
-print(f'Words up to unit 4: {len(words_u4)} words')
-print(f'Contains li: {\"li\" in words_u4}')
-print(f'Contains pi: {\"pi\" in words_u4}')
-"
+cd backend && python -m pytest tests/data/test_units.py -v
 ```
 
-Expected output:
-```
-Units: 10
-Unit 1: toki!
-Words up to unit 4: 23 words
-Contains li: True
-Contains pi: False
-```
+Expected: All tests pass.
 
-- [ ] **Step 3:** Commit with message: "Add unit structure definition with 10-unit skill tree"
+- [ ] **Step 4:** Commit with message: "Add unit structure definition with 10-unit skill tree and tests"
 
-- [ ] **Step 4:** Record learnings to `.claude/learnings-unit-structure.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 5:** Record learnings to `.claude/learnings-unit-structure.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -553,10 +624,155 @@ Contains pi: False
 
 **Files:**
 - `backend/app/data/loader.py` (new)
+- `backend/tests/data/test_loader.py` (new)
 
 **Context:** JSON files are small and static. Load them once at module level. Provide typed access functions for the rest of the app.
 
-- [ ] **Step 1:** Create `backend/app/data/loader.py` that loads all three JSON files at import time and provides accessor functions.
+- [ ] **Step 1:** Write failing tests in `backend/tests/data/test_loader.py` (TDD red phase).
+
+Write to `backend/tests/data/test_loader.py`:
+
+```python
+"""Tests for the JSON data loader module."""
+
+
+def test_words_loaded():
+    """WORDS is a non-empty list of dicts."""
+    from app.data.loader import WORDS
+    assert isinstance(WORDS, list)
+    assert len(WORDS) > 0
+    assert isinstance(WORDS[0], dict)
+
+
+def test_exercises_loaded():
+    """EXERCISES is a dict with expected top-level keys."""
+    from app.data.loader import EXERCISES
+    assert isinstance(EXERCISES, dict)
+    assert "flashcards" in EXERCISES
+    assert "sentence_quiz" in EXERCISES
+
+
+def test_grammar_loaded():
+    """GRAMMAR is a dict with expected top-level keys."""
+    from app.data.loader import GRAMMAR
+    assert isinstance(GRAMMAR, dict)
+    assert "sections" in GRAMMAR
+
+
+def test_get_word_found():
+    """get_word returns the correct entry for a known word."""
+    from app.data.loader import get_word
+    entry = get_word("pona")
+    assert entry is not None
+    assert entry["word"] == "pona"
+    assert "definitions" in entry
+    assert isinstance(entry["definitions"], list)
+
+
+def test_get_word_not_found():
+    """get_word returns None for an unknown word."""
+    from app.data.loader import get_word
+    assert get_word("nonexistent_word_xyz") is None
+
+
+def test_search_words_by_query():
+    """search_words with q='water' finds 'telo'."""
+    from app.data.loader import search_words
+    results = search_words(q="water")
+    words = [w["word"] for w in results]
+    assert "telo" in words
+
+
+def test_search_words_by_pos():
+    """search_words with pos='verb' returns only words with 'verb' in pos."""
+    from app.data.loader import search_words
+    results = search_words(pos="verb")
+    assert len(results) > 0
+    for w in results:
+        assert "verb" in w["pos"]
+
+
+def test_search_words_by_word_set_ku():
+    """search_words with word_set='ku' returns only ku words."""
+    from app.data.loader import search_words
+    results = search_words(word_set="ku")
+    assert len(results) > 0
+    for w in results:
+        assert w["ku"] is True
+
+
+def test_search_words_by_word_set_pu():
+    """search_words with word_set='pu' returns only non-ku words."""
+    from app.data.loader import search_words
+    results = search_words(word_set="pu")
+    assert len(results) > 0
+    for w in results:
+        assert w["ku"] is False
+
+
+def test_search_words_combined_filters():
+    """search_words with both q and pos narrows results."""
+    from app.data.loader import search_words
+    results = search_words(q="eat", pos="verb")
+    words = [w["word"] for w in results]
+    assert "moku" in words
+    for w in results:
+        assert "verb" in w["pos"]
+
+
+def test_get_grammar_sections():
+    """get_grammar_sections returns a non-empty list."""
+    from app.data.loader import get_grammar_sections
+    sections = get_grammar_sections()
+    assert isinstance(sections, list)
+    assert len(sections) > 0
+
+
+def test_get_grammar_section_found():
+    """get_grammar_section returns the correct section by id."""
+    from app.data.loader import get_grammar_section
+    section = get_grammar_section("core-rule")
+    assert section is not None
+    assert section["id"] == "core-rule"
+
+
+def test_get_grammar_section_not_found():
+    """get_grammar_section returns None for unknown id."""
+    from app.data.loader import get_grammar_section
+    assert get_grammar_section("nonexistent_section") is None
+
+
+def test_get_exercises_by_words_filters_correctly():
+    """get_exercises_by_words only returns exercises using words from the given set."""
+    from app.data.loader import get_exercises_by_words
+    word_set = {"mi", "sina", "pona", "ike", "toki", "moku"}
+    result = get_exercises_by_words(word_set)
+    # Flashcards should only contain words in the set
+    for fc in result["flashcards"]:
+        assert fc["word"] in word_set
+    # Sentence quiz entries should only use words in the set
+    for item in result["sentence_quiz"]["tp2en"]:
+        for w in item["words"]:
+            assert w in word_set
+
+
+def test_get_exercises_by_words_empty_set():
+    """get_exercises_by_words with empty set returns empty exercise lists."""
+    from app.data.loader import get_exercises_by_words
+    result = get_exercises_by_words(set())
+    assert result["flashcards"] == []
+    assert result["sentence_quiz"]["tp2en"] == []
+```
+
+Run the tests and confirm they fail:
+
+```bash
+cd backend && python -m pytest tests/data/test_loader.py -v 2>&1 | tail -20
+```
+
+Expected: ImportError because `app.data.loader` does not exist yet.
+
+- [ ] **Step 2:** Create `backend/app/data/loader.py` that loads all three JSON files at import time and provides accessor functions.
 
 Write to `backend/app/data/loader.py`:
 
@@ -740,26 +956,17 @@ def get_exercises_by_words(
     return filtered
 ```
 
-- [ ] **Step 2:** Verify the loader works.
+- [ ] **Step 3:** Run the loader tests and verify they all pass (TDD green phase).
 
 ```bash
-cd backend && python -c "
-from app.data.loader import WORDS, EXERCISES, GRAMMAR, get_word, search_words, get_exercises_by_words
-print(f'Words loaded: {len(WORDS)}')
-print(f'Word lookup: {get_word(\"pona\")[\"word\"]}')
-print(f'Search \"water\": {len(search_words(q=\"water\"))} results')
-print(f'Filter noun: {len(search_words(pos=\"noun\"))} results')
-print(f'Filter ku: {len(search_words(word_set=\"ku\"))} results')
-exs = get_exercises_by_words({'mi', 'sina', 'pona', 'ike', 'toki', 'moku'})
-print(f'Unit 1 flashcards: {len(exs[\"flashcards\"])}')
-"
+cd backend && python -m pytest tests/data/test_loader.py -v
 ```
 
-Expected: Non-zero counts for all queries.
+Expected: All tests pass.
 
-- [ ] **Step 3:** Commit with message: "Add JSON data loader with search, filter, and word-set filtering"
+- [ ] **Step 4:** Commit with message: "Add JSON data loader with search, filter, word-set filtering, and tests"
 
-- [ ] **Step 4:** Record learnings to `.claude/learnings-data-loader.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 5:** Record learnings to `.claude/learnings-data-loader.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -895,16 +1102,16 @@ Add after the `UsersPublic` class (before ItemBase):
 class UserProgress(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     user_id: uuid.UUID = Field(foreign_key="user.id", index=True)
-    completed_units: list[int] = Field(default=[], sa_column=Column(JSON))
-    completed_lessons: list[str] = Field(default=[], sa_column=Column(JSON))
+    completed_units: list[int] = Field(default_factory=list, sa_column=Column(JSON))
+    completed_lessons: list[str] = Field(default_factory=list, sa_column=Column(JSON))
     current_unit: int = Field(default=1)
-    srs_data: dict = Field(default={}, sa_column=Column(JSON))
+    srs_data: dict = Field(default_factory=dict, sa_column=Column(JSON))
     total_correct: int = Field(default=0)
     total_answered: int = Field(default=0)
     streak_days: int = Field(default=0)
     last_activity: datetime | None = None
-    known_words: list[str] = Field(default=[], sa_column=Column(JSON))
-    recent_errors: list[dict] = Field(default=[], sa_column=Column(JSON))
+    known_words: list[str] = Field(default_factory=list, sa_column=Column(JSON))
+    recent_errors: list[dict] = Field(default_factory=list, sa_column=Column(JSON))
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_type=DateTime(timezone=True),
@@ -915,7 +1122,7 @@ class UserProgress(SQLModel, table=True):
     )
 ```
 
-**Important:** Use `default=[]` in `Field()` is fine with `sa_column=Column(JSON)` because SQLModel/SQLAlchemy handles the mutable default correctly at the database level. However, if linters complain, wrap with `default_factory=list` — but note that `sa_column` and `default_factory` together may need testing. The spec uses `default=[]` so follow that.
+**Important:** We use `default_factory=list` / `default_factory=dict` instead of `default=[]` / `default={}` to avoid the Python mutable default argument footgun. Even though SQLAlchemy handles the DB-level default, the Python-side default is shared across all instances if mutable, which can cause subtle bugs when objects are created without going through the DB (e.g., in tests or before flush).
 
 - [ ] **Step 5:** Generate the Alembic migration.
 
@@ -1304,9 +1511,9 @@ def validate_words(words: list[dict], errors: list[str]) -> set[str]:
     """Validate words.json and return set of all word strings."""
     logger.info("Validating words.json (%d entries)", len(words))
 
-    if len(words) < 50:
+    if len(words) < 85:
         errors.append(
-            f"words.json has only {len(words)} entries (expected >= 50 for sample, >= 130 for full)"
+            f"words.json has only {len(words)} entries (expected >= 85 for sample, 137 for full)"
         )
 
     required_fields = {"word", "ku", "pos", "definitions", "note"}
@@ -2167,8 +2374,8 @@ def word_set(words: list[dict]) -> set[str]:
 
 class TestWords:
     def test_minimum_count(self, words: list[dict]) -> None:
-        """Sample data has at least 50 words."""
-        assert len(words) >= 50
+        """Sample data has at least 85 words (full dataset should have 137)."""
+        assert len(words) >= 85
 
     def test_no_duplicate_words(self, words: list[dict]) -> None:
         """No duplicate word entries."""
@@ -2363,7 +2570,7 @@ Expected: No errors. If there are warnings/errors, fix them.
 cd backend && python -m mypy app/
 ```
 
-Expected: No errors. If there are type errors in the new code, fix them. Note: mypy may complain about JSON column types with `default=[]` — if so, use `default_factory=list` and similar.
+Expected: No errors. If there are type errors in the new code, fix them.
 
 - [ ] **Step 5:** Verify all API endpoints work by listing routes.
 
@@ -2397,8 +2604,8 @@ Expected output should include:
 | # | Task | Key files | Tests |
 |---|------|-----------|-------|
 | 1 | JSON data files | `backend/app/data/{words,exercises,grammar}.json` | (validated in Task 9) |
-| 2 | Unit structure | `backend/app/data/units.py` | (tested via lessons API) |
-| 3 | Data loader | `backend/app/data/loader.py` | (tested via API endpoints) |
+| 2 | Unit structure | `backend/app/data/units.py` | `tests/data/test_units.py` |
+| 3 | Data loader | `backend/app/data/loader.py` | `tests/data/test_loader.py` |
 | 4 | UserProgress model | `backend/app/models.py`, Alembic migration | `tests/crud/test_user_progress.py` |
 | 5 | Extraction script | `backend/scripts/extract_data.py` | (manual, needs HTML artifacts) |
 | 6 | Validation script | `backend/scripts/validate_data.py` | (manual CLI) |

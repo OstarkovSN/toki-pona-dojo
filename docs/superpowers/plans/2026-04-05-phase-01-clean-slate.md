@@ -327,9 +327,9 @@
 
 - [ ] **Step 6: Verify no Item/items references remain in frontend source (excluding client/ which will be regenerated)**
   ```bash
-  grep -rn "Item\|items\|Briefcase" frontend/src/ --include="*.tsx" --include="*.ts" | grep -v "node_modules" | grep -v "frontend/src/client/" | grep -v "routeTree.gen.ts"
+  grep -rn "Item\|items\|Briefcase" frontend/src/ --include="*.tsx" --include="*.ts" | grep -v "node_modules" | grep -v "frontend/src/client/" | grep -v "routeTree.gen.ts" | grep -v "SidebarMenuItem\|SidebarMenuSubItem\|DropdownMenuItem\|MenubarItem" | grep -v "Sidebar/Main.tsx"
   ```
-  Expected: No references to Items components, ItemsService, Briefcase icon, or items route. (Note: `SidebarMenuItem` and similar UI component names containing "Item" are fine — those are shadcn/ui components, not our Items feature.)
+  Expected: No references to Items components, ItemsService, Briefcase icon, or items route. (Note: `SidebarMenuItem` and similar UI component names containing "Item" are fine — those are shadcn/ui components, not our Items feature. The `type Item` in `Sidebar/Main.tsx` is a generic menu item type used by the sidebar, not related to the Items feature.)
 
 - [ ] **Step 7: Commit**
   ```bash
@@ -393,6 +393,7 @@
 
 **Files:**
 - MODIFY: `frontend/index.html`
+- CHECK: `frontend/src/routes/_layout.tsx`
 - MODIFY: `frontend/src/routes/_layout/index.tsx`
 - MODIFY: `frontend/src/routes/_layout/admin.tsx`
 - MODIFY: `frontend/src/routes/_layout/settings.tsx`
@@ -511,10 +512,7 @@
         </>
       ) : (
         <span
-          className={cn(
-            variant === "full" ? "text-lg font-bold" : "text-lg font-bold",
-            className,
-          )}
+          className={cn("text-lg font-bold", className)}
         >
           {variant === "full" ? "toki pona dojo" : "tp"}
         </span>
@@ -552,7 +550,30 @@
 
   Remove the unused imports (`FaGithub`, `FaLinkedinIn`, `FaXTwitter`, `socialLinks`).
 
-- [ ] **Step 6: Verify no "FastAPI Template" or "Full Stack" branding references remain**
+- [ ] **Step 6: Check `frontend/src/routes/_layout.tsx` for any "Full Stack" or Items-related references and clean them up**
+
+  Read the file and verify it contains no branding strings or Items imports:
+  ```bash
+  grep -n "Full Stack\|FastAPI\|Item\|item" frontend/src/routes/_layout.tsx
+  ```
+  Expected: No output. If any branding or Items references are found, remove them.
+
+- [ ] **Step 7: Check `frontend/src/routes/_layout/admin.tsx` for Item references beyond the page title**
+
+  The admin page manages users, not items. Verify it has no leftover Items imports, components, or service calls:
+  ```bash
+  grep -n "Item\|item\|Briefcase" frontend/src/routes/_layout/admin.tsx
+  ```
+  Expected: No output. The file should only reference Users/Admin concepts. (The page title is already handled in Step 2.)
+
+- [ ] **Step 8: Update meta description in `frontend/index.html`**
+
+  The current `index.html` has no `<meta name="description">` tag. Add one inside `<head>`, after the viewport meta tag:
+  ```html
+  <meta name="description" content="toki pona dojo — learn toki pona" />
+  ```
+
+- [ ] **Step 9: Verify no "FastAPI Template" or "Full Stack" branding references remain**
   ```bash
   grep -rn "FastAPI Template\|Full Stack FastAPI\|fastapi-logo\|fastapi-icon" frontend/src/ --include="*.tsx" --include="*.ts" --include="*.html"
   ```
@@ -564,9 +585,10 @@
   ```
   Expected: No output.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 10: Commit**
   ```bash
   git add frontend/index.html \
+    frontend/src/routes/_layout.tsx \
     frontend/src/routes/_layout/index.tsx \
     frontend/src/routes/_layout/admin.tsx \
     frontend/src/routes/_layout/settings.tsx \
@@ -579,7 +601,7 @@
   git commit -m "Rebrand UI from FastAPI Template to toki pona dojo"
   ```
 
-- [ ] **Step 8:** Record learnings to `.claude/learnings-rebrand-ui.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 11:** Record learnings to `.claude/learnings-rebrand-ui.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -642,9 +664,9 @@
   ```bash
   git status
   ```
-  If there are changes:
+  If there are changes, stage only the specific files that were auto-fixed (do NOT use `git add -A`):
   ```bash
-  git add -A
+  git add <list the specific changed files from git status>
   git commit -m "Apply auto-fixes from linting and final cleanup"
   ```
 
@@ -667,15 +689,17 @@
 
 **Total estimated time:** ~55 minutes
 
-**Parallelization notes:** Tasks 1-3 are sequential (each depends on prior removals compiling). Task 4 depends on Task 1 (models must be clean before generating migration). Task 5 is independent of Tasks 1-4 (frontend changes). Task 6 depends on Tasks 1-2 (backend must be clean for OpenAPI schema). Task 7 is independent. Task 8 depends on all others.
+**Parallelization notes:** Tasks 1-3 are sequential (each depends on prior removals compiling). Task 4 depends on Task 1 (models must be clean before generating migration), not on Tasks 2-3. Task 5 is independent of Tasks 1-4 (frontend changes). Task 6 depends on Tasks 1-2 (backend must be clean for OpenAPI schema) and Task 5. Task 7 is independent. Task 8 depends on all others.
 
 **Dependency graph:**
 ```
-Task 1 -> Task 2 -> Task 3 -> Task 4
-                                  \
-                                   -> Task 6 -> Task 8
-Task 5 -------------------------/
-Task 7 -------------------------/
+Task 1 -> Task 2 -> Task 3
+  |                    \
+  +-> Task 4            \
+  |                      +-> Task 6 -> Task 8
+  +-> (Task 6 also)    /              /
+Task 5 ---------------/              /
+Task 7 -----------------------------/
 ```
 
 Possible parallel dispatch: Tasks 5 and 7 can run in parallel with Tasks 1-4. Task 6 waits for backend tasks (1-2) and Task 5. Task 8 waits for all.

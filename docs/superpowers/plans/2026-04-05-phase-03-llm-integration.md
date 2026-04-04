@@ -4,7 +4,7 @@
 
 **Goal:** Add LLM-powered chat streaming and exercise grading endpoints with rate limiting for anonymous users.
 
-**Architecture:** OpenAI-compatible client via `openai` SDK, SSE streaming via FastAPI StreamingResponse, slowapi rate limiting with auth-aware key function, optional user dependency for public+auth endpoints.
+**Architecture:** OpenAI-compatible client via `openai` SDK, SSE streaming via FastAPI StreamingResponse, slowapi rate limiting with a shared `Limiter` instance (in `app.core.rate_limit`) and `exempt_when` for authenticated users, optional user dependency for public+auth endpoints.
 
 **Tech Stack:** FastAPI, OpenAI Python SDK, slowapi, SSE, pytest (with mocked OpenAI client)
 
@@ -102,6 +102,24 @@
   ```
 
   Note: `OPENAI_BASE_URL` is already effectively set via the existing `OPENAI_BASE_URL` env var. The `LANGFUSE_*` vars already exist in `.env`.
+
+- [ ] **Step 4b: Update `.env.example` with placeholder values for the new LLM config vars.**
+
+  Add these lines to `.env.example` (no real secrets — only placeholder values):
+
+  ```env
+  # -- App LLM config (OpenAI-compatible) --
+  OPENAI_BASE_URL=https://api.openai.com/v1
+  OPENAI_API_TOKEN=changethis
+  MODEL=gpt-4o-mini
+
+  # -- LLM rate limiting --
+  CHAT_FREE_DAILY_LIMIT=20
+  CHAT_FREE_MAX_TOKENS=500
+
+  # -- Telegram bot (Phase 5) --
+  TG_BOT_TOKEN=
+  ```
 
 - [ ] **Step 5: Verify the app still starts.**
 
@@ -381,6 +399,8 @@
       recent_errors: list[dict] = Field(default_factory=list)
 
 
+  # NOTE: ChatResponse is not used by any endpoint currently (streaming uses
+  # raw SSE). Kept as a reserved schema for a future non-streaming chat endpoint.
   class ChatResponse(BaseModel):
       content: str
 
@@ -430,6 +450,8 @@
   ```python
   from fastapi import Depends, HTTPException, status, Header
   ```
+
+  **Note on async consistency:** The existing `get_current_user` is a sync function (not `async`), so `get_optional_current_user` below is intentionally sync to match. If the template's `get_current_user` is ever changed to `async`, update this one to `async` as well.
 
   Add the `Optional` bearer scheme and the new dependency after the `CurrentUser` definition:
 
@@ -482,26 +504,38 @@
 
 ---
 
-## Task 5: Rate limiting setup in app entrypoint
+## Task 5: Rate limiting setup (shared module + app entrypoint)
 
 **Files:**
+- `backend/app/core/rate_limit.py` (create)
 - `backend/app/main.py`
 
 **Steps:**
 
-- [ ] **Step 1: Add slowapi limiter setup to `backend/app/main.py`.**
+- [ ] **Step 1: Create the shared limiter module `backend/app/core/rate_limit.py`.**
+
+  This module holds the single `Limiter` instance so both `main.py` (exception handler) and route modules (decorators) use the same object.
+
+  ```python
+  from slowapi import Limiter
+  from slowapi.util import get_remote_address
+
+  limiter = Limiter(key_func=get_remote_address)
+  ```
+
+- [ ] **Step 2: Wire the shared limiter into `backend/app/main.py`.**
 
   Add imports at the top of the file:
   ```python
-  from slowapi import Limiter, _rate_limit_exceeded_handler
+  from slowapi import _rate_limit_exceeded_handler
   from slowapi.errors import RateLimitExceeded
-  from slowapi.util import get_remote_address
+
+  from app.core.rate_limit import limiter
   ```
 
   Add after the `app = FastAPI(...)` block (before the CORS middleware):
   ```python
-  # Rate limiting
-  limiter = Limiter(key_func=get_remote_address)
+  # Rate limiting (limiter instance lives in app.core.rate_limit)
   app.state.limiter = limiter
   app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
   ```
@@ -511,13 +545,13 @@
   import sentry_sdk
   from fastapi import FastAPI
   from fastapi.routing import APIRoute
-  from slowapi import Limiter, _rate_limit_exceeded_handler
+  from slowapi import _rate_limit_exceeded_handler
   from slowapi.errors import RateLimitExceeded
-  from slowapi.util import get_remote_address
   from starlette.middleware.cors import CORSMiddleware
 
   from app.api.main import api_router
   from app.core.config import settings
+  from app.core.rate_limit import limiter
 
 
   def custom_generate_unique_id(route: APIRoute) -> str:
@@ -533,8 +567,7 @@
       generate_unique_id_function=custom_generate_unique_id,
   )
 
-  # Rate limiting
-  limiter = Limiter(key_func=get_remote_address)
+  # Rate limiting (limiter instance lives in app.core.rate_limit)
   app.state.limiter = limiter
   app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
@@ -562,7 +595,7 @@
 - [ ] **Step 3: Commit.**
 
   ```
-  feat: add slowapi rate limiter to FastAPI app (Phase 3.5)
+  feat: add shared slowapi rate limiter module and wire into app (Phase 3.5)
   ```
 
 - [ ] **Step 4:** Record learnings to `.claude/learnings-rate-limiting-setup.md` using the surfacing-subagent-learnings skill.
@@ -861,6 +894,37 @@
               json=body,
           )
           assert resp.status_code == 429
+
+      @patch("app.api.routes.chat.get_llm_client")
+      def test_authenticated_user_bypasses_rate_limit(
+          self,
+          mock_get_client: MagicMock,
+          client: TestClient,
+          normal_user_token_headers: dict[str, str],
+      ) -> None:
+          """Authenticated users should NOT be rate-limited."""
+          mock_client = MagicMock()
+          mock_client.chat.completions.create.return_value = _make_mock_stream(["ok"])
+          mock_get_client.return_value = mock_client
+
+          # Reset rate limiter state for clean test
+          from app.main import app
+
+          app.state.limiter.reset()
+
+          body = _chat_request_body()
+          limit = settings.CHAT_FREE_DAILY_LIMIT
+
+          # Make more requests than the anonymous limit allows
+          for i in range(limit + 5):
+              resp = client.post(
+                  f"{settings.API_V1_STR}/chat/stream",
+                  json=body,
+                  headers=normal_user_token_headers,
+              )
+              assert resp.status_code == 200, (
+                  f"Authenticated request {i+1} failed with {resp.status_code}"
+              )
   ```
 
 - [ ] **Step 2: Create `backend/tests/api/__init__.py` if it does not already exist.**
@@ -886,11 +950,10 @@
 
   from fastapi import APIRouter, Request
   from fastapi.responses import StreamingResponse
-  from slowapi import Limiter
-  from slowapi.util import get_remote_address
 
   from app.api.deps import OptionalUser
   from app.core.config import settings
+  from app.core.rate_limit import limiter
   from app.schemas.chat import (
       ChatRequest,
       ExerciseGradeRequest,
@@ -905,11 +968,18 @@
   logger = logging.getLogger(__name__)
 
   router = APIRouter(prefix="/chat", tags=["chat"])
-  limiter = Limiter(key_func=get_remote_address)
+
+
+  def _is_authenticated(request: Request) -> bool:
+      """Return True if the request has a valid auth user attached (set by OptionalUser)."""
+      return getattr(request.state, "user", None) is not None
 
 
   @router.post("/stream")
-  @limiter.limit(f"{settings.CHAT_FREE_DAILY_LIMIT}/day")
+  @limiter.limit(
+      f"{settings.CHAT_FREE_DAILY_LIMIT}/day",
+      exempt_when=_is_authenticated,
+  )
   async def chat_stream(
       request: Request,
       body: ChatRequest,
@@ -918,8 +988,10 @@
       """Stream a chat response from the LLM.
 
       Anonymous users: rate-limited to CHAT_FREE_DAILY_LIMIT/day, max_tokens capped.
-      Authenticated users: no effective rate limit, higher max_tokens.
+      Authenticated users: exempt from rate limit, higher max_tokens.
       """
+      # Stash user on request.state so _is_authenticated can read it
+      request.state.user = user
       client = get_llm_client()
       system = build_chat_system_prompt(
           mode=body.mode,
@@ -951,13 +1023,18 @@
 
 
   @router.post("/grade", response_model=ExerciseGradeResponse)
-  @limiter.limit(f"{settings.CHAT_FREE_DAILY_LIMIT}/day")
+  @limiter.limit(
+      f"{settings.CHAT_FREE_DAILY_LIMIT}/day",
+      exempt_when=_is_authenticated,
+  )
   async def grade_exercise(
       request: Request,
       body: ExerciseGradeRequest,
       user: OptionalUser = None,
   ) -> ExerciseGradeResponse:
       """Grade a free-form toki pona exercise using the LLM."""
+      # Stash user on request.state so _is_authenticated can read it
+      request.state.user = user
       client = get_llm_client()
       system = build_grade_system_prompt(body.known_words)
 
@@ -1144,11 +1221,13 @@
 | MODIFY | `backend/pyproject.toml` |
 | MODIFY | `backend/app/core/config.py` |
 | MODIFY | `.env` |
+| MODIFY | `.env.example` |
 | CREATE | `backend/app/services/__init__.py` |
 | CREATE | `backend/app/services/llm.py` |
 | CREATE | `backend/app/schemas/__init__.py` |
 | CREATE | `backend/app/schemas/chat.py` |
 | MODIFY | `backend/app/api/deps.py` |
+| CREATE | `backend/app/core/rate_limit.py` |
 | MODIFY | `backend/app/main.py` |
 | CREATE | `backend/app/api/routes/chat.py` |
 | MODIFY | `backend/app/api/main.py` |
@@ -1160,7 +1239,8 @@
 
 - `POST /api/v1/chat/stream` returns SSE chunks with mock LLM
 - `POST /api/v1/chat/grade` returns valid JSON response
-- Rate limiting works (429 after limit exceeded)
+- Rate limiting works (429 after limit exceeded for anonymous users)
+- Authenticated users are exempt from rate limiting (verified by test)
 - Authenticated users get higher max_tokens (1500 vs CHAT_FREE_MAX_TOKENS)
 - All tests pass
 - Linter and type checker clean

@@ -31,7 +31,7 @@
   ```css
   @import "tailwindcss";
   @import "tw-animate-css";
-  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap');
+  /* Google Fonts are loaded via <link> in index.html (non-blocking, font-display: swap) */
 
   @custom-variant dark (&:is(.dark *));
 
@@ -211,9 +211,10 @@
   }
   ```
 
-- [ ] **Step 3: Update `frontend/index.html` title and meta**
+- [ ] **Step 3: Update `frontend/index.html` title, meta, and font loading**
 
-  Replace the contents of `frontend/index.html` with:
+  Replace the contents of `frontend/index.html` with the version below.
+  **Note:** Google Fonts are loaded via `<link>` tags in `index.html` (with `font-display: swap`) instead of a CSS `@import` for better render performance and offline resilience. For full offline support, consider self-hosting the font files in a future phase.
 
   ```html
   <!DOCTYPE html>
@@ -225,6 +226,10 @@
       <meta name="description" content="toki pona dojo — learn toki pona with a calm, guided approach" />
       <title>toki pona dojo</title>
       <link rel="icon" type="image/x-icon" href="/assets/images/favicon.png" />
+      <!-- Google Fonts — loaded via <link> for non-blocking render; consider self-hosting for offline use -->
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
     </head>
     <body>
       <div id="root"></div>
@@ -505,6 +510,7 @@
 - ADD: `frontend/src/routes/_layout/grammar/index.tsx` (stub)
 - ADD: `frontend/src/routes/_layout/grammar/modifiers.tsx` (stub)
 - ADD: `frontend/src/routes/_layout/grammar/particles.tsx` (stub)
+- ADD: `frontend/src/routes/_layout/learn/$unit.$lesson.tsx` (stub — target for UnitNode links)
 
 ### Steps
 
@@ -512,6 +518,7 @@
   ```bash
   mkdir -p frontend/src/routes/_layout/dictionary
   mkdir -p frontend/src/routes/_layout/grammar
+  mkdir -p frontend/src/routes/_layout/learn
   ```
 
 - [ ] **Step 2: Create stub `frontend/src/routes/_layout/dictionary/index.tsx`**
@@ -600,28 +607,63 @@
   }
   ```
 
-- [ ] **Step 7: Run vite build to trigger route tree regeneration and verify**
+- [ ] **Step 7: Create stub `frontend/src/routes/_layout/learn/$unit.$lesson.tsx`**
+
+  This route is the link target for `UnitNode` (Task 4). The lesson UI is built in Phase 6; this stub prevents a 404.
+
+  ```tsx
+  import { createFileRoute, Link } from "@tanstack/react-router"
+
+  export const Route = createFileRoute("/_layout/learn/$unit/$lesson")({
+    component: LessonPlaceholder,
+    head: ({ params }) => ({
+      meta: [{ title: `Unit ${params.unit} Lesson ${params.lesson} — toki pona dojo` }],
+    }),
+  })
+
+  function LessonPlaceholder() {
+    const { unit, lesson } = Route.useParams()
+
+    return (
+      <div className="flex flex-col items-center gap-4 py-16 text-center">
+        <p className="font-tp text-2xl text-zen-text3">kama sona</p>
+        <p className="text-sm text-zen-text3">
+          Unit {unit}, Lesson {lesson} — Coming in Phase 6
+        </p>
+        <Link
+          to="/"
+          className="mt-4 text-sm text-zen-teal hover:underline"
+        >
+          back to skill tree
+        </Link>
+      </div>
+    )
+  }
+  ```
+
+- [ ] **Step 8: Run vite build to trigger route tree regeneration and verify**
   ```bash
   cd frontend && npx vite build --mode development 2>&1 | tail -5
   ```
-  Expected: Build succeeds. `routeTree.gen.ts` now includes dictionary and grammar routes.
+  Expected: Build succeeds. `routeTree.gen.ts` now includes dictionary, grammar, and learn routes.
 
-- [ ] **Step 8: Verify routeTree.gen.ts contains the new routes**
+- [ ] **Step 9: Verify routeTree.gen.ts contains the new routes**
   ```bash
-  grep -c "dictionary\|grammar" frontend/src/routeTree.gen.ts
+  grep -c "dictionary\|grammar\|learn" frontend/src/routeTree.gen.ts
   ```
-  Expected: Multiple matches showing dictionary and grammar route imports.
+  Expected: Multiple matches showing dictionary, grammar, and learn route imports.
 
-- [ ] **Step 9: Commit**
+- [ ] **Step 10: Commit**
   ```bash
-  git add frontend/src/routes/_layout/dictionary/ frontend/src/routes/_layout/grammar/ frontend/src/routeTree.gen.ts
-  git commit -m "feat(frontend): add route stubs for dictionary and grammar pages
+  git add frontend/src/routes/_layout/dictionary/ frontend/src/routes/_layout/grammar/ frontend/src/routes/_layout/learn/ frontend/src/routeTree.gen.ts
+  git commit -m "feat(frontend): add route stubs for dictionary, grammar, and learn pages
 
   Create TanStack Router file-based routes for dictionary/index, dictionary/\$word,
-  grammar/index, grammar/modifiers, grammar/particles. Stubs to be filled in later tasks."
+  grammar/index, grammar/modifiers, grammar/particles, learn/\$unit/\$lesson (Phase 6
+  placeholder). Stubs to be filled in later tasks."
   ```
 
-- [ ] **Step 10:** Record learnings to `.claude/learnings-route-structure.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 11:** Record learnings to `.claude/learnings-route-structure.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -902,19 +944,19 @@
 ## Task 5: Dictionary page — search, filter, WordCard component
 
 **Files:**
+- ADD: `frontend/src/lib/pos-colors.ts`
 - ADD: `frontend/src/components/WordCard.tsx`
 - MODIFY: `frontend/src/routes/_layout/dictionary/index.tsx`
 
 ### Steps
 
-- [ ] **Step 1: Create `frontend/src/components/WordCard.tsx`**
+- [ ] **Step 1: Create `frontend/src/lib/pos-colors.ts`**
 
-  ```tsx
-  import { Link } from "@tanstack/react-router"
-  import { Badge } from "@/components/ui/badge"
-  import { cn } from "@/lib/utils"
+  Extract POS color mapping to a shared module (used by both `WordCard.tsx` and `$word.tsx`):
 
-  const POS_COLORS: Record<string, string> = {
+  ```ts
+  /** POS → Tailwind class mapping. Shared by WordCard and word detail page. */
+  export const POS_COLORS: Record<string, string> = {
     noun: "bg-zen-teal-bg text-zen-teal-dark dark:bg-zen-teal-bg dark:text-zen-teal-dark",
     verb: "bg-zen-coral-bg text-zen-coral-dark dark:bg-zen-coral-bg dark:text-zen-coral-dark",
     adjective: "bg-zen-amber-bg text-zen-amber-dark dark:bg-zen-amber-bg dark:text-zen-amber-dark",
@@ -923,6 +965,15 @@
     number: "bg-zen-bg3 text-zen-text2",
     preposition: "bg-zen-coral-bg text-zen-coral-dark dark:bg-zen-coral-bg dark:text-zen-coral-dark",
   }
+  ```
+
+- [ ] **Step 2: Create `frontend/src/components/WordCard.tsx`**
+
+  ```tsx
+  import { Link } from "@tanstack/react-router"
+  import { Badge } from "@/components/ui/badge"
+  import { cn } from "@/lib/utils"
+  import { POS_COLORS } from "@/lib/pos-colors"
 
   export interface WordDefinition {
     pos: string
@@ -983,7 +1034,7 @@
   }
   ```
 
-- [ ] **Step 2: Replace `frontend/src/routes/_layout/dictionary/index.tsx` with the full dictionary page**
+- [ ] **Step 3: Replace `frontend/src/routes/_layout/dictionary/index.tsx` with the full dictionary page**
 
   ```tsx
   import { useState, useMemo, useRef } from "react"
@@ -1174,23 +1225,24 @@
   }
   ```
 
-- [ ] **Step 3: Verify TypeScript compiles**
+- [ ] **Step 4: Verify TypeScript compiles**
   ```bash
   cd frontend && npx tsc -p tsconfig.build.json --noEmit 2>&1 | head -20
   ```
   Expected: No errors.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 5: Commit**
   ```bash
-  git add frontend/src/components/WordCard.tsx frontend/src/routes/_layout/dictionary/index.tsx
+  git add frontend/src/lib/pos-colors.ts frontend/src/components/WordCard.tsx frontend/src/routes/_layout/dictionary/index.tsx
   git commit -m "feat(frontend): add dictionary page with search, POS/set filters, and word cards
 
+  Extract POS_COLORS to shared lib/pos-colors.ts (reused by word detail page).
   Fetches from GET /api/v1/dictionary/words. Search filters by word and definition.
   POS filter pills, set filter (pu/ku suli), alphabetical letter jump bar.
   WordCard shows word, POS badges with semantic colors, definitions, notes."
   ```
 
-- [ ] **Step 5:** Record learnings to `.claude/learnings-dictionary-page.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 6:** Record learnings to `.claude/learnings-dictionary-page.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -1210,6 +1262,7 @@
   import { Badge } from "@/components/ui/badge"
   import { Skeleton } from "@/components/ui/skeleton"
   import { cn } from "@/lib/utils"
+  import { POS_COLORS } from "@/lib/pos-colors"
   import type { WordData } from "@/components/WordCard"
 
   export const Route = createFileRoute("/_layout/dictionary/$word")({
@@ -1219,17 +1272,8 @@
     }),
   })
 
-  const POS_COLORS: Record<string, string> = {
-    noun: "bg-zen-teal-bg text-zen-teal-dark dark:bg-zen-teal-bg dark:text-zen-teal-dark",
-    verb: "bg-zen-coral-bg text-zen-coral-dark dark:bg-zen-coral-bg dark:text-zen-coral-dark",
-    adjective: "bg-zen-amber-bg text-zen-amber-dark dark:bg-zen-amber-bg dark:text-zen-amber-dark",
-    "pre-verb": "bg-zen-amber-bg text-zen-amber-dark dark:bg-zen-amber-bg dark:text-zen-amber-dark",
-    particle: "bg-zen-blue-bg text-zen-blue-dark dark:bg-zen-blue-bg dark:text-zen-blue-dark",
-    number: "bg-zen-bg3 text-zen-text2",
-    preposition: "bg-zen-coral-bg text-zen-coral-dark dark:bg-zen-coral-bg dark:text-zen-coral-dark",
-  }
-
-  // Map words to units they appear in
+  // TODO: Replace this hardcoded map with data from the API when a
+  // "word → units" endpoint is available (e.g. GET /api/v1/dictionary/words/:word/units).
   const WORD_UNITS: Record<string, number[]> = {
     mi: [1], sina: [1], pona: [1], ike: [1], toki: [1], moku: [1, 3],
     jan: [2], tomo: [2], telo: [2], soweli: [2], suno: [2], ma: [2], nimi: [2],
