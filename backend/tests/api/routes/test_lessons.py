@@ -112,7 +112,7 @@ def test_lesson_exercises_capped_at_max(client: TestClient) -> None:
 
 def test_lesson_word_bank_skips_malformed_entries(client: TestClient) -> None:
     """gap-19: Malformed unscramble entries are skipped; good entries still returned."""
-    from unittest.mock import patch as mock_patch
+    from unittest.mock import patch
 
     malformed_filtered = {
         "unscramble": [
@@ -126,7 +126,7 @@ def test_lesson_word_bank_skips_malformed_entries(client: TestClient) -> None:
         "stories": [],
     }
 
-    with mock_patch(
+    with patch(
         "app.api.routes.lessons.get_exercises_by_words",
         return_value=malformed_filtered,
     ):
