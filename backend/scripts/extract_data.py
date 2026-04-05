@@ -168,7 +168,7 @@ def extract_grammar(html_path: Path) -> dict:
 
     result: dict = {"sections": [], "comparisons": [], "quiz": []}
 
-    for var_name, key in MODIFIERS_VARIABLES.items():
+    for var_name, _key in MODIFIERS_VARIABLES.items():
         raw = extract_js_variable(content, var_name)
         if raw is None:
             logger.warning("Could not find %s variable", var_name)

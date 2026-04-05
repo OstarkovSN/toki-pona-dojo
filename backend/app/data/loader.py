@@ -92,12 +92,14 @@ def search_words(
 
 def get_grammar_sections() -> list[dict[str, Any]]:
     """Return all grammar sections."""
-    return GRAMMAR.get("sections", [])
+    sections: list[dict[str, Any]] = GRAMMAR.get("sections", [])
+    return sections
 
 
 def get_grammar_section(section_id: str) -> dict[str, Any] | None:
     """Return a single grammar section by id."""
-    for section in GRAMMAR.get("sections", []):
+    sections: list[dict[str, Any]] = GRAMMAR.get("sections", [])
+    for section in sections:
         if section["id"] == section_id:
             return section
     return None
@@ -105,12 +107,14 @@ def get_grammar_section(section_id: str) -> dict[str, Any] | None:
 
 def get_grammar_comparisons() -> list[dict[str, Any]]:
     """Return all grammar comparisons."""
-    return GRAMMAR.get("comparisons", [])
+    comparisons: list[dict[str, Any]] = GRAMMAR.get("comparisons", [])
+    return comparisons
 
 
 def get_grammar_quiz() -> list[dict[str, Any]]:
     """Return grammar quiz questions."""
-    return GRAMMAR.get("quiz", [])
+    quiz: list[dict[str, Any]] = GRAMMAR.get("quiz", [])
+    return quiz
 
 
 def get_exercises_by_words(
