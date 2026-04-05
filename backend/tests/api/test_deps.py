@@ -111,6 +111,9 @@ def test_optional_auth_invalid_token_returns_anonymous(client: TestClient) -> No
         # Invalid token on optional-auth endpoint is silently ignored -> treated as anon
         assert response.status_code == 200
         # max_tokens should be the free (low) limit since user is anon
+        assert mock_client.chat.completions.create.called, (
+            "LLM client create() was never called"
+        )
         call_kwargs = mock_client.chat.completions.create.call_args.kwargs
         assert call_kwargs["max_tokens"] == settings.CHAT_FREE_MAX_TOKENS
 
@@ -119,13 +122,7 @@ def test_optional_auth_inactive_user_returns_anonymous(
     client: TestClient, db: Session
 ) -> None:
     """gap-29: Valid token for inactive user on optional-auth endpoint -> treated as anonymous."""
-    from datetime import timedelta
     from unittest.mock import MagicMock, patch
-
-    from app.core.security import create_access_token
-    from app.crud import create_user
-    from app.models import UserCreate
-    from tests.utils.utils import random_email, random_lower_string
 
     email = random_email()
     password = random_lower_string()
@@ -156,5 +153,8 @@ def test_optional_auth_inactive_user_returns_anonymous(
         )
         # Inactive user on optional-auth -> treated as anon (not rejected)
         assert response.status_code == 200
+        assert mock_client.chat.completions.create.called, (
+            "LLM client create() was never called"
+        )
         call_kwargs = mock_client.chat.completions.create.call_args.kwargs
         assert call_kwargs["max_tokens"] == settings.CHAT_FREE_MAX_TOKENS
