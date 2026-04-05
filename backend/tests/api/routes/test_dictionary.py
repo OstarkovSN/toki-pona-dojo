@@ -43,8 +43,8 @@ def test_get_words_pos_filter(client: TestClient) -> None:
 
 
 def test_get_words_ku_filter(client: TestClient) -> None:
-    """GET /dictionary/words?set=ku returns only ku words."""
-    r = client.get(f"{settings.API_V1_STR}/dictionary/words", params={"set": "ku"})
+    """GET /dictionary/words?word_set=ku returns only ku words."""
+    r = client.get(f"{settings.API_V1_STR}/dictionary/words", params={"word_set": "ku"})
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
@@ -54,8 +54,8 @@ def test_get_words_ku_filter(client: TestClient) -> None:
 
 
 def test_get_words_pu_filter(client: TestClient) -> None:
-    """GET /dictionary/words?set=pu returns only pu (non-ku) words."""
-    r = client.get(f"{settings.API_V1_STR}/dictionary/words", params={"set": "pu"})
+    """GET /dictionary/words?word_set=pu returns only pu (non-ku) words."""
+    r = client.get(f"{settings.API_V1_STR}/dictionary/words", params={"word_set": "pu"})
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
@@ -92,22 +92,18 @@ def test_get_grammar_all(client: TestClient) -> None:
 
 
 def test_get_grammar_section(client: TestClient) -> None:
-    """GET /dictionary/grammar/{section_id} returns that section."""
-    # Get the list first to find a valid section id
-    r = client.get(f"{settings.API_V1_STR}/dictionary/grammar")
-    sections = r.json()["sections"]
-    assert len(sections) > 0
-    first_id = sections[0]["id"]
-
-    r = client.get(f"{settings.API_V1_STR}/dictionary/grammar/{first_id}")
+    """GET /dictionary/grammar/basic-sentences returns that section."""
+    section_id = "basic-sentences"
+    r = client.get(f"{settings.API_V1_STR}/dictionary/grammar/{section_id}")
     assert r.status_code == 200
     data = r.json()
-    assert data["id"] == first_id
+    assert data["id"] == section_id
     assert "title" in data
     assert "content" in data
 
 
 def test_get_grammar_section_not_found(client: TestClient) -> None:
-    """GET /dictionary/grammar/nonexistent returns 404."""
+    """GET /dictionary/grammar/nonexistent returns 404 with detail message."""
     r = client.get(f"{settings.API_V1_STR}/dictionary/grammar/nonexistent")
     assert r.status_code == 404
+    assert "nonexistent" in r.json()["detail"]

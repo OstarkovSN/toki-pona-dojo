@@ -20,16 +20,16 @@ router = APIRouter(prefix="/dictionary", tags=["dictionary"])
 def list_words(
     q: str | None = None,
     pos: str | None = None,
-    set: str | None = None,
+    word_set: str | None = None,
 ) -> list[dict[str, Any]]:
     """Search and filter dictionary words.
 
     Query params:
         q: Search text (matches word name and definitions).
         pos: Part of speech filter (e.g. "noun", "verb", "particle").
-        set: Word set filter — "pu" for core words, "ku" for ku words.
+        word_set: Word set filter — "pu" for core words, "ku" for ku words.
     """
-    return search_words(q=q, pos=pos, word_set=set)
+    return search_words(q=q, pos=pos, word_set=word_set)
 
 
 @router.get("/words/{word}")
