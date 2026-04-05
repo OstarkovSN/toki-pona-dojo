@@ -15,6 +15,8 @@
 | 2 | **Data Layer** | Extract toki pona content into structured JSON, add UserProgress model, serve dictionary/lessons via read-only API | [spec](docs/superpowers/specs/2026-04-05-phase-02-data-layer-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-02-data-layer.md) |
 | 3 | **LLM Integration** | LLM-powered chat streaming and exercise grading endpoints with rate limiting for anonymous users | [spec](docs/superpowers/specs/2026-04-05-phase-03-llm-integration-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-03-llm-integration.md) |
 | 4 | **LangFuse Observability** | Self-hosted LangFuse v3 with all LLM calls traced; graceful degradation when unavailable | [spec](docs/superpowers/specs/2026-04-05-phase-04-langfuse-observability-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-04-langfuse-observability.md) |
+| 4.5.1 | **Test Gaps Search** | 1. Dispatch an agent to find all test gaps in the current backend<br>2. Dispatch an agent to use writing-plans skill to write the plan for the section 4.5.2 that will close those gaps<br>3. Add it to [this file](plan.md) | — | — |
+| 4.5.2 | **Test Coverage** | Fill the test gaps that were found | — | [plan](docs/superpowers/plans/2026-04-05-phase-045-test-coverage.md) |
 | 5 | **Frontend — Structure** | Zen-themed UI replacing the template dashboard: skill tree, dictionary, grammar pages | [spec](docs/superpowers/specs/2026-04-05-phase-05-frontend-structure-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-05-frontend-structure.md) |
 | 6 | **Frontend — Exercises** | Lesson view with 7 interactive exercise types, immediate feedback, LLM-graded free-form | [spec](docs/superpowers/specs/2026-04-05-phase-06-frontend-exercises-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-06-frontend-exercises.md) |
 | 7 | **Frontend — Chat** | Always-on chat sidebar with jan sona tutor, streaming, BYOM direct calls, route-aware context | [spec](docs/superpowers/specs/2026-04-05-phase-07-frontend-chat-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-07-frontend-chat.md) |
@@ -33,7 +35,7 @@ Invoke superpowers:subagent-driven-development and execute the plan.
 Each task's agent chain (implementer → spec reviewer → code reviewer → fixers) writes learnings to `.claude/learnings-{task-name-slug}.md`. Your job:
 - **Before dispatching** each subagent, include in the prompt: `"Record learnings to .claude/learnings-{task-name-slug}.md using the surfacing-subagent-learnings skill."`
 - **After each task chain completes** (all reviews pass, task marked done): dispatch the `learnings-curator` agent with the scratch file path. It curates entries into the right CLAUDE.md files and deletes the scratch file.
-- **After all tasks complete**, glob `.claude/learnings-*.md` — if any remain, dispatch `learnings-curator` for each before finishing the branch.
+- **After all tasks complete**, glob `learnings/learnings-*.md` — if any remain, dispatch `learnings-curator` for each before finishing the branch.
 
 
 ### Branch & implementation
