@@ -206,6 +206,37 @@ mocker.patch("app.utils.send_email", ...)
 
 ## Gotchas
 
+### Phase 4.5: Test Coverage
+
+- **`ValidationError` missing from `grade_exercise` except clause** — `ExerciseGradeResponse(**result)` with wrong-typed fields raises pydantic `ValidationError`, not `ValueError`; must catch both in separate branches.
+- **`grade_exercise` has two distinct except branches** — parse/type failures → "I couldn't grade this…"; API failures → "The grading service is temporarily unavailable." — test assertions must match the correct branch.
+- **Patching stdlib modules requires patch-where-used pattern** — `patch("app.api.routes.chat.asyncio.current_task")` patches the imported name in the module, not `asyncio.current_task` directly.
+- **Inner-function imports in test functions keep files clean** — `from datetime import timedelta` inside a test function works fine and avoids polluting top-level imports.
+- **`mock_client.chat.completions.create.return_value = iter([])` for empty SSE streaming** — no need to mock streaming protocol; empty iterator is sufficient for 200 response with empty SSE body.
+- **Ruff formatter hook reverts partial Edit calls on import lines** — use `Write` to rewrite whole file when adding imports; `Edit` on multi-symbol lines gets reformatted and changes lost.
+- **Patching `app.core.config.settings.EMAILS_FROM_EMAIL` for email enabled check** — the property checks `SMTP_HOST` and `EMAILS_FROM_EMAIL`, not `SMTP_USER`; patch the right config key.
+- **`_build_word_bank_exercises` is the correct function name** — type string in responses is `"word_bank"`, matching builder name, not data key `"unscramble"`.
+- **`random.sample` mocking intercepts both capping and per-builder calls** — filter by `k == 7` to isolate the MAX_EXERCISES cap assertion.
+- **`coverage html` with `-k` filter produces harmless "No source for code" warning** — tests still pass and coverage generates correctly despite warning in output.
+- **`get_exercises_by_words` mock at `app.api.routes.lessons.get_exercises_by_words`** — cleanly bypasses real data loading while unit's `exercise_types` list still drives which builders run.
+- **Unique index on `userprogress.user_id` requires migration run** — model has `unique=True` but `alembic upgrade head` must be run to create actual DB constraint; duplicate FK inserts silently succeed without it.
+- **`alembic upgrade head` fails with `UniqueViolation` if duplicates exist** — must `DELETE FROM userprogress WHERE user_id = '...'` before running migration again.
+- **`UserProgress.user_id` has FK to `user.id`** — tests inserting `UserProgress` with random UUID fail with `ForeignKeyViolation`; must create real `User` row first.
+- **Cleanup order after `IntegrityError` in SQLAlchemy session** — after `db.rollback()`, re-fetch stale ORM objects with `db.get(Model, pk)` before deleting; delete child (UserProgress) before parent (User) to avoid FK cascade errors.
+- **`patch("langfuse.Langfuse", ...)` requires langfuse installed** — `unittest.mock.patch` tries to import target module to resolve attribute; if module isn't installed, patch itself raises `ModuleNotFoundError`.
+- **`patch("app.data.loader._load_json", ...) + del sys.modules + import` does NOT reliably intercept module-level calls** — fresh `import` inside `with patch(...)` context still reads real files; directly manipulate already-loaded `_WORD_INDEX` instead.
+- **`private.py` route needed duplicate-email handling** — bare `session.commit()` raises `IntegrityError` which propagates through `TestClient` as exception (not 500 response); added `try/except IntegrityError → 409` to make it testable.
+- **Hardcoded email in `test_create_user` fails on second run** — always use `random_email()` to be idempotent.
+- **mypy strict mode requires `-> None` on all test functions** — test functions without return annotations fail mypy; pre-existing `test_units.py` and `test_data_integrity.py` have same issue.
+- **`w["word"]` from `dict[str, Any]` has type `Any`** — indexing `dict[str, dict[str, Any]]` with it raises mypy `[index]`; use `str(w["word"])` to satisfy type checker.
+- **`app.services.tracing` not mounted via volume** — must be `docker cp`'d into container; `docker compose watch` only mounts `htmlcov/` in phase-01-clean-slate stack.
+- **`_configure_langfuse_env` patch target depends on file sync** — patch `app.services.llm._configure_langfuse_env` only after worktree version of `llm.py` (which has the import) is synced to container.
+- **Stale `app/services/services/` mirror can appear inside container** — check with `docker exec ... ls /app/backend/app/services/` before running tests.
+- **`conftest.py` teardown cleanup order matters** — `delete(UserProgress)` before `delete(User)` to avoid `ForeignKeyViolation` when UserProgress records exist.
+- **`test_create_user_duplicate_email_returns_error` with TestClient re-raises IntegrityError** — TestClient re-raises `IntegrityError` (raise_server_exceptions=True default) instead of returning 500; test must catch exception explicitly.
+- **Last test alphabetically fails with ForeignKeyViolation on teardown** — conftest cleanup order was wrong (User before UserProgress); correct order in fixture resolves it.
+- **[STALE] CLAUDE.md claimed `tests/tests/` mirror existed** — no `tests/tests/` mirror was created; actual issue was conftest cleanup order.
+
 ### Phase 4: LangFuse Observability
 
 - **`langfuse>=4.0.0` pulls in full `opentelemetry-*` stack** — transitive deps include opentelemetry-api, -sdk, -exporter-otlp-proto-http, -proto, -semantic-conventions.
