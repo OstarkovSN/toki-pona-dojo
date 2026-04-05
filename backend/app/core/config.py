@@ -96,8 +96,8 @@ class Settings(BaseSettings):
 
     # LLM provider (OpenAI-compatible)
     OPENAI_BASE_URL: str = "https://api.openai.com/v1"
-    OPENAI_API_TOKEN: str = "changethis"
-    MODEL: str = "gpt-4o-mini"
+    OPENAI_API_KEY: str = "changethis"
+    OPENAI_MODEL: str = "gpt-4o-mini"
 
     # LLM rate limiting (anonymous users)
     CHAT_FREE_DAILY_LIMIT: int = 20
@@ -129,7 +129,7 @@ class Settings(BaseSettings):
         self._check_default_secret(
             "FIRST_SUPERUSER_PASSWORD", self.FIRST_SUPERUSER_PASSWORD
         )
-        self._check_default_secret("OPENAI_API_TOKEN", self.OPENAI_API_TOKEN)
+        self._check_default_secret("OPENAI_API_KEY", self.OPENAI_API_KEY)
 
         return self
 
