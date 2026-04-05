@@ -39,7 +39,7 @@ def get_langfuse_handler() -> Any:
     if not _configure_langfuse_env():
         return None
     try:
-        from langfuse.callback import CallbackHandler  # type: ignore[import-not-found]
+        from langfuse.callback import CallbackHandler
 
         return CallbackHandler()
     except Exception:

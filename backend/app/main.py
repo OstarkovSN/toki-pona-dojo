@@ -28,7 +28,7 @@ configure_sentry()
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     # Startup: check LangFuse connectivity (never blocks if unavailable)
     check_langfuse_auth()
     yield
