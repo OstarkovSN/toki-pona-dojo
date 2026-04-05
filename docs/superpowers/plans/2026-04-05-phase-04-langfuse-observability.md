@@ -1028,6 +1028,16 @@ These facts were gathered during plan creation and are essential context for eac
 
 ---
 
+## Task 10: Curate learnings into CLAUDE.md
+
+**Goal:** Improve CLAUDE.md files with all learnings captured during this phase.
+
+- [ ] **Step 1:** Glob `.claude/learnings-*.md` and collect all scratch files written during this phase.
+- [ ] **Step 2:** For each scratch file, dispatch a subagent with the `claude-md-improver` skill, providing the scratch file path in the prompt.
+- [ ] **Step 3:** Verify all scratch files have been deleted after processing.
+
+---
+
 ## Summary of All Files
 
 | Action | Path |

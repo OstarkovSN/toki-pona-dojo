@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **Context management:** Before dispatching Task 1, launch an `agent-orchestration:context-manager` subagent. Its role is to maintain the canonical `ExerciseProps` interface and `ExerciseResult` shape as the single source of truth. Each of the 7 exercise type agents must receive this interface definition before implementing, and report back any additions. This prevents prop-shape drift across exercise types built by independent agents.
+
 **Goal:** Build the lesson view with 7 interactive exercise types, immediate feedback, and LLM-graded free-form exercises.
 
 **Architecture:** Dynamic route `$unit.$lesson.tsx` renders exercises sequentially, each exercise component implements `ExerciseProps` interface and calls `onComplete` with `ExerciseResult`. LLM-graded exercises use TanStack Query mutation to `POST /api/v1/chat/grade`.
@@ -2288,3 +2290,13 @@ Task 14 (E2E tests) -- depends on Task 13
 - Group C (after Task 1 + 2): Tasks 8, 9
 - Group D (after all B + C): Task 13
 - Group E (after D): Task 14
+
+---
+
+## Task 15: Curate learnings into CLAUDE.md
+
+**Goal:** Improve CLAUDE.md files with all learnings captured during this phase.
+
+- [ ] **Step 1:** Glob `.claude/learnings-*.md` and collect all scratch files written during this phase.
+- [ ] **Step 2:** For each scratch file, dispatch a subagent with the `claude-md-improver` skill, providing the scratch file path in the prompt.
+- [ ] **Step 3:** Verify all scratch files have been deleted after processing.

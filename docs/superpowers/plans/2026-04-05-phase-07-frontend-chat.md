@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **Context management:** Before dispatching Task 1, launch an `agent-orchestration:context-manager` subagent. Its role is to maintain a shared knowledge graph of decisions made across tasks (component interfaces, prop shapes, hook signatures, localStorage keys). Each subsequent task agent must receive relevant prior-task context from it, and report its own decisions back. This prevents interface drift between `ChatContext` → `useChat` → `ChatPanel` → BYOM path → SSE streaming across 6+ agents.
+
 **Goal:** Build the always-on chat sidebar with jan sona tutor, supporting streaming responses, BYOM direct calls, and route-aware context.
 
 **Architecture:** ChatPanel fills the 40% right panel, useChat hook handles two paths (server SSE proxy vs BYOM direct call), context passed via React context from layout. Mobile uses shadcn Sheet as bottom sheet.
@@ -1864,6 +1866,16 @@
   ```
 
 - [ ] **Step 7:** Record learnings to `.claude/learnings-chat-smoke-test.md` using the surfacing-subagent-learnings skill.
+
+---
+
+## Task 11: Curate learnings into CLAUDE.md
+
+**Goal:** Improve CLAUDE.md files with all learnings captured during this phase.
+
+- [ ] **Step 1:** Glob `.claude/learnings-*.md` and collect all scratch files written during this phase.
+- [ ] **Step 2:** For each scratch file, dispatch a subagent with the `claude-md-improver` skill, providing the scratch file path in the prompt.
+- [ ] **Step 3:** Verify all scratch files have been deleted after processing.
 
 ---
 

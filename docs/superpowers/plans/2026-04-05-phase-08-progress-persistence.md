@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **Context management:** Before dispatching Task 1, launch an `agent-orchestration:context-manager` subagent. Its role is to maintain a shared knowledge graph of schema decisions, field names, and API contracts established across tasks. Each subsequent task agent must receive the current contract snapshot from it, and report back any new decisions (e.g. exact field names in `UserProgress`, sync payload shape, SM-2 data structure). This prevents field-name drift between backend model → migration → API endpoints → frontend localStorage → sync logic → SM-2 → streak tracking.
+
 **Goal:** Implement persistent learning progress with localStorage for anonymous users, server sync for authenticated users, SM-2 spaced repetition, and streak tracking.
 
 **Architecture:** localStorage as write-ahead cache, server sync via TanStack Query mutations, SM-2 algorithm runs client-side, POST /progress/sync merges using max/union strategy.
@@ -642,6 +644,13 @@
 - ADD: `frontend/src/lib/srs.ts`
 
 ### Steps
+
+- [ ] **Step 0: Install vitest (not in package.json by default)**
+  ```bash
+  cd /home/claude/workdirs/toki-pona-dojo/frontend
+  bun add -d vitest
+  ```
+  Verify it was added to `devDependencies` in `package.json`.
 
 - [ ] **Step 1: Create `frontend/src/lib/srs.ts`**
 
@@ -2045,3 +2054,13 @@ Tasks 8, 9 ──► Task 10 (Playwright tests)
 - Group A and B can run in parallel
 - Tasks 8, 9 can run in parallel (both depend on Task 6)
 - Task 10 runs last
+
+---
+
+## Task 11: Curate learnings into CLAUDE.md
+
+**Goal:** Improve CLAUDE.md files with all learnings captured during this phase.
+
+- [ ] **Step 1:** Glob `.claude/learnings-*.md` and collect all scratch files written during this phase.
+- [ ] **Step 2:** For each scratch file, dispatch a subagent with the `claude-md-improver` skill, providing the scratch file path in the prompt.
+- [ ] **Step 3:** Verify all scratch files have been deleted after processing.
