@@ -4,7 +4,7 @@
 
 **Goal:** Close the highest-priority test gaps in the FastAPI backend — covering LLM error paths, optional auth fallbacks, exercise builder edge cases, and model/config invariants.
 
-**Architecture:** Backend only (FastAPI, SQLModel, pytest). No new production code — only test files added or extended. All gaps are unit/integration tests using pytest, `unittest.mock`, and the existing `TestClient`/`db` fixtures from `tests/conftest.py`.
+**Architecture:** Backend only (FastAPI, SQLModel, pytest). Primarily test files, with targeted production fixes where tests expose real bugs (chat.py, login.py, users.py, main.py). All tests use pytest, `unittest.mock`, and the existing `TestClient`/`db` fixtures from `tests/conftest.py`.
 
 **Tech Stack:** FastAPI, pytest, pytest-mock, SQLModel, TestClient, coverage.py
 
@@ -115,6 +115,9 @@ These four gaps all live in the two chat endpoints or the rate-limit task-tracki
       assert data["correct"] is False
       assert data["score"] == 0.0
       assert "couldn't grade" in data["feedback"].lower()
+      # NOTE: if this assertion fails with a string mismatch (not a logic error),
+      # read the except branch in chat.py's grade_exercise to find the exact wording
+      # and update this assertion to match.
 
 
   # ---- new standalone class ----
@@ -191,7 +194,7 @@ These four gaps all live in the two chat endpoints or the rate-limit task-tracki
   git commit -m "test: cover chat LLM exception paths, wrong-type fallback, and _is_authenticated() guards"
   ```
 
-- [ ] **Step 7:** Record learnings to `.claude/learnings-chat-error-paths.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 7:** Record learnings to `learnings-chat-error-paths.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -310,7 +313,7 @@ The existing `test_deps.py` covers `get_current_user` (required auth). `get_opti
   git commit -m "test: cover optional auth -- invalid token and inactive user treated as anonymous"
   ```
 
-- [ ] **Step 5:** Record learnings to `.claude/learnings-optional-auth-fallbacks.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 5:** Record learnings to `learnings-optional-auth-fallbacks.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -453,7 +456,7 @@ Both endpoints call `send_email(...)` without catching exceptions. If SMTP is do
   git commit -m "fix: catch send_email exceptions in recover_password and create_user; test smtp-down paths"
   ```
 
-- [ ] **Step 7:** Record learnings to `.claude/learnings-email-failure-paths.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 7:** Record learnings to `learnings-email-failure-paths.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -572,7 +575,7 @@ Targets:
   git commit -m "test: cover exercise MAX_EXERCISES cap, malformed entry skip, and empty dictionary query"
   ```
 
-- [ ] **Step 6:** Record learnings to `.claude/learnings-exercise-builder-edge-cases.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 6:** Record learnings to `learnings-exercise-builder-edge-cases.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -799,6 +802,12 @@ Targets:
       yield
   ```
 
+  Then re-run to confirm the fix works:
+
+  ```bash
+  docker compose exec backend bash -c "cd /app && bash scripts/tests-start.sh -x -k test_lifespan 2>&1 | tail -15"
+  ```
+
 - [ ] **Step 8: Write test for gap-26 (private endpoint duplicate email)**
 
   Append to `backend/tests/api/routes/test_private.py`:
@@ -843,7 +852,7 @@ Targets:
   git commit -m "test: cover config defaults, UserProgress unique constraint, no-op update, prompt key fallbacks, duplicate word loader, lifespan LangFuse failure, private endpoint duplicate email"
   ```
 
-- [ ] **Step 12:** Record learnings to `.claude/learnings-data-config-model-invariants.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 12:** Record learnings to `learnings-data-config-model-invariants.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -876,7 +885,7 @@ Targets:
   git commit -m "test: final cleanup for phase-4.5.2 test coverage"
   ```
 
-- [ ] **Step 4:** Record learnings to `.claude/learnings-phase-045-final-verification.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 4:** Record learnings to `learnings-phase-045-final-verification.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -890,12 +899,13 @@ Targets:
 | 4 | gap-19, gap-20, gap-22 | Exercise builder malformed entries, MAX_EXERCISES cap, empty dictionary query |
 | 5 | gap-26, gap-33, gap-36, gap-40, gap-46, gap-53, gap-56 | Data/config/model invariants (bulk task) |
 | 6 | — | Full suite verification |
+| 7 | — | Curate learnings into CLAUDE.md |
 
 **Dependency graph:**
 
 ```
-Tasks 1, 2, 3, 4, 5 can be dispatched in sequence.
-All → Task 6
+Tasks 1, 2, 3, 4, 5 are independent — can be dispatched in parallel.
+All → Task 6 → Task 7
 ```
 
 **Production code changes required** (not just tests):
@@ -903,3 +913,15 @@ All → Task 6
 - `backend/app/api/routes/login.py` — wrap `send_email` in `try/except` (gap-9)
 - `backend/app/api/routes/users.py` — wrap `send_email` in `try/except` (gap-13)
 - `backend/app/main.py` — wrap `check_langfuse_auth()` in lifespan try/except (gap-56, conditional on test result)
+
+---
+
+## Task 7: Curate learnings into CLAUDE.md
+
+**Goal:** Promote all learnings captured during this phase into the CLAUDE.md files.
+
+### Steps
+
+- [ ] **Step 1:** Glob `learnings-*.md` at the repo root to collect all scratch files written during this phase.
+- [ ] **Step 2:** For each scratch file, dispatch a subagent with the `claude-md-improver` skill, providing the scratch file path in the prompt.
+- [ ] **Step 3:** Verify all scratch files have been deleted after processing.
