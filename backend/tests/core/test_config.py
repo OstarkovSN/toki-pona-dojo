@@ -91,9 +91,15 @@ def test_check_default_secret_raises_on_production(
 
 
 def test_emails_from_name_defaults_to_project_name() -> None:
-    """gap-33: EMAILS_FROM_NAME defaults to PROJECT_NAME when None/empty."""
-    from app.core.config import settings
-
-    assert settings.EMAILS_FROM_NAME
-    assert isinstance(settings.EMAILS_FROM_NAME, str)
-    assert len(settings.EMAILS_FROM_NAME) > 0
+    """EMAILS_FROM_NAME falls back to PROJECT_NAME when not explicitly set."""
+    s = Settings(
+        SECRET_KEY="test-secret-key-long-enough-to-be-valid-32chars",
+        FIRST_SUPERUSER="admin@test.com",
+        FIRST_SUPERUSER_PASSWORD="password123",
+        POSTGRES_SERVER="localhost",
+        POSTGRES_USER="postgres",
+        POSTGRES_DB="test",
+        POSTGRES_PASSWORD="password",
+        PROJECT_NAME="my-test-project",
+    )
+    assert s.EMAILS_FROM_NAME == "my-test-project"
