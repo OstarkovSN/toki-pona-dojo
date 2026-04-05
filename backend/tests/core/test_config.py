@@ -50,7 +50,7 @@ def test_check_default_secret_warns_on_local(monkeypatch: pytest.MonkeyPatch) ->
 
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        s = Settings()
+        s = Settings()  # type: ignore[call-arg]
         assert s.SECRET_KEY == "changethis"
 
     messages = [str(w.message) for w in caught]
@@ -70,7 +70,7 @@ def test_check_default_secret_raises_on_staging(
     monkeypatch.setenv("FIRST_SUPERUSER_PASSWORD", "somepassword")
 
     with pytest.raises(ValueError):
-        Settings()
+        Settings()  # type: ignore[call-arg]
 
 
 def test_check_default_secret_raises_on_production(
@@ -87,4 +87,13 @@ def test_check_default_secret_raises_on_production(
     monkeypatch.setenv("FIRST_SUPERUSER_PASSWORD", "changethis")
 
     with pytest.raises(ValueError):
-        Settings()
+        Settings()  # type: ignore[call-arg]
+
+
+def test_emails_from_name_defaults_to_project_name() -> None:
+    """gap-33: EMAILS_FROM_NAME defaults to PROJECT_NAME when None/empty."""
+    from app.core.config import settings
+
+    assert settings.EMAILS_FROM_NAME
+    assert isinstance(settings.EMAILS_FROM_NAME, str)
+    assert len(settings.EMAILS_FROM_NAME) > 0
