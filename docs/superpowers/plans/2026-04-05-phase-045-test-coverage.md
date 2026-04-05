@@ -194,7 +194,7 @@ These four gaps all live in the two chat endpoints or the rate-limit task-tracki
   git commit -m "test: cover chat LLM exception paths, wrong-type fallback, and _is_authenticated() guards"
   ```
 
-- [ ] **Step 7:** Record learnings to `learnings-chat-error-paths.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 7:** Record learnings to `learnings/learnings-chat-error-paths.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -313,7 +313,7 @@ The existing `test_deps.py` covers `get_current_user` (required auth). `get_opti
   git commit -m "test: cover optional auth -- invalid token and inactive user treated as anonymous"
   ```
 
-- [ ] **Step 5:** Record learnings to `learnings-optional-auth-fallbacks.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 5:** Record learnings to `learnings/learnings-optional-auth-fallbacks.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -456,7 +456,7 @@ Both endpoints call `send_email(...)` without catching exceptions. If SMTP is do
   git commit -m "fix: catch send_email exceptions in recover_password and create_user; test smtp-down paths"
   ```
 
-- [ ] **Step 7:** Record learnings to `learnings-email-failure-paths.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 7:** Record learnings to `learnings/learnings-email-failure-paths.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -575,7 +575,7 @@ Targets:
   git commit -m "test: cover exercise MAX_EXERCISES cap, malformed entry skip, and empty dictionary query"
   ```
 
-- [ ] **Step 6:** Record learnings to `learnings-exercise-builder-edge-cases.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 6:** Record learnings to `learnings/learnings-exercise-builder-edge-cases.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -852,7 +852,7 @@ Targets:
   git commit -m "test: cover config defaults, UserProgress unique constraint, no-op update, prompt key fallbacks, duplicate word loader, lifespan LangFuse failure, private endpoint duplicate email"
   ```
 
-- [ ] **Step 12:** Record learnings to `learnings-data-config-model-invariants.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 12:** Record learnings to `learnings/learnings-data-config-model-invariants.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -885,7 +885,7 @@ Targets:
   git commit -m "test: final cleanup for phase-4.5.2 test coverage"
   ```
 
-- [ ] **Step 4:** Record learnings to `learnings-phase-045-final-verification.md` using the `surfacing-subagent-learnings` skill.
+- [ ] **Step 4:** Record learnings to `learnings/learnings-phase-045-final-verification.md` using the `surfacing-subagent-learnings` skill.
 
 ---
 
@@ -922,6 +922,6 @@ All → Task 6 → Task 7
 
 ### Steps
 
-- [ ] **Step 1:** Glob `learnings-*.md` at the repo root to collect all scratch files written during this phase.
+- [ ] **Step 1:** Glob `learnings/learnings-*.md` at the repo root to collect all scratch files written during this phase.
 - [ ] **Step 2:** For each scratch file, dispatch a subagent with the `claude-md-improver` skill, providing the scratch file path in the prompt.
 - [ ] **Step 3:** Verify all scratch files have been deleted after processing.
