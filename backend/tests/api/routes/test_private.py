@@ -30,6 +30,7 @@ def test_create_user(client: TestClient, db: Session) -> None:
 
 def test_create_user_duplicate_email_returns_error(client: TestClient) -> None:
     """gap-26: Duplicate email to /private/users/ hits DB unique constraint."""
+
     email = random_email()
     payload = {
         "email": email,
@@ -41,5 +42,11 @@ def test_create_user_duplicate_email_returns_error(client: TestClient) -> None:
     r1 = client.post(f"{settings.API_V1_STR}/private/users/", json=payload)
     assert r1.status_code == 200
 
-    r2 = client.post(f"{settings.API_V1_STR}/private/users/", json=payload)
-    assert r2.status_code in (409, 500)
+    # The private route has no duplicate-email guard; the DB raises an
+    # IntegrityError which the TestClient (raise_server_exceptions=True) will
+    # re-raise. Accept either a 4xx/5xx response OR an IntegrityError exception.
+    try:
+        r2 = client.post(f"{settings.API_V1_STR}/private/users/", json=payload)
+        assert r2.status_code in (409, 422, 500)
+    except Exception as exc:
+        assert "UniqueViolation" in str(exc) or "IntegrityError" in str(exc)
