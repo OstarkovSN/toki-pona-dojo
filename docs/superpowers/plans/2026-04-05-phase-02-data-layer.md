@@ -976,9 +976,7 @@ Expected: All tests pass.
 - `backend/app/models.py` (modify)
 - `backend/app/alembic/versions/xxx_add_user_progress.py` (new, auto-generated)
 
-**Context:** The existing `models.py` has User, Item, and related models plus Message, Token, TokenPayload, NewPassword. We add UserProgress with JSON columns. The table uses `sa_column=Column(JSON)` for list/dict fields. Alembic env.py already imports from `app.models` so it will auto-detect the new table.
-
-**Note:** The Item model and its related classes (ItemBase, ItemCreate, ItemUpdate, Item, ItemPublic, ItemsPublic) still exist in models.py and crud.py. We leave them as-is for this task -- cleaning them up is out of scope for Phase 2.
+**Context:** The existing `models.py` has User and related models plus Message, Token, TokenPayload, NewPassword. Phase 1 (Clean Slate) removed all Item-related code. We add UserProgress with JSON columns. The table uses `sa_column=Column(JSON)` for list/dict fields. Alembic env.py already imports from `app.models` so it will auto-detect the new table.
 
 - [ ] **Step 1:** Write a test in `backend/tests/crud/test_user_progress.py` that creates a UserProgress record and verifies its fields.
 
@@ -1052,26 +1050,21 @@ def test_user_progress_json_fields(db: Session) -> None:
     db.commit()
 ```
 
-- [ ] **Step 2:** Check that `tests/utils/user.py` has a `create_random_user` helper. If not, check what helpers exist and adapt the test accordingly.
+- [ ] **Step 2:** Confirm that `tests/utils/user.py` already has `create_random_user` (it was added in Phase 1 test coverage work). No action needed — the helper already exists and uses `crud.create_user` internally.
 
 ```bash
-cd backend && grep -n "def " tests/utils/user.py
+cd backend && grep -n "def create_random_user" tests/utils/user.py
 ```
 
-If `create_random_user` does not exist, add it to `tests/utils/user.py`:
+Expected: one line found. If missing for any reason, add it:
 
 ```python
 def create_random_user(db: Session) -> User:
     """Create a random user for testing."""
-    from app.core.security import get_password_hash
-    user = User(
-        email=f"test-{uuid.uuid4().hex[:8]}@example.com",
-        hashed_password=get_password_hash("testpassword123"),
-        full_name="Test User",
-    )
-    db.add(user)
-    db.commit()
-    db.refresh(user)
+    email = random_email()
+    password = random_lower_string()
+    user_in = UserCreate(email=email, password=password)
+    user = crud.create_user(session=db, user_create=user_in)
     return user
 ```
 
@@ -1096,7 +1089,7 @@ Note: `DateTime` is already imported. Merge the import to:
 from sqlalchemy import Column, DateTime, JSON
 ```
 
-Add after the `UsersPublic` class (before ItemBase):
+Add after the `UsersPublic` class (at end of file, since Item classes were removed in Phase 1):
 
 ```python
 class UserProgress(SQLModel, table=True):
@@ -1124,10 +1117,10 @@ class UserProgress(SQLModel, table=True):
 
 **Important:** We use `default_factory=list` / `default_factory=dict` instead of `default=[]` / `default={}` to avoid the Python mutable default argument footgun. Even though SQLAlchemy handles the DB-level default, the Python-side default is shared across all instances if mutable, which can cause subtle bugs when objects are created without going through the DB (e.g., in tests or before flush).
 
-- [ ] **Step 5:** Generate the Alembic migration.
+- [ ] **Step 5:** Generate the Alembic migration (must run inside the container for proper DB access).
 
 ```bash
-cd backend && alembic revision --autogenerate -m "add user_progress table"
+docker compose exec backend alembic revision --autogenerate -m "add user_progress table"
 ```
 
 Expected: New migration file created in `backend/app/alembic/versions/`.
@@ -1135,7 +1128,7 @@ Expected: New migration file created in `backend/app/alembic/versions/`.
 - [ ] **Step 6:** Apply the migration.
 
 ```bash
-cd backend && alembic upgrade head
+docker compose exec backend alembic upgrade head
 ```
 
 - [ ] **Step 7:** Run the UserProgress tests and verify they pass.
@@ -1897,10 +1890,10 @@ def get_grammar_section_detail(section_id: str) -> dict[str, Any]:
 
 - [ ] **Step 4:** Register the dictionary router in `backend/app/api/main.py`. Add the import and include_router call.
 
-In `backend/app/api/main.py`, add to imports:
+In `backend/app/api/main.py`, update the import line (note: `items` was removed in Phase 1):
 
 ```python
-from app.api.routes import items, login, private, users, utils, dictionary
+from app.api.routes import login, private, users, utils, dictionary
 ```
 
 Add after the existing `include_router` calls (before the `if settings.ENVIRONMENT` block):
@@ -2286,10 +2279,10 @@ def get_lesson_exercises(unit_id: int, lesson_id: int) -> dict[str, Any]:
 
 - [ ] **Step 4:** Register the lessons router in `backend/app/api/main.py`. Add to imports and include_router.
 
-In `backend/app/api/main.py`, update the import to include lessons:
+In `backend/app/api/main.py`, update the import to include lessons (note: `items` was removed in Phase 1):
 
 ```python
-from app.api.routes import items, login, private, users, utils, dictionary, lessons
+from app.api.routes import login, private, users, utils, dictionary, lessons
 ```
 
 Add after the dictionary router include:
@@ -2546,7 +2539,7 @@ Expected: All tests pass.
 cd backend && python -m pytest -v 2>&1 | tail -40
 ```
 
-Expected: All new tests pass. Pre-existing tests (items, users, login) should still pass.
+Expected: All new tests pass. Pre-existing tests (users, login, utils) should still pass.
 
 - [ ] **Step 2:** Run the validation script.
 
@@ -2559,7 +2552,7 @@ Expected: Exit code 0, "Validation PASSED".
 - [ ] **Step 3:** Run the linter.
 
 ```bash
-cd backend && python -m ruff check app/ tests/ scripts/
+cd backend && uv run ruff check app/ tests/ scripts/
 ```
 
 Expected: No errors. If there are warnings/errors, fix them.
@@ -2567,7 +2560,7 @@ Expected: No errors. If there are warnings/errors, fix them.
 - [ ] **Step 4:** Run type checking.
 
 ```bash
-cd backend && python -m mypy app/
+cd backend && uv run mypy app/
 ```
 
 Expected: No errors. If there are type errors in the new code, fix them.
