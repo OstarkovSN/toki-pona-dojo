@@ -34,7 +34,7 @@ class TestTestsPreStart:
         mock_session_fail = MagicMock()
         mock_session_fail.exec.side_effect = Exception("DB not ready")
 
-        def make_context(*args, **kwargs):
+        def make_context(*args: object, **kwargs: object) -> MagicMock:  # noqa: ARG001
             nonlocal call_count
             call_count += 1
             ctx = MagicMock()
@@ -102,7 +102,7 @@ class TestBackendPreStart:
         mock_session_fail = MagicMock()
         mock_session_fail.exec.side_effect = Exception("DB not ready")
 
-        def make_context(*args, **kwargs):
+        def make_context(*args: object, **kwargs: object) -> MagicMock:  # noqa: ARG001
             nonlocal call_count
             call_count += 1
             ctx = MagicMock()

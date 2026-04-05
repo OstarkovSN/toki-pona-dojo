@@ -212,8 +212,22 @@ def test_reset_password_bad_token(client: TestClient) -> None:
     assert r.json()["detail"] == "Invalid token"
 
 
+def test_reset_password_valid_token_nonexistent_user(client: TestClient) -> None:
+    """POST /reset-password/ with a valid token for an email not in the DB → 400 Invalid token."""
+    # Generate a valid token for an email that was never registered
+    nonexistent_email = "ghost-user-never-registered@example.invalid"
+    token = generate_password_reset_token(email=nonexistent_email)
+    data = {"new_password": "newpassword123", "token": token}
+    r = client.post(f"{settings.API_V1_STR}/reset-password/", json=data)
+    assert r.status_code == 400
+    # Same error as invalid token to avoid user enumeration
+    assert r.json()["detail"] == "Invalid token"
+
+
 def test_recover_password_html_content_superuser(
-    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+    client: TestClient,
+    superuser_token_headers: dict[str, str],
+    db: Session,  # noqa: ARG001
 ) -> None:
     """POST /password-recovery-html-content/{email} as superuser → 200 HTML."""
     r = client.post(
