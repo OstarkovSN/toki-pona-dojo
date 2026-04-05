@@ -203,3 +203,25 @@ mocker.patch("app.utils.send_email", ...)
 ### Testing Sentry initialization
 
 `app/main.py` initializes Sentry at module import time, not in a lifespan handler — test conditional init logic by patching `settings.SENTRY_DSN` and `settings.ENVIRONMENT` then re-evaluating the `if` branch directly (don't rely on triggering lifespan events).
+
+## Gotchas
+
+### Phase 2: Data Layer
+
+- **`uv run python` required** — bare `python`/`python3` not in PATH; all scripts must use `uv run python`.
+- **words.json is a flat list**, not a dict keyed by word — loader code must iterate or build an index at load time.
+- **Grammar section IDs are strings** (`"basic-sentences"`, `"direct-objects"`, etc.), not numeric indices — downstream code querying by id should use the string id.
+- **Exercise word references are validated at data-integrity time** — all words in `"words": [...]` fields must exist in words.json; builders silently skip words missing from JSON without raising errors.
+- **Ruff/formatter hook reverts partial Edit calls on import lines** — when adding a new name to an existing `from x import a, b` line, use `Write` to rewrite the entire file instead of `Edit`.
+- **`docker cp` requires full directory, not individual files** — `docker cp backend/app/data` copies directory contents; copying to a non-existent path errors; new subdirectories must be copied as a whole.
+- **Alembic `--autogenerate` lowercases table names** — `class UserProgress` becomes table `userprogress` (no underscore), per SQLModel convention.
+- **Post-edit hook silently drops newly added imports** — when editing multi-symbol imports, always read the file back after hook runs to confirm additions weren't reverted; alphabetical order is how ruff sorts multi-symbol imports.
+- **Pipe with `2>&1 | tail -5` masks exit codes** — always test exit codes separately with a plain run, not through pipes.
+- **Pytest module-scoped fixtures depend on session setup** — running a test subset skips `init_db`, causing 404s; always run the full suite or ensure fixtures execute first.
+- **Repeated `docker cp` of tests stacks `tests/tests/`** — `docker cp backend/tests backend:/app/backend/` copies to `/app/backend/tests` cleanly, but repeated runs from root directory create nested mirror; check with `docker exec <container> ls /app/tests/` before copying.
+- **`GRAMMAR.get("sections", [])` returns `Any` type** — when accessing dict[str, Any], assign to a typed local before returning to satisfy mypy `no-any-return`.
+- **Ruff B007 fires on unused loop variables** — rename to `_key` when the variable is never used in the loop body.
+- **Sample data has 106 vocabulary entries** (validated, comfortably > 85 minimum) and all flashcard categories have >= 3 entries.
+- **`set` as a FastAPI query param name works fine** — no shadowing issue (`set: str | None = None` is valid).
+- **Exercise builders use lambdas with 3 params** (`words, all_words, filtered`) to cleanly dispatch by type without if/elif chains.
+- **Unit 1 exercises use only match + multichoice** types; other exercise types come in later units.
