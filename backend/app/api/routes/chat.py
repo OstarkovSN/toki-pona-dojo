@@ -165,7 +165,7 @@ async def grade_exercise(
         content = response.choices[0].message.content or ""
         result = json.loads(content)
         return ExerciseGradeResponse(**result)
-    except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError, ValidationError):
         logger.exception("Failed to parse LLM grading response")
         return ExerciseGradeResponse(
             correct=False,
