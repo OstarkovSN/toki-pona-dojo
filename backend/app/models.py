@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 
 from pydantic import EmailStr
-from sqlalchemy import DateTime
+from sqlalchemy import JSON, Column, DateTime
 from sqlmodel import Field, SQLModel
 
 
@@ -85,3 +85,26 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=128)
+
+
+class UserProgress(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+    completed_units: list[int] = Field(default_factory=list, sa_column=Column(JSON))
+    completed_lessons: list[str] = Field(default_factory=list, sa_column=Column(JSON))
+    current_unit: int = Field(default=1)
+    srs_data: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    total_correct: int = Field(default=0)
+    total_answered: int = Field(default=0)
+    streak_days: int = Field(default=0)
+    last_activity: datetime | None = None
+    known_words: list[str] = Field(default_factory=list, sa_column=Column(JSON))
+    recent_errors: list[dict] = Field(default_factory=list, sa_column=Column(JSON))
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_type=DateTime(timezone=True),
+    )
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_type=DateTime(timezone=True),
+    )
