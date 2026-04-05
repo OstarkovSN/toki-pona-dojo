@@ -129,6 +129,21 @@ services:
     ports:
       - 9323:9323
 
+  langfuse-server:
+    restart: "no"
+  langfuse-worker:
+    restart: "no"
+  langfuse-db:
+    restart: "no"
+  langfuse-zookeeper:
+    restart: "no"
+  langfuse-clickhouse:
+    restart: "no"
+  langfuse-minio:
+    restart: "no"
+  langfuse-cache:
+    restart: "no"
+
 networks:
   traefik-public:
     # For local dev, don't expect an external Traefik network

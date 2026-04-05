@@ -4,6 +4,7 @@ from typing import Any
 from openai import OpenAI
 
 from app.core.config import settings
+from app.services.tracing import _configure_langfuse_env
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +39,28 @@ Known words the learner has studied: {words}"""
 
 
 def get_llm_client() -> OpenAI:
-    """Create OpenAI-compatible client from .env config."""
+    """Return an OpenAI client, optionally wrapped with LangFuse tracing.
+
+    When LANGFUSE_SECRET_KEY and LANGFUSE_PUBLIC_KEY are set, uses the
+    langfuse.openai drop-in replacement which automatically traces all
+    chat.completions.create() calls. Otherwise returns a plain OpenAI client.
+    """
+    if _configure_langfuse_env():
+        try:
+            from langfuse.openai import (  # type: ignore[attr-defined]
+                OpenAI as LangfuseOpenAI,
+            )
+
+            logger.debug("Using LangFuse-instrumented OpenAI client")
+            return LangfuseOpenAI(
+                base_url=settings.OPENAI_BASE_URL,
+                api_key=settings.OPENAI_API_KEY,
+            )
+        except Exception:
+            logger.exception(
+                "Failed to create LangFuse OpenAI client, falling back to plain client"
+            )
+
     return OpenAI(
         base_url=settings.OPENAI_BASE_URL,
         api_key=settings.OPENAI_API_KEY,

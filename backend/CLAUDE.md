@@ -206,6 +206,24 @@ mocker.patch("app.utils.send_email", ...)
 
 ## Gotchas
 
+### Phase 4: LangFuse Observability
+
+- **`langfuse>=4.0.0` pulls in full `opentelemetry-*` stack** — transitive deps include opentelemetry-api, -sdk, -exporter-otlp-proto-http, -proto, -semantic-conventions.
+- **`uv.lock` lives at repo root, not `backend/`** — `uv add` run from `backend/` updates `../uv.lock`; stage it as `uv.lock` from worktree root.
+- **`from langfuse import Langfuse` has stubs; `from langfuse.callback import CallbackHandler` does not** — latter needs `# type: ignore[import-not-found]`.
+- **Adding `# type: ignore[import-not-found]` on the `langfuse` import causes mypy `[unused-ignore]`** — only suppress on submodules without stubs; check submodules before adding suppression.
+- **`get_langfuse_handler() -> Any` satisfies `no-untyped-call`** — `Any` return type on functions calling LangFuse handles mypy strict mode without needing `# noqa: ANN201`.
+- **mypy `--ignore-missing-imports` makes all `type: ignore[import-*]` comments unused** — remove inline `type: ignore[import-not-found]` entirely when using that flag; the flag covers them globally.
+- **Formatter hook (ruff) reverts partial `Edit` calls on import lines** — always use `Write` to rewrite entire file when adding new imports with dependent code.
+- **All LangFuse-touching functions must `try/except Exception` with `logger.exception(...)`** — graceful degradation pattern; never hard-fail on tracing errors.
+- **`check_langfuse_auth()` is startup-time only; other helpers are call-time** — keep auth check as optional lifespan step, never hard dependency.
+- **Import test (`uv run python -c "from app.main import app"`) fails in worktrees without `.env`** — environmental issue, not code error; use syntax check + mypy for local verification.
+- **Worktree `.env` is gitignored and NOT copied automatically** — manually `cp /home/claude/workdirs/toki-pona-dojo/.env .worktrees/phase-04-langfuse/.env` before running tests.
+- **`PROJECT_NAME` and `FIRST_SUPERUSER_PASSWORD` may be empty strings** — inject via env vars: `PROJECT_NAME="toki-pona-dojo" FIRST_SUPERUSER_PASSWORD="testpass123" uv run pytest ...`.
+- **`patch("langfuse.Langfuse", ...)` patches at module level** — deferred `from langfuse import Langfuse` inside function requires patching `langfuse.Langfuse`, not `app.services.tracing.Langfuse`.
+- **`patch.dict("sys.modules", {"langfuse.openai": MagicMock(OpenAI=...)})` for dynamic imports** — patching attributes directly doesn't work for `from langfuse.openai import OpenAI` inside function body.
+- **AsyncGenerator[None, None] from `collections.abc` for `@asynccontextmanager` lifespan** — satisfies mypy without issues for functions with no return value.
+
 ### Phase 3: LLM Integration
 
 - **slowapi `exempt_when` receives zero arguments** — function signature `exempt_when(request: Request)` raises `TypeError`; use `exempt_when()` with no params.

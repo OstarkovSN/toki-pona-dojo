@@ -148,4 +148,17 @@ New services must use non-standard ports. LangFuse: 3100 (UI), 9190 (MinIO). Cro
 - **Backend reads `.env` from parent dir** (`env_file="../.env"` in Settings). Run `fastapi dev` from inside `backend/` or the container; don't move the `.env`.
 - **`bun` is the package manager** for frontend (not npm). Use `bun install`, `bun run`.
 - **Items demo code was removed** in Phase 1. The app now has only auth/users as a base.
-- **LangFuse uses `postgres:17`** (planned, Phase 4) (separate container+volume from the app's `postgres:18`). They must not share a Postgres instance.
+- **LangFuse uses `postgres:17`** (separate container+volume from the app's `postgres:18`). They must not share a Postgres instance.
+
+## Phase 4 Gotchas
+
+- **`.env` is shared across worktrees** — gitignored files don't auto-copy; worktree must reference root `.env` at `/home/claude/workdirs/toki-pona-dojo/.env`.
+- **ClickHouse config files live in `deploy/langfuse-clickhouse/`** — created manually alongside `compose.yml`; not part of the template.
+- **`macros.xml` must define shard/replica identity** — even in single-node dev setups, LangFuse expects these macros for cluster mode readiness.
+- **`zookeeper.xml` references service by Compose name** — hostname must exactly match `langfuse-zookeeper` service name in `compose.yml`, port 2181.
+- **`docker compose config --quiet` exits 1 if `.env` missing** — even with env vars passed, create empty temp `.env` for validation, then remove it.
+- **Both `backend` and `prestart` services need `LANGFUSE_HOST`** — easy to miss one in env var blocks.
+- **`LANGFUSE_HOST` appears twice in compose config output** (key + value lines for both services); grep count of 4 is correct.
+- **`langfuse-minio` uses port `9190:9000`** (host:container); `langfuse-server` uses `localhost:9190` (host-accessible), `langfuse-worker` uses internal Docker hostname `http://langfuse-minio:9000`.
+- **LangFuse restart overrides in `compose.override.yml`** must be inserted before the `networks:` section, not after the last service block.
+- **`LANGFUSE_INIT_USER_*` env vars** (email, password, name, organization) are required for first-launch admin setup and were missing from `.env.example` before Phase 4.
