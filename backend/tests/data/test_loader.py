@@ -142,3 +142,44 @@ def test_get_exercises_by_words_empty_set():
     result = get_exercises_by_words(set())
     assert result["flashcards"] == []
     assert result["sentence_quiz"]["tp2en"] == []
+
+
+def test_search_words_no_args():
+    """search_words with no args returns all words."""
+    from app.data.loader import WORDS, search_words
+
+    assert len(search_words()) == len(WORDS)
+
+
+def test_get_grammar_comparisons():
+    """get_grammar_comparisons returns a list."""
+    from app.data.loader import get_grammar_comparisons
+
+    result = get_grammar_comparisons()
+    assert isinstance(result, list)
+
+
+def test_get_grammar_quiz():
+    """get_grammar_quiz returns a list."""
+    from app.data.loader import get_grammar_quiz
+
+    result = get_grammar_quiz()
+    assert isinstance(result, list)
+
+
+def test_get_exercises_by_words_all_keys_present():
+    """get_exercises_by_words result has all 8 required keys."""
+    from app.data.loader import get_exercises_by_words
+
+    result = get_exercises_by_words({"mi", "sina", "pona"})
+    required_keys = {
+        "flashcards",
+        "sentence_quiz",
+        "word_building",
+        "unscramble",
+        "sitelen_pona",
+        "particles",
+        "stories",
+        "reverse_build",
+    }
+    assert required_keys.issubset(result.keys())

@@ -21,8 +21,12 @@ _DATA_DIR = Path(__file__).parent
 def _load_json(filename: str) -> Any:
     path = _DATA_DIR / filename
     logger.info("Loading data file: %s", path)
-    with open(path) as f:
-        return json.load(f)
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        logger.exception("Failed to load required data file: %s", path)
+        raise
 
 
 WORDS: list[dict[str, Any]] = _load_json("words.json")
@@ -58,9 +62,9 @@ def search_words(
     Args:
         q: Text to search in word name and definitions.
         pos: Part of speech filter (e.g. "noun", "verb").
-        word_set: "pu" for core words only, "ku" for ku words only, None for all.
+        word_set: "pu" for core words only, "ku" for ku words only, None (or any other value) for all.
     """
-    results = WORDS
+    results: list[dict[str, Any]] = list(WORDS)
 
     if word_set == "pu":
         results = [w for w in results if not w["ku"]]
