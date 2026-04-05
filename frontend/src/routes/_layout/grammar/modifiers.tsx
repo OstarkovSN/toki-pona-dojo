@@ -305,15 +305,19 @@ function QuizSection({ questions }: { questions: QuizQuestion[] }) {
 }
 
 function GrammarModifiersPage() {
-  const { data, isLoading } = useQuery<GrammarData>({
-    queryKey: ["grammar"],
+  const { data, isLoading, error } = useQuery<GrammarData>({
+    queryKey: ["grammar", "modifiers"],
     queryFn: async () => {
       const res = await fetch("/api/v1/dictionary/grammar")
-      if (!res.ok) throw new Error("Failed to fetch grammar data")
+      if (!res.ok) throw new Error(`Failed to fetch grammar data (HTTP ${res.status})`)
       return res.json()
     },
     retry: false,
   })
+
+  if (error) {
+    console.error("[grammar/modifiers] fetch failed:", error)
+  }
 
   const sections = data?.sections ?? FALLBACK_SECTIONS
   const comparisons = data?.comparisons ?? FALLBACK_COMPARISONS
