@@ -86,7 +86,7 @@ class TestChatStream:
         assert response.headers["content-type"].startswith("text/event-stream")
 
         lines = response.text.strip().split("\n\n")
-        data_lines = [l for l in lines if l.startswith("data:")]
+        data_lines = [line for line in lines if line.startswith("data:")]
         assert len(data_lines) == 4  # 3 content + 1 DONE
 
         first = json.loads(data_lines[0].removeprefix("data: "))
