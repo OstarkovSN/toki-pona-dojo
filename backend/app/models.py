@@ -90,7 +90,7 @@ class NewPassword(SQLModel):
 
 class UserProgress(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    user_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True, unique=True)
     completed_units: list[int] = Field(default_factory=list, sa_column=Column(JSON))
     completed_lessons: list[str] = Field(default_factory=list, sa_column=Column(JSON))
     current_unit: int = Field(default=1)

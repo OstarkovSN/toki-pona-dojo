@@ -34,7 +34,12 @@ EXERCISES: dict[str, Any] = _load_json("exercises.json")
 GRAMMAR: dict[str, Any] = _load_json("grammar.json")
 
 # Build lookup indexes
-_WORD_INDEX: dict[str, dict[str, Any]] = {w["word"]: w for w in WORDS}
+_WORD_INDEX: dict[str, dict[str, Any]] = {}
+for _w in WORDS:
+    if "word" not in _w:
+        logger.warning("Word entry missing 'word' key, skipping: %s", _w)
+        continue
+    _WORD_INDEX[_w["word"]] = _w
 
 logger.info(
     "Loaded %d words, %d grammar sections",

@@ -100,14 +100,18 @@ def _build_word_bank_exercises(
     selected = unscramble[:max_count]
 
     for item in selected:
-        exercises.append(
-            {
-                "type": "word_bank",
-                "words": item["words"],
-                "correct": item["correct"],
-                "translation": item.get("translation", ""),
-            }
-        )
+        try:
+            exercises.append(
+                {
+                    "type": "word_bank",
+                    "words": item["words"],
+                    "correct": item["correct"],
+                    "translation": item.get("translation", ""),
+                }
+            )
+        except (KeyError, TypeError) as e:
+            logger.warning("Skipping malformed exercise entry: %s — %s", item, e)
+            continue
     return exercises
 
 
@@ -121,14 +125,18 @@ def _build_fill_particle_exercises(
     selected = particles[:max_count]
 
     for item in selected:
-        exercises.append(
-            {
-                "type": "fill_particle",
-                "sentence": item["sentence"],
-                "answer": item["answer"],
-                "explanation": item.get("explanation", ""),
-            }
-        )
+        try:
+            exercises.append(
+                {
+                    "type": "fill_particle",
+                    "sentence": item["sentence"],
+                    "answer": item["answer"],
+                    "explanation": item.get("explanation", ""),
+                }
+            )
+        except (KeyError, TypeError) as e:
+            logger.warning("Skipping malformed exercise entry: %s — %s", item, e)
+            continue
     return exercises
 
 
@@ -142,13 +150,17 @@ def _build_free_compose_exercises(
     selected = reverse[:max_count]
 
     for item in selected:
-        exercises.append(
-            {
-                "type": "free_compose",
-                "meaning": item["meaning"],
-                "expected": item["expected"],
-            }
-        )
+        try:
+            exercises.append(
+                {
+                    "type": "free_compose",
+                    "meaning": item["meaning"],
+                    "expected": item["expected"],
+                }
+            )
+        except (KeyError, TypeError) as e:
+            logger.warning("Skipping malformed exercise entry: %s — %s", item, e)
+            continue
     return exercises
 
 
@@ -162,14 +174,18 @@ def _build_concept_build_exercises(
     selected = word_building[:max_count]
 
     for item in selected:
-        exercises.append(
-            {
-                "type": "concept_build",
-                "compound": item["compound"],
-                "meaning": item["meaning"],
-                "parts": item["parts"],
-            }
-        )
+        try:
+            exercises.append(
+                {
+                    "type": "concept_build",
+                    "compound": item["compound"],
+                    "meaning": item["meaning"],
+                    "parts": item["parts"],
+                }
+            )
+        except (KeyError, TypeError) as e:
+            logger.warning("Skipping malformed exercise entry: %s — %s", item, e)
+            continue
     return exercises
 
 
@@ -183,14 +199,18 @@ def _build_story_exercises(
     selected = stories[:max_count]
 
     for item in selected:
-        exercises.append(
-            {
-                "type": "story",
-                "title": item["title"],
-                "text": item["text"],
-                "questions": item["questions"],
-            }
-        )
+        try:
+            exercises.append(
+                {
+                    "type": "story",
+                    "title": item["title"],
+                    "text": item["text"],
+                    "questions": item["questions"],
+                }
+            )
+        except (KeyError, TypeError) as e:
+            logger.warning("Skipping malformed exercise entry: %s — %s", item, e)
+            continue
     return exercises
 
 
