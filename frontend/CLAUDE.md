@@ -31,8 +31,7 @@ frontend/src/
 │   ├── _layout/
 │   │   ├── index.tsx     # Dashboard (/)
 │   │   ├── admin.tsx     # Admin panel (/admin) — superusers only
-│   │   ├── settings.tsx  # User settings (/settings)
-│   │   └── (no items route — removed in Phase 1)
+│   │   └── settings.tsx  # User settings (/settings)
 │   ├── login.tsx
 │   ├── signup.tsx
 │   ├── recover-password.tsx
