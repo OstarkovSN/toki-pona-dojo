@@ -1,3 +1,4 @@
+import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -12,6 +13,8 @@ from app.api.main import api_router
 from app.core.config import settings
 from app.core.rate_limit import limiter
 from app.services.tracing import check_langfuse_auth
+
+logger = logging.getLogger(__name__)
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
@@ -30,7 +33,10 @@ configure_sentry()
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     # Startup: check LangFuse connectivity (never blocks if unavailable)
-    check_langfuse_auth()
+    try:
+        check_langfuse_auth()
+    except Exception:
+        logger.exception("LangFuse auth check raised unexpectedly during startup")
     yield
     # Shutdown: nothing to clean up
 

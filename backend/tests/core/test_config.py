@@ -50,7 +50,7 @@ def test_check_default_secret_warns_on_local(monkeypatch: pytest.MonkeyPatch) ->
 
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        s = Settings()
+        s = Settings()  # type: ignore[call-arg]
         assert s.SECRET_KEY == "changethis"
 
     messages = [str(w.message) for w in caught]
@@ -70,7 +70,7 @@ def test_check_default_secret_raises_on_staging(
     monkeypatch.setenv("FIRST_SUPERUSER_PASSWORD", "somepassword")
 
     with pytest.raises(ValueError):
-        Settings()
+        Settings()  # type: ignore[call-arg]
 
 
 def test_check_default_secret_raises_on_production(
@@ -87,4 +87,19 @@ def test_check_default_secret_raises_on_production(
     monkeypatch.setenv("FIRST_SUPERUSER_PASSWORD", "changethis")
 
     with pytest.raises(ValueError):
-        Settings()
+        Settings()  # type: ignore[call-arg]
+
+
+def test_emails_from_name_defaults_to_project_name() -> None:
+    """EMAILS_FROM_NAME falls back to PROJECT_NAME when not explicitly set."""
+    s = Settings(
+        SECRET_KEY="test-secret-key-long-enough-to-be-valid-32chars",
+        FIRST_SUPERUSER="admin@test.com",
+        FIRST_SUPERUSER_PASSWORD="password123",
+        POSTGRES_SERVER="localhost",
+        POSTGRES_USER="postgres",
+        POSTGRES_DB="test",
+        POSTGRES_PASSWORD="password",
+        PROJECT_NAME="my-test-project",
+    )
+    assert s.EMAILS_FROM_NAME == "my-test-project"

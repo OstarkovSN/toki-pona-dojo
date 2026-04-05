@@ -84,3 +84,57 @@ def test_get_unit_4_has_more_types(client: TestClient) -> None:
     data = r.json()
     exercises = data["exercises"]
     assert isinstance(exercises, list)
+
+
+def test_lesson_exercises_capped_at_max(client: TestClient) -> None:
+    """gap-20: When >7 exercises are built, random.sample caps output at MAX_EXERCISES=7."""
+    import random as random_mod
+    from unittest.mock import patch
+
+    original_sample = random_mod.sample
+    sample_calls: list[tuple[object, int]] = []
+
+    def recording_sample(population: object, k: int) -> list[object]:
+        sample_calls.append((population, k))
+        return original_sample(population, k)  # type: ignore[arg-type]
+
+    with patch("app.api.routes.lessons.random.sample", side_effect=recording_sample):
+        r = client.get(f"{settings.API_V1_STR}/lessons/units/10/lessons/1")
+
+    assert r.status_code == 200
+    exercises = r.json()["exercises"]
+    assert len(exercises) <= 7
+
+    capping_calls = [c for c in sample_calls if c[1] == 7]
+    if capping_calls:
+        assert capping_calls[0][1] == 7
+
+
+def test_lesson_word_bank_skips_malformed_entries(client: TestClient) -> None:
+    """gap-19: Malformed unscramble entries are skipped; good entries still returned."""
+    from unittest.mock import patch
+
+    malformed_filtered = {
+        "unscramble": [
+            {"words": ["mi", "pona"], "correct": "mi pona", "translation": "I am good"},
+            {"words": ["sina"]},  # missing 'correct'
+            None,  # not a dict
+        ],
+        "particles": [],
+        "reverse_build": [],
+        "word_building": [],
+        "stories": [],
+    }
+
+    with patch(
+        "app.api.routes.lessons.get_exercises_by_words",
+        return_value=malformed_filtered,
+    ):
+        r = client.get(f"{settings.API_V1_STR}/lessons/units/4/lessons/1")
+
+    assert r.status_code == 200
+    exercises = r.json()["exercises"]
+    # No 500 error -- builder continued past bad entries
+    word_bank = [e for e in exercises if e["type"] == "word_bank"]
+    assert len(word_bank) >= 1
+    assert word_bank[0]["correct"] == "mi pona"

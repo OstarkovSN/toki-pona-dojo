@@ -107,3 +107,13 @@ def test_get_grammar_section_not_found(client: TestClient) -> None:
     r = client.get(f"{settings.API_V1_STR}/dictionary/grammar/nonexistent")
     assert r.status_code == 404
     assert "nonexistent" in r.json()["detail"]
+
+
+def test_list_words_empty_q_returns_all(client: TestClient) -> None:
+    """gap-22: q='' is treated the same as no filter -- returns all words."""
+    r_all = client.get(f"{settings.API_V1_STR}/dictionary/words")
+    r_empty_q = client.get(f"{settings.API_V1_STR}/dictionary/words?q=")
+
+    assert r_all.status_code == 200
+    assert r_empty_q.status_code == 200
+    assert len(r_empty_q.json()) == len(r_all.json())

@@ -73,3 +73,22 @@ def test_app_has_api_router() -> None:
     routes = [r.path for r in app.routes]  # type: ignore[attr-defined]
     # At least one route should start with the API prefix
     assert any(r.startswith(settings.API_V1_STR) for r in routes)
+
+
+def test_lifespan_continues_when_check_langfuse_auth_raises() -> None:
+    """gap-56: App lifespan still completes when check_langfuse_auth raises."""
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    with patch(
+        "app.main.check_langfuse_auth", side_effect=Exception("langfuse unavailable")
+    ):
+        try:
+            with TestClient(app) as c:
+                r = c.get("/api/v1/utils/health-check/")
+                assert r.status_code == 200
+        except Exception as exc:
+            raise AssertionError(
+                f"Lifespan crashed when check_langfuse_auth raised: {exc}"
+            ) from exc

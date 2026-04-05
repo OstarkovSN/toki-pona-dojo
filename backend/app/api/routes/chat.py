@@ -6,6 +6,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
+from pydantic import ValidationError
 
 from app.api.deps import get_optional_current_user
 from app.core.config import settings
@@ -165,7 +166,7 @@ async def grade_exercise(
         content = response.choices[0].message.content or ""
         result = json.loads(content)
         return ExerciseGradeResponse(**result)
-    except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+    except (json.JSONDecodeError, KeyError, ValidationError):
         logger.exception("Failed to parse LLM grading response")
         return ExerciseGradeResponse(
             correct=False,

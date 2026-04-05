@@ -123,3 +123,21 @@ class TestGetLlmClientLangfuse:
         ):
             client = get_llm_client()
             assert client is mock_langfuse_openai_instance
+
+
+def test_build_chat_system_prompt_missing_word_key_falls_back() -> None:
+    """gap-46: Error dict missing 'word' or 'context' key falls back to '?' without raising."""
+    errors = [
+        {"context": "some context"},  # missing 'word'
+        {"word": "pona"},  # missing 'context'
+        {},  # both missing
+    ]
+    result = build_chat_system_prompt(
+        mode="free_chat",
+        known_words=["mi"],
+        current_unit=1,
+        recent_errors=errors,
+    )
+    assert "?: some context" in result
+    assert "pona: ?" in result
+    assert "?: ?" in result

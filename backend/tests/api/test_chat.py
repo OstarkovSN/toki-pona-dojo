@@ -143,6 +143,26 @@ class TestChatStream:
         )
         assert response.status_code == 422
 
+    @patch("app.api.routes.chat.get_llm_client")
+    def test_stream_llm_exception_returns_503_sse(
+        self, mock_get_client: MagicMock, client: TestClient
+    ) -> None:
+        """gap-1: LLM API raises -> 503 SSE with error payload."""
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.side_effect = RuntimeError("network down")
+        mock_get_client.return_value = mock_client
+
+        response = client.post(
+            f"{settings.API_V1_STR}/chat/stream",
+            json=_chat_request_body(),
+        )
+
+        assert response.status_code == 503
+        assert response.headers["content-type"].startswith("text/event-stream")
+        assert '"error"' in response.text
+        assert "LLM service unavailable" in response.text
+        assert "data: [DONE]" in response.text
+
 
 # ---------------------------------------------------------------------------
 # /chat/grade tests
@@ -227,6 +247,50 @@ class TestChatGrade:
         )
         assert response.status_code == 422
 
+    @patch("app.api.routes.chat.get_llm_client")
+    def test_grade_llm_exception_returns_graceful_default(
+        self, mock_get_client: MagicMock, client: TestClient
+    ) -> None:
+        """gap-5: LLM API raises -> 200 with graceful fallback payload."""
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.side_effect = RuntimeError("network down")
+        mock_get_client.return_value = mock_client
+
+        response = client.post(
+            f"{settings.API_V1_STR}/chat/grade",
+            json=_grade_request_body(),
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["correct"] is False
+        assert data["score"] == 0.0
+        assert "unavailable" in data["feedback"].lower()
+        assert data["suggested_answer"] is None
+
+    @patch("app.api.routes.chat.get_llm_client")
+    def test_grade_llm_returns_wrong_field_types_uses_fallback(
+        self, mock_get_client: MagicMock, client: TestClient
+    ) -> None:
+        """gap-7: LLM returns JSON with wrong field types -> Pydantic ValidationError -> graceful fallback."""
+        bad_json = '{"correct": "yes", "score": "ten out of ten", "feedback": "ok"}'
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = _make_mock_completion(
+            bad_json
+        )
+        mock_get_client.return_value = mock_client
+
+        response = client.post(
+            f"{settings.API_V1_STR}/chat/grade",
+            json=_grade_request_body(),
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["correct"] is False
+        assert data["score"] == 0.0
+        assert "couldn't grade" in data["feedback"].lower()
+
 
 # ---------------------------------------------------------------------------
 # Rate limiting tests
@@ -291,3 +355,31 @@ class TestRateLimiting:
                 )
         finally:
             settings.CHAT_FREE_DAILY_LIMIT = original_limit
+
+
+# ---------------------------------------------------------------------------
+# _is_authenticated() guard tests
+# ---------------------------------------------------------------------------
+
+
+class TestIsAuthenticated:
+    """gap-8: _is_authenticated() must never raise."""
+
+    def test_returns_false_when_current_task_is_none(self) -> None:
+        """_is_authenticated() returns False when asyncio.current_task() is None."""
+        from app.api.routes.chat import _is_authenticated
+
+        with patch("app.api.routes.chat.asyncio.current_task", return_value=None):
+            result = _is_authenticated()
+        assert result is False
+
+    def test_returns_false_when_current_task_raises_runtime_error(self) -> None:
+        """_is_authenticated() returns False when asyncio.current_task() raises RuntimeError."""
+        from app.api.routes.chat import _is_authenticated
+
+        with patch(
+            "app.api.routes.chat.asyncio.current_task",
+            side_effect=RuntimeError("no running event loop"),
+        ):
+            result = _is_authenticated()
+        assert result is False
