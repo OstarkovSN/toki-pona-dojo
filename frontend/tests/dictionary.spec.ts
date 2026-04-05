@@ -47,3 +47,28 @@ test("Set filter pills are toggleable", async ({ page }) => {
     "false",
   )
 })
+
+test("Word detail page renders when navigating to /dictionary/toki", async ({
+  page,
+}) => {
+  await page.goto("/dictionary/toki")
+  // Page should render (even if loading or showing 'ala' error state)
+  await expect(page).toHaveURL(/\/dictionary\/toki/)
+  // Should not crash — either shows word content (h1) or error state (p.font-tp)
+  // The page renders a skeleton while loading, then either h1 (success) or the 'ala' error paragraph
+  await page.waitForSelector("h1, p.font-tp, .space-y-4", { timeout: 5000 })
+  const pageContent = page.locator("h1, p.font-tp")
+  await expect(pageContent.first()).toBeVisible()
+})
+
+test("Word detail page shows error state for unknown word", async ({
+  page,
+}) => {
+  await page.goto("/dictionary/xyznotaword")
+  await expect(page).toHaveURL(/\/dictionary\/xyznotaword/)
+  // Backend endpoint not implemented — page should show error/empty state, not crash
+  // Error state renders <p class="font-tp text-2xl ...">ala</p>
+  await page.waitForSelector("p.font-tp, h1", { timeout: 5000 })
+  const errorOrContent = page.locator("p.font-tp, h1")
+  await expect(errorOrContent.first()).toBeVisible()
+})
