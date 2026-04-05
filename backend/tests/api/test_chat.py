@@ -289,13 +289,7 @@ class TestChatGrade:
         data = response.json()
         assert data["correct"] is False
         assert data["score"] == 0.0
-        # If this assertion fails with a string mismatch, read the except branch in chat.py
-        # to find the exact wording and update to match.
-        assert (
-            "couldn't grade" in data["feedback"].lower()
-            or "grading" in data["feedback"].lower()
-            or "unavailable" in data["feedback"].lower()
-        )
+        assert "couldn't grade" in data["feedback"].lower()
 
 
 # ---------------------------------------------------------------------------
@@ -373,8 +367,6 @@ class TestIsAuthenticated:
 
     def test_returns_false_when_current_task_is_none(self) -> None:
         """_is_authenticated() returns False when asyncio.current_task() is None."""
-        from unittest.mock import patch
-
         from app.api.routes.chat import _is_authenticated
 
         with patch("app.api.routes.chat.asyncio.current_task", return_value=None):
@@ -383,8 +375,6 @@ class TestIsAuthenticated:
 
     def test_returns_false_when_current_task_raises_runtime_error(self) -> None:
         """_is_authenticated() returns False when asyncio.current_task() raises RuntimeError."""
-        from unittest.mock import patch
-
         from app.api.routes.chat import _is_authenticated
 
         with patch(
