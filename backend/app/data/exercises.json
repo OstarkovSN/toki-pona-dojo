@@ -1,0 +1,381 @@
+{
+  "flashcards": [
+    {"word": "mi", "definition": "I, me, my, we, us, our", "category": "pronouns"},
+    {"word": "sina", "definition": "you, your", "category": "pronouns"},
+    {"word": "ona", "definition": "she, he, it, they", "category": "pronouns"},
+    {"word": "ni", "definition": "this, that", "category": "pronouns"},
+    {"word": "seme", "definition": "what, which, who (question word)", "category": "pronouns"},
+    {"word": "jan", "definition": "person, human being, somebody", "category": "people"},
+    {"word": "mama", "definition": "parent, ancestor, creator, caretaker", "category": "people"},
+    {"word": "meli", "definition": "woman, female, wife", "category": "people"},
+    {"word": "mije", "definition": "man, male, husband", "category": "people"},
+    {"word": "toki", "definition": "language, speech, communication / to speak", "category": "actions"},
+    {"word": "moku", "definition": "food, drink / to eat, to drink", "category": "actions"},
+    {"word": "pali", "definition": "to do, to make, to work", "category": "actions"},
+    {"word": "kama", "definition": "to come, to arrive / to become", "category": "actions"},
+    {"word": "jo", "definition": "to have, to contain, to carry", "category": "actions"},
+    {"word": "lukin", "definition": "to see, to look at / eye / to try to", "category": "actions"},
+    {"word": "lape", "definition": "to sleep, to rest", "category": "actions"},
+    {"word": "tomo", "definition": "house, room, home, building", "category": "places"},
+    {"word": "ma", "definition": "land, place, area, country", "category": "places"},
+    {"word": "nasin", "definition": "way, path, road, method, doctrine", "category": "places"},
+    {"word": "nena", "definition": "bump, button, hill, mountain, nose", "category": "places"},
+    {"word": "pona", "definition": "good, simple, positive / to improve, to fix", "category": "adjectives"},
+    {"word": "ike", "definition": "bad, negative, wrong, harmful", "category": "adjectives"},
+    {"word": "mute", "definition": "many, a lot, much, more", "category": "adjectives"},
+    {"word": "lili", "definition": "small, little, few, young", "category": "adjectives"},
+    {"word": "suli", "definition": "big, large, important, tall", "category": "adjectives"},
+    {"word": "wawa", "definition": "strong, powerful, energetic", "category": "adjectives"},
+    {"word": "sin", "definition": "new, fresh, another, more", "category": "adjectives"},
+    {"word": "ante", "definition": "different, other, changed", "category": "adjectives"},
+    {"word": "telo", "definition": "water, liquid, fluid", "category": "nature"},
+    {"word": "suno", "definition": "sun, light, brightness, shine", "category": "nature"},
+    {"word": "mun", "definition": "moon, star, night sky object", "category": "nature"},
+    {"word": "kasi", "definition": "plant, grass, herb, leaf, tree", "category": "nature"},
+    {"word": "soweli", "definition": "animal, mammal, land animal", "category": "nature"},
+    {"word": "kala", "definition": "fish, sea creature, marine animal", "category": "nature"},
+    {"word": "kon", "definition": "air, wind, smell, spirit, essence", "category": "nature"},
+    {"word": "li", "definition": "separates subject from predicate", "category": "particles"},
+    {"word": "e", "definition": "marks the direct object of a verb", "category": "particles"},
+    {"word": "la", "definition": "introduces context or condition; if, when", "category": "particles"},
+    {"word": "pi", "definition": "regroups modifiers; of, belonging to", "category": "particles"},
+    {"word": "o", "definition": "marks imperative or vocative; hey, oh, please", "category": "particles"}
+  ],
+  "sentence_quiz": {
+    "tp2en": [
+      {
+        "tp": "mi moku",
+        "en": "I eat",
+        "words": ["mi", "moku"]
+      },
+      {
+        "tp": "sina pona",
+        "en": "You are good",
+        "words": ["sina", "pona"]
+      },
+      {
+        "tp": "jan li toki",
+        "en": "A person speaks",
+        "words": ["jan", "li", "toki"]
+      },
+      {
+        "tp": "ona li lukin e tomo",
+        "en": "She looks at the house",
+        "words": ["ona", "li", "lukin", "e", "tomo"]
+      },
+      {
+        "tp": "mi wile moku",
+        "en": "I want to eat",
+        "words": ["mi", "wile", "moku"]
+      },
+      {
+        "tp": "telo li pona",
+        "en": "Water is good",
+        "words": ["telo", "li", "pona"]
+      },
+      {
+        "tp": "sina sona ala e toki pona",
+        "en": "You do not know toki pona",
+        "words": ["sina", "sona", "ala", "e", "toki", "pona"]
+      },
+      {
+        "tp": "jan li lape lon tomo",
+        "en": "A person sleeps in the house",
+        "words": ["jan", "li", "lape", "lon", "tomo"]
+      }
+    ],
+    "en2tp": [
+      {
+        "en": "I am good",
+        "tp": "mi pona",
+        "words": ["mi", "pona"]
+      },
+      {
+        "en": "You eat food",
+        "tp": "sina moku e moku",
+        "words": ["sina", "moku", "e"]
+      },
+      {
+        "en": "The person works",
+        "tp": "jan li pali",
+        "words": ["jan", "li", "pali"]
+      },
+      {
+        "en": "She has a house",
+        "tp": "ona li jo e tomo",
+        "words": ["ona", "li", "jo", "e", "tomo"]
+      },
+      {
+        "en": "Water is beautiful",
+        "tp": "telo li pona",
+        "words": ["telo", "li", "pona"]
+      },
+      {
+        "en": "I want to sleep",
+        "tp": "mi wile lape",
+        "words": ["mi", "wile", "lape"]
+      }
+    ],
+    "grammar": [
+      {
+        "sentence": "jan li toki",
+        "question": "What is the subject of this sentence?",
+        "answer": "jan",
+        "words": ["jan", "li", "toki"]
+      },
+      {
+        "sentence": "mi moku e kili",
+        "question": "What is the direct object?",
+        "answer": "kili",
+        "words": ["mi", "moku", "e", "kili"]
+      },
+      {
+        "sentence": "ona li pali pona",
+        "question": "What does 'pona' modify here?",
+        "answer": "pali",
+        "words": ["ona", "li", "pali", "pona"]
+      }
+    ]
+  },
+  "word_building": [
+    {
+      "compound": "toki pona",
+      "meaning": "the good language / toki pona language",
+      "parts": ["toki", "pona"]
+    },
+    {
+      "compound": "tomo telo",
+      "meaning": "bathroom, toilet",
+      "parts": ["tomo", "telo"]
+    },
+    {
+      "compound": "jan pona",
+      "meaning": "friend (good person)",
+      "parts": ["jan", "pona"]
+    },
+    {
+      "compound": "ma tomo",
+      "meaning": "city, town",
+      "parts": ["ma", "tomo"]
+    },
+    {
+      "compound": "tomo moku",
+      "meaning": "restaurant, dining room",
+      "parts": ["tomo", "moku"]
+    },
+    {
+      "compound": "suno pona",
+      "meaning": "good day, hello",
+      "parts": ["suno", "pona"]
+    },
+    {
+      "compound": "tenpo suno",
+      "meaning": "daytime, day",
+      "parts": ["tenpo", "suno"]
+    },
+    {
+      "compound": "tenpo lape",
+      "meaning": "bedtime, sleeping time",
+      "parts": ["tenpo", "lape"]
+    },
+    {
+      "compound": "ilo toki",
+      "meaning": "phone, communication device",
+      "parts": ["ilo", "toki"]
+    },
+    {
+      "compound": "jan sona",
+      "meaning": "wise person, expert, teacher",
+      "parts": ["jan", "sona"]
+    }
+  ],
+  "unscramble": [
+    {
+      "words": ["moku", "mi", "e", "kili"],
+      "correct": "mi moku e kili",
+      "translation": "I eat fruit"
+    },
+    {
+      "words": ["li", "toki", "jan"],
+      "correct": "jan li toki",
+      "translation": "A person speaks"
+    },
+    {
+      "words": ["tomo", "e", "lukin", "ona", "li"],
+      "correct": "ona li lukin e tomo",
+      "translation": "She looks at the house"
+    },
+    {
+      "words": ["pona", "sina"],
+      "correct": "sina pona",
+      "translation": "You are good"
+    },
+    {
+      "words": ["lape", "wile", "mi"],
+      "correct": "mi wile lape",
+      "translation": "I want to sleep"
+    },
+    {
+      "words": ["pali", "li", "jan", "e", "tomo"],
+      "correct": "jan li pali e tomo",
+      "translation": "A person builds a house"
+    }
+  ],
+  "sitelen_pona": [
+    {
+      "word": "mi",
+      "glyph_desc": "A hand pointing inward toward the self",
+      "category": "pronouns"
+    },
+    {
+      "word": "sina",
+      "glyph_desc": "A hand pointing outward toward another",
+      "category": "pronouns"
+    },
+    {
+      "word": "pona",
+      "glyph_desc": "A simple smiley face",
+      "category": "adjectives"
+    },
+    {
+      "word": "toki",
+      "glyph_desc": "A mouth with lines indicating speech",
+      "category": "actions"
+    },
+    {
+      "word": "jan",
+      "glyph_desc": "A simple stick figure representing a person",
+      "category": "people"
+    },
+    {
+      "word": "telo",
+      "glyph_desc": "Wavy lines representing water",
+      "category": "nature"
+    },
+    {
+      "word": "suno",
+      "glyph_desc": "A circle with rays emanating outward",
+      "category": "nature"
+    },
+    {
+      "word": "mun",
+      "glyph_desc": "A crescent moon shape",
+      "category": "nature"
+    },
+    {
+      "word": "tomo",
+      "glyph_desc": "A simple house shape with a roof",
+      "category": "places"
+    },
+    {
+      "word": "ma",
+      "glyph_desc": "A flat shape representing land or ground",
+      "category": "places"
+    }
+  ],
+  "particles": [
+    {
+      "sentence": "jan ___ toki",
+      "answer": "li",
+      "explanation": "li separates the subject (jan) from the predicate (toki) when the subject is not mi or sina alone",
+      "words": ["jan", "li", "toki"]
+    },
+    {
+      "sentence": "mi moku ___ kili",
+      "answer": "e",
+      "explanation": "e marks the direct object (kili) that follows the verb (moku)",
+      "words": ["mi", "moku", "e", "kili"]
+    },
+    {
+      "sentence": "tenpo pona ___, mi moku",
+      "answer": "la",
+      "explanation": "la introduces a context clause; when it is a good time, I eat",
+      "words": ["tenpo", "pona", "la", "mi", "moku"]
+    },
+    {
+      "sentence": "jan ___ tomo pona li pali",
+      "answer": "pi",
+      "explanation": "pi regroups modifiers — jan pi tomo pona means person of the good house",
+      "words": ["jan", "pi", "tomo", "pona", "li", "pali"]
+    },
+    {
+      "sentence": "sina ___ pona",
+      "answer": "o",
+      "explanation": "o with sina gives a command — sina o pona means you, be good / please be good",
+      "words": ["sina", "o", "pona"]
+    }
+  ],
+  "stories": [
+    {
+      "title": "jan Toma li moku",
+      "text": "jan Toma li lon tomo. ona li wile moku. ona li jo e kili mute. jan Toma li moku e kili. ona li pilin pona.",
+      "questions": [
+        {
+          "question": "Where is jan Toma?",
+          "options": ["in the forest", "in the house", "at the market", "outside"],
+          "answer_index": 1
+        },
+        {
+          "question": "What does jan Toma want?",
+          "options": ["to sleep", "to speak", "to eat", "to work"],
+          "answer_index": 2
+        },
+        {
+          "question": "How does jan Toma feel at the end?",
+          "options": ["bad", "confused", "good", "tired"],
+          "answer_index": 2
+        }
+      ],
+      "words": ["jan", "lon", "tomo", "wile", "moku", "jo", "kili", "mute", "pilin", "pona"]
+    },
+    {
+      "title": "telo wawa",
+      "text": "suno li suli. telo li wawa. soweli li moku e telo. soweli li pilin pona. ma li pona tan telo.",
+      "questions": [
+        {
+          "question": "What is described as large?",
+          "options": ["the water", "the animal", "the sun", "the land"],
+          "answer_index": 2
+        },
+        {
+          "question": "What does the animal drink?",
+          "options": ["food", "water", "fruit", "air"],
+          "answer_index": 1
+        },
+        {
+          "question": "Why is the land good?",
+          "options": ["because of the sun", "because of the animal", "because of water", "because of food"],
+          "answer_index": 2
+        }
+      ],
+      "words": ["suno", "suli", "telo", "wawa", "soweli", "moku", "pilin", "pona", "ma", "tan"]
+    }
+  ],
+  "reverse_build": [
+    {
+      "meaning": "I want to eat food",
+      "expected": "mi wile moku e moku",
+      "key_words": ["mi", "wile", "moku", "e"]
+    },
+    {
+      "meaning": "The person is good",
+      "expected": "jan li pona",
+      "key_words": ["jan", "li", "pona"]
+    },
+    {
+      "meaning": "She knows the language",
+      "expected": "ona li sona e toki",
+      "key_words": ["ona", "li", "sona", "e", "toki"]
+    },
+    {
+      "meaning": "You can sleep in the house",
+      "expected": "sina ken lape lon tomo",
+      "key_words": ["sina", "ken", "lape", "lon", "tomo"]
+    },
+    {
+      "meaning": "The tool is useful",
+      "expected": "ilo li pona",
+      "key_words": ["ilo", "li", "pona"]
+    }
+  ]
+}

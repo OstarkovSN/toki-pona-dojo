@@ -1,0 +1,238 @@
+{
+  "sections": [
+    {
+      "id": "basic-sentences",
+      "number": 1,
+      "title": "Basic Sentence Structure",
+      "content": "In toki pona, every simple sentence follows the pattern: subject + li + predicate. The particle 'li' separates the subject from the predicate (verb or adjective). However, when the subject is exactly 'mi' or exactly 'sina', li is dropped.\n\nExamples:\n- jan li toki. (A person speaks.)\n- soweli li lape. (The animal sleeps.)\n- mi moku. (I eat.) — no li after mi\n- sina pona. (You are good.) — no li after sina",
+      "chains": [
+        {"label": "Subject", "example": "jan"},
+        {"label": "li", "example": "li"},
+        {"label": "Predicate", "example": "toki"}
+      ],
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "Drop li only when the complete subject is exactly 'mi' or 'sina' — not 'mi en sina' or 'mi mute'."
+        },
+        {
+          "type": "example",
+          "text": "mi mute li toki. (We speak.) — li is kept here because the subject is 'mi mute', not bare 'mi'."
+        }
+      ]
+    },
+    {
+      "id": "direct-objects",
+      "number": 2,
+      "title": "Direct Objects with e",
+      "content": "To add a direct object to a sentence, use the particle 'e' between the verb and the object. The e particle marks exactly what the action is done to.\n\nStructure: subject (+ li) + verb + e + object\n\nExamples:\n- mi moku e kili. (I eat fruit.)\n- ona li lukin e tomo. (She looks at the house.)\n- sina jo e ilo. (You have a tool.)",
+      "chains": [
+        {"label": "Subject", "example": "mi"},
+        {"label": "Verb", "example": "moku"},
+        {"label": "e", "example": "e"},
+        {"label": "Object", "example": "kili"}
+      ],
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "You can chain multiple objects: mi moku e kili e pan. (I eat fruit and bread.)"
+        },
+        {
+          "type": "warning",
+          "text": "Adjectives and prepositions never follow e — only nouns (or noun phrases) do."
+        }
+      ]
+    },
+    {
+      "id": "modifiers",
+      "number": 3,
+      "title": "Modifiers and Adjectives",
+      "content": "In toki pona, modifiers (adjectives, adverbs) always come after the word they modify. This is opposite to English. Multiple modifiers can be stacked.\n\nExamples:\n- jan pona (good person, friend)\n- tomo suli (big house)\n- telo pona mute (very good water / a lot of good water)\n\nThe particle 'pi' regroups modifiers. Without pi, all modifiers attach directly to the first noun. With pi, the words after pi form a phrase that modifies the first noun as a group.\n\n- jan pi toki pona (toki pona person — a person of toki pona)\n- jan toki pona (good-language person — ambiguous stacking)",
+      "chains": [
+        {"label": "Noun", "example": "jan"},
+        {"label": "Modifier 1", "example": "pi"},
+        {"label": "Noun 2", "example": "toki"},
+        {"label": "Modifier 2", "example": "pona"}
+      ],
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "Use pi when you have a two-word modifier: jan pi ma ante (person of a different land)."
+        },
+        {
+          "type": "warning",
+          "text": "Never use pi with a single word — pi pona is wrong. Just use pona directly."
+        }
+      ]
+    },
+    {
+      "id": "pre-verbs",
+      "number": 4,
+      "title": "Pre-verbs (Modal Verbs)",
+      "content": "Pre-verbs come before the main verb and change its meaning. Common pre-verbs include:\n- wile (want to, need to)\n- ken (can, may)\n- kama (become, manage to)\n- awen (keep on, continue to)\n- sona (know how to)\n- lukin (try to)\n- open (start to)\n- pini (stop, finish)\n\nStructure: subject (+ li) + pre-verb + main verb\n\nExamples:\n- mi wile moku. (I want to eat.)\n- sina ken toki. (You can speak.)\n- ona li kama sona e toki pona. (She is learning toki pona.)",
+      "chains": [
+        {"label": "Subject", "example": "mi"},
+        {"label": "Pre-verb", "example": "wile"},
+        {"label": "Main verb", "example": "moku"}
+      ],
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "Pre-verbs can be stacked: mi wile ken moku. (I want to be able to eat.)"
+        }
+      ]
+    },
+    {
+      "id": "context-clauses",
+      "number": 5,
+      "title": "Context Clauses with la",
+      "content": "The particle 'la' marks the end of a context clause that precedes the main sentence. The context clause can express:\n- Time: tenpo suno la, mi pali. (In the daytime, I work.)\n- Condition: sina pona la, mi pilin pona. (If you are good, I feel good.)\n- Topic: toki pona la, nimi lili li mute ala. (As for toki pona, there aren't many words.)\n\nStructure: [context] la [main sentence]",
+      "chains": [
+        {"label": "Context", "example": "tenpo suno"},
+        {"label": "la", "example": "la"},
+        {"label": "Main sentence", "example": "mi pali"}
+      ],
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "The context before la can be a full sentence or just a noun phrase."
+        },
+        {
+          "type": "example",
+          "text": "mi lape la, o kalama ala. (While I sleep, don't make noise.)"
+        }
+      ]
+    },
+    {
+      "id": "prepositions",
+      "number": 6,
+      "title": "Prepositions: lon, tawa, tan, kepeken",
+      "content": "Toki pona has four main prepositions that attach to the end of a sentence:\n- lon: at, in, on (location or existence)\n- tawa: to, for, moving to\n- tan: from, because of\n- kepeken: using, with\n\nExamples:\n- mi moku lon tomo. (I eat in the house.)\n- mi tawa ma pona. (I go to the good land.)\n- ona li kama tan ma ante. (She comes from another land.)\n- mi pali kepeken ilo. (I work using a tool.)",
+      "chains": [
+        {"label": "Subject+Predicate", "example": "mi moku"},
+        {"label": "Preposition", "example": "lon"},
+        {"label": "Object", "example": "tomo"}
+      ],
+      "callouts": [
+        {
+          "type": "tip",
+          "text": "lon, tawa, tan, and kepeken can also be used as verbs: mi lon. (I exist / I am here.)"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "title": "li vs no li (with mi/sina)",
+      "left": "jan li toki. (A person speaks.)",
+      "right": "mi toki. (I speak.)",
+      "explanation": "When the subject is exactly 'mi' or 'sina' alone, drop li. For all other subjects — including 'mi mute' — keep li."
+    },
+    {
+      "title": "Modifier order: toki pona vs pona toki",
+      "left": "toki pona (good language / toki pona language)",
+      "right": "pona toki (communication goodness — unusual)",
+      "explanation": "Modifiers follow the word they modify. toki pona means a language that is good (or the specific language). Reversed order pona toki would mean a goodness that is language-like, which is rarely used."
+    },
+    {
+      "title": "e (direct object) vs lon (location)",
+      "left": "mi lukin e tomo. (I look at the house.)",
+      "right": "mi lon tomo. (I am in the house.)",
+      "explanation": "e marks a direct object — the thing directly acted upon. lon is a preposition indicating location or existence. Don't use e with prepositions."
+    },
+    {
+      "title": "pi (grouping) vs stacked modifiers",
+      "left": "jan pi tomo pona (person of the good house)",
+      "right": "jan tomo pona (good-house person — can be ambiguous)",
+      "explanation": "Without pi, all modifiers attach one by one to the head noun. pi groups subsequent words as a unit that modifies the head noun."
+    },
+    {
+      "title": "wile (want/need) as pre-verb vs noun",
+      "left": "mi wile moku. (I want to eat.)",
+      "right": "mi jo e wile moku. (I have a desire to eat.)",
+      "explanation": "As a pre-verb, wile precedes the main verb and means to want/need to do that action. As a noun (with e before it), wile refers to the desire itself."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence correctly uses 'li'?",
+      "options": [
+        "mi li moku",
+        "jan li toki",
+        "sina li pona",
+        "ona moku"
+      ],
+      "answer_index": 1
+    },
+    {
+      "question": "What does 'e' mark in a toki pona sentence?",
+      "options": [
+        "The subject",
+        "A condition or context",
+        "The direct object",
+        "A location"
+      ],
+      "answer_index": 2
+    },
+    {
+      "question": "How do you say 'I want to sleep' in toki pona?",
+      "options": [
+        "mi lape wile",
+        "mi wile lape",
+        "mi li wile lape",
+        "wile mi lape"
+      ],
+      "answer_index": 1
+    },
+    {
+      "question": "What does 'pi' do in a toki pona noun phrase?",
+      "options": [
+        "Marks the direct object",
+        "Indicates a question",
+        "Regroups modifiers as a unit",
+        "Separates subject from predicate"
+      ],
+      "answer_index": 2
+    },
+    {
+      "question": "Which sentence means 'She works in the house'?",
+      "options": [
+        "ona li pali e tomo",
+        "ona li pali lon tomo",
+        "ona pali lon tomo",
+        "tomo li pali ona"
+      ],
+      "answer_index": 1
+    },
+    {
+      "question": "When do you drop 'li' from a sentence?",
+      "options": [
+        "When the sentence is a question",
+        "When the subject is 'ona'",
+        "When the subject is exactly 'mi' or 'sina' alone",
+        "When the verb is a pre-verb"
+      ],
+      "answer_index": 2
+    },
+    {
+      "question": "What does 'la' introduce in a sentence?",
+      "options": [
+        "A direct object",
+        "A context or conditional clause",
+        "A list of nouns",
+        "A command"
+      ],
+      "answer_index": 1
+    },
+    {
+      "question": "Which preposition means 'using' or 'with (a tool)'?",
+      "options": [
+        "lon",
+        "tawa",
+        "tan",
+        "kepeken"
+      ],
+      "answer_index": 3
+    }
+  ]
+}
