@@ -11,6 +11,7 @@
 | # | Phase | Description | Spec | Plan |
 |---|-------|-------------|------|------|
 | 1 | **Clean Slate** | Remove Items demo code, rebrand to "toki pona dojo", leave a clean app with only auth/users | [spec](docs/superpowers/specs/2026-04-05-phase-01-clean-slate-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-01-clean-slate.md) |
+| 1.5 | **Test Coverage** | Find all test gaps in the current backend, write tests to reach 100% line coverage | — | [plan](docs/superpowers/plans/2026-04-05-phase-015-test-coverage.md) |
 | 2 | **Data Layer** | Extract toki pona content into structured JSON, add UserProgress model, serve dictionary/lessons via read-only API | [spec](docs/superpowers/specs/2026-04-05-phase-02-data-layer-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-02-data-layer.md) |
 | 3 | **LLM Integration** | LLM-powered chat streaming and exercise grading endpoints with rate limiting for anonymous users | [spec](docs/superpowers/specs/2026-04-05-phase-03-llm-integration-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-03-llm-integration.md) |
 | 4 | **LangFuse Observability** | Self-hosted LangFuse v3 with all LLM calls traced; graceful degradation when unavailable | [spec](docs/superpowers/specs/2026-04-05-phase-04-langfuse-observability-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-04-langfuse-observability.md) |
