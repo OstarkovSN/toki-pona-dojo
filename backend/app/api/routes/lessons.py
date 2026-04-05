@@ -2,19 +2,21 @@
 
 import logging
 import random
+from collections.abc import Callable
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
 from app.data.loader import get_exercises_by_words, get_word
-from app.data.units import UNITS, get_unit_by_id, get_words_up_to_unit
+from app.data.units import UNITS, UnitSummary, get_unit_by_id, get_words_up_to_unit
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/lessons", tags=["lessons"])
 
-MIN_EXERCISES = 5
 MAX_EXERCISES = 7
+
+_ExBuilder = Callable[[list[str], set[str], dict[str, Any]], list[dict[str, Any]]]
 
 
 def _build_match_exercises(
@@ -192,7 +194,7 @@ def _build_story_exercises(
     return exercises
 
 
-_EXERCISE_BUILDERS: dict[str, Any] = {
+_EXERCISE_BUILDERS: dict[str, _ExBuilder] = {
     "match": lambda words, all_words, filtered: _build_match_exercises(words),
     "multichoice": lambda words, all_words, filtered: _build_multichoice_exercises(
         words, all_words
@@ -213,7 +215,7 @@ _EXERCISE_BUILDERS: dict[str, Any] = {
 }
 
 
-@router.get("/units")
+@router.get("/units", response_model=list[UnitSummary])
 def list_units() -> list[dict[str, Any]]:
     """Return the full skill tree — all 10 units with metadata."""
     return UNITS
