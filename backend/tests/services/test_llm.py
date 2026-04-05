@@ -1,4 +1,4 @@
-
+from unittest.mock import MagicMock, patch
 
 from app.services.llm import (
     SYSTEM_PROMPT_CHAT,
@@ -97,3 +97,29 @@ def test_get_llm_client_returns_openai_instance() -> None:
     from openai import OpenAI
 
     assert isinstance(client, OpenAI)
+
+
+class TestGetLlmClientLangfuse:
+    """get_llm_client() returns LangFuse client when configured."""
+
+    def test_returns_plain_openai_when_not_configured(self) -> None:
+        from openai import OpenAI
+
+        with patch("app.services.llm._configure_langfuse_env", return_value=False):
+            client = get_llm_client()
+            assert isinstance(client, OpenAI)
+
+    def test_returns_langfuse_client_when_configured(self) -> None:
+        mock_langfuse_openai_cls = MagicMock()
+        mock_langfuse_openai_instance = MagicMock()
+        mock_langfuse_openai_cls.return_value = mock_langfuse_openai_instance
+
+        with (
+            patch("app.services.llm._configure_langfuse_env", return_value=True),
+            patch.dict(
+                "sys.modules",
+                {"langfuse.openai": MagicMock(OpenAI=mock_langfuse_openai_cls)},
+            ),
+        ):
+            client = get_llm_client()
+            assert client is mock_langfuse_openai_instance
