@@ -6,6 +6,7 @@ as part of the pytest suite.
 
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -13,25 +14,25 @@ DATA_DIR = Path(__file__).parent.parent.parent / "app" / "data"
 
 
 @pytest.fixture(scope="module")
-def words() -> list[dict]:
+def words() -> list[dict[str, Any]]:
     with open(DATA_DIR / "words.json") as f:
         return json.load(f)
 
 
 @pytest.fixture(scope="module")
-def exercises() -> dict:
+def exercises() -> dict[str, Any]:
     with open(DATA_DIR / "exercises.json") as f:
         return json.load(f)
 
 
 @pytest.fixture(scope="module")
-def grammar() -> dict:
+def grammar() -> dict[str, Any]:
     with open(DATA_DIR / "grammar.json") as f:
         return json.load(f)
 
 
 @pytest.fixture(scope="module")
-def word_set(words: list[dict]) -> set[str]:
+def word_set(words: list[dict[str, Any]]) -> set[str]:
     return {w["word"] for w in words}
 
 
@@ -39,36 +40,38 @@ def word_set(words: list[dict]) -> set[str]:
 
 
 class TestWords:
-    def test_minimum_count(self, words: list[dict]) -> None:
+    def test_minimum_count(self, words: list[dict[str, Any]]) -> None:
         """Sample data has at least 85 words (full dataset should have 137)."""
         assert len(words) >= 85
 
-    def test_no_duplicate_words(self, words: list[dict]) -> None:
+    def test_no_duplicate_words(self, words: list[dict[str, Any]]) -> None:
         """No duplicate word entries."""
         seen: set[str] = set()
         for entry in words:
             assert entry["word"] not in seen, f"Duplicate: {entry['word']}"
             seen.add(entry["word"])
 
-    def test_required_fields(self, words: list[dict]) -> None:
+    def test_required_fields(self, words: list[dict[str, Any]]) -> None:
         """Every word has all required fields."""
         required = {"word", "ku", "pos", "definitions", "note"}
         for entry in words:
             missing = required - set(entry.keys())
             assert not missing, f"{entry.get('word', '?')}: missing {missing}"
 
-    def test_ku_is_boolean(self, words: list[dict]) -> None:
+    def test_ku_is_boolean(self, words: list[dict[str, Any]]) -> None:
         """The ku field is always a boolean."""
         for entry in words:
             assert isinstance(entry["ku"], bool), f"{entry['word']}: ku is not bool"
 
-    def test_pos_is_nonempty_list(self, words: list[dict]) -> None:
+    def test_pos_is_nonempty_list(self, words: list[dict[str, Any]]) -> None:
         """The pos field is a non-empty list."""
         for entry in words:
             assert isinstance(entry["pos"], list), f"{entry['word']}: pos is not list"
             assert len(entry["pos"]) > 0, f"{entry['word']}: pos is empty"
 
-    def test_definitions_have_required_fields(self, words: list[dict]) -> None:
+    def test_definitions_have_required_fields(
+        self, words: list[dict[str, Any]]
+    ) -> None:
         """Each definition has pos and definition fields."""
         for entry in words:
             for defn in entry["definitions"]:
@@ -93,7 +96,7 @@ class TestWords:
 
 
 class TestExercises:
-    def test_required_keys(self, exercises: dict) -> None:
+    def test_required_keys(self, exercises: dict[str, Any]) -> None:
         """exercises.json has all required top-level keys."""
         required = {
             "flashcards",
@@ -108,16 +111,18 @@ class TestExercises:
         missing = required - set(exercises.keys())
         assert not missing, f"Missing keys: {missing}"
 
-    def test_flashcard_minimum_count(self, exercises: dict) -> None:
+    def test_flashcard_minimum_count(self, exercises: dict[str, Any]) -> None:
         """At least 3 flashcard entries."""
         assert len(exercises["flashcards"]) >= 3
 
-    def test_flashcard_words_exist(self, exercises: dict, word_set: set[str]) -> None:
+    def test_flashcard_words_exist(
+        self, exercises: dict[str, Any], word_set: set[str]
+    ) -> None:
         """Flashcard words reference valid words."""
         for fc in exercises["flashcards"]:
             assert fc["word"] in word_set, f"Flashcard unknown word: {fc['word']}"
 
-    def test_flashcard_categories_have_enough(self, exercises: dict) -> None:
+    def test_flashcard_categories_have_enough(self, exercises: dict[str, Any]) -> None:
         """Each flashcard category has >= 3 entries."""
         categories: dict[str, int] = {}
         for fc in exercises["flashcards"]:
@@ -127,7 +132,7 @@ class TestExercises:
             assert count >= 3, f"Category '{cat}' has only {count} entries"
 
     def test_sentence_quiz_words_exist(
-        self, exercises: dict, word_set: set[str]
+        self, exercises: dict[str, Any], word_set: set[str]
     ) -> None:
         """Sentence quiz word references are valid."""
         sq = exercises["sentence_quiz"]
@@ -136,7 +141,7 @@ class TestExercises:
                 for w in item.get("words", []):
                     assert w in word_set, f"sentence_quiz.{section} unknown word: '{w}'"
 
-    def test_story_answer_indices_valid(self, exercises: dict) -> None:
+    def test_story_answer_indices_valid(self, exercises: dict[str, Any]) -> None:
         """Story question answer_index values are within range."""
         for story in exercises.get("stories", []):
             for q in story.get("questions", []):
@@ -147,7 +152,9 @@ class TestExercises:
                     f"out of range for {len(options)} options"
                 )
 
-    def test_story_words_exist(self, exercises: dict, word_set: set[str]) -> None:
+    def test_story_words_exist(
+        self, exercises: dict[str, Any], word_set: set[str]
+    ) -> None:
         """Story word references are valid."""
         for story in exercises.get("stories", []):
             for w in story.get("words", []):
@@ -158,13 +165,13 @@ class TestExercises:
 
 
 class TestGrammar:
-    def test_required_keys(self, grammar: dict) -> None:
+    def test_required_keys(self, grammar: dict[str, Any]) -> None:
         """grammar.json has all required top-level keys."""
         required = {"sections", "comparisons", "quiz"}
         missing = required - set(grammar.keys())
         assert not missing, f"Missing keys: {missing}"
 
-    def test_sections_have_required_fields(self, grammar: dict) -> None:
+    def test_sections_have_required_fields(self, grammar: dict[str, Any]) -> None:
         """Each section has id, number, title, content."""
         for section in grammar["sections"]:
             for field in ["id", "number", "title", "content"]:
@@ -172,7 +179,7 @@ class TestGrammar:
                     f"Section missing '{field}': {section.get('id', '?')}"
                 )
 
-    def test_no_duplicate_section_ids(self, grammar: dict) -> None:
+    def test_no_duplicate_section_ids(self, grammar: dict[str, Any]) -> None:
         """No duplicate section IDs."""
         seen: set[str] = set()
         for section in grammar["sections"]:
@@ -180,7 +187,7 @@ class TestGrammar:
             assert sid not in seen, f"Duplicate section id: {sid}"
             seen.add(sid)
 
-    def test_quiz_answer_indices_valid(self, grammar: dict) -> None:
+    def test_quiz_answer_indices_valid(self, grammar: dict[str, Any]) -> None:
         """Grammar quiz answer_index values are within range."""
         for i, q in enumerate(grammar.get("quiz", [])):
             options = q["options"]
@@ -189,6 +196,6 @@ class TestGrammar:
                 f"quiz[{i}]: answer_index {idx} out of range for {len(options)} options"
             )
 
-    def test_sections_minimum_count(self, grammar: dict) -> None:
+    def test_sections_minimum_count(self, grammar: dict[str, Any]) -> None:
         """At least 3 grammar sections in sample data."""
         assert len(grammar["sections"]) >= 3
