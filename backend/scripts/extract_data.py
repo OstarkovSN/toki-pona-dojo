@@ -41,10 +41,6 @@ DOJO_VARIABLES = {
     "FC_ALL": "flashcards_raw",
 }
 
-DICTIONARY_VARIABLES = {
-    "WORDS": "words_raw",
-}
-
 MODIFIERS_VARIABLES = {
     "SECTIONS": "sections_raw",
     "COMPARISONS": "comparisons_raw",

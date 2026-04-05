@@ -28,8 +28,11 @@ def load_json(path: Path) -> dict | list:
     """Load and parse a JSON file."""
     if not path.exists():
         raise ValidationError(f"File not found: {path}")
-    with open(path) as f:
-        return json.load(f)
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except json.JSONDecodeError as e:
+        raise ValidationError(f"Invalid JSON in {path}: {e}") from e
 
 
 def validate_words(words: list[dict], errors: list[str]) -> set[str]:
@@ -188,6 +191,13 @@ def main(data_dir: Path) -> None:
         grammar = load_json(data_dir / "grammar.json")
     except ValidationError as e:
         logger.error("%s", e)
+        sys.exit(1)
+
+    if not isinstance(words, list):
+        logger.error("words.json must be a JSON array, got %s", type(words).__name__)
+        sys.exit(1)
+    if not isinstance(exercises, dict) or not isinstance(grammar, dict):
+        logger.error("exercises.json and grammar.json must be JSON objects")
         sys.exit(1)
 
     word_set = validate_words(words, errors)
