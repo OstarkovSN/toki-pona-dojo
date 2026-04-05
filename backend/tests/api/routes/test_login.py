@@ -261,6 +261,24 @@ def test_recover_password_html_content_unknown_email(
     assert "does not exist" in r.json()["detail"]
 
 
+def test_recovery_password_smtp_failure_still_returns_200(
+    client: TestClient, db: Session
+) -> None:
+    """gap-9: send_email raises (smtp down) -> recover_password still returns 200."""
+    email = random_email()
+    password = random_lower_string()
+    create_user(session=db, user_create=UserCreate(email=email, password=password))
+
+    with (
+        patch("app.core.config.settings.SMTP_HOST", "smtp.example.com"),
+        patch("app.core.config.settings.EMAILS_FROM_EMAIL", "admin@example.com"),
+        patch("app.api.routes.login.send_email", side_effect=Exception("SMTP down")),
+    ):
+        r = client.post(f"{settings.API_V1_STR}/password-recovery/{email}")
+
+    assert r.status_code == 200
+
+
 def test_login_with_argon2_password_keeps_hash(client: TestClient, db: Session) -> None:
     """Test that logging in with an argon2 password hash does not update it."""
     email = random_email()

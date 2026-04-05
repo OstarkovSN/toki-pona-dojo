@@ -505,6 +505,33 @@ def test_delete_user_current_super_user_error(
     assert r.json()["detail"] == "Super users are not allowed to delete themselves"
 
 
+def test_create_user_smtp_failure_still_returns_user(
+    client: TestClient,
+    superuser_token_headers: dict[str, str],
+) -> None:
+    """gap-13: send_email raises after user is created -> user still returned, no crash."""
+    email = random_email()
+    data = {
+        "email": email,
+        "password": random_lower_string(),
+        "full_name": "Email Fail User",
+    }
+
+    with (
+        patch("app.core.config.settings.SMTP_HOST", "smtp.example.com"),
+        patch("app.core.config.settings.EMAILS_FROM_EMAIL", "admin@example.com"),
+        patch("app.api.routes.users.send_email", side_effect=Exception("SMTP down")),
+    ):
+        r = client.post(
+            f"{settings.API_V1_STR}/users/",
+            json=data,
+            headers=superuser_token_headers,
+        )
+
+    assert r.status_code == 200
+    assert r.json()["email"] == email
+
+
 def test_delete_user_without_privileges(
     client: TestClient, normal_user_token_headers: dict[str, str], db: Session
 ) -> None:
