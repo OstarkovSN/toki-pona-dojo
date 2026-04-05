@@ -303,3 +303,7 @@ mocker.patch("app.utils.send_email", ...)
 - **`set` as a FastAPI query param name works fine** — no shadowing issue (`set: str | None = None` is valid).
 - **Exercise builders use lambdas with 3 params** (`words, all_words, filtered`) to cleanly dispatch by type without if/elif chains.
 - **Unit 1 exercises use only match + multichoice** types; other exercise types come in later units.
+- **SQLModel unique=True on FK fields** — for 1:1 relationships (e.g. one UserProgress per user), add `unique=True` to the FK field; `index=True` alone does not prevent duplicate rows.
+- **Exercise builders need KeyError guards** — builders that access dict fields by key on raw JSON entries must use `try/except (KeyError, TypeError)` with `logging.warning` and `continue`; malformed entries must never produce unlogged 500s.
+- **Module-level index builds need guards** — bare `{w["key"]: w for w in collection}` dict comprehensions at module level crash app startup on bad data; use a guarded loop that logs and skips entries missing required keys.
+- **Unique constraint migration pattern** — when adding `unique=True` to an existing indexed column, generate a new migration that drops the non-unique index and recreates it with `unique=True`; do not edit the original migration.
