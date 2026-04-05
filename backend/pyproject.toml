@@ -21,6 +21,7 @@ dependencies = [
     "pwdlib[argon2,bcrypt]>=0.3.0",
     "openai>=1.0.0,<2.0.0",
     "slowapi>=0.1.9,<1.0.0",
+    "langfuse>=4.0.0",
 ]
 
 [dependency-groups]
