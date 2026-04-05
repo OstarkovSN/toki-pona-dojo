@@ -97,3 +97,13 @@ Added to `Settings`:
 - **Static JSON data** (Phase 2+) lives in `app/data/` and is loaded at module import time (`json.loads(Path(...).read_text())`). No DB table, no migration needed.
 - **`cd backend && uv run prek install`** — installs git hooks for entire repo (uses root `.pre-commit-config.yaml`), but must be run from `backend/` since that's where `prek` is installed.
 - **Naming gotcha:** The pre-start Python script is named `backend_pre_start.py` (underscores) while the shell wrapper is `prestart.sh` — don't confuse the two.
+
+### Running tests inside the container
+
+The Dockerfile does NOT copy `tests/` — it only copies `app/`, `scripts/`, `pyproject.toml`. Before running tests, sync the tests directory:
+```bash
+docker compose cp backend/tests backend:/app/backend/tests
+docker compose exec backend bash scripts/tests-start.sh
+```
+
+Or use `docker compose watch` (which syncs the full `./backend` including `tests/`) instead of `docker compose up -d`.
