@@ -1,9 +1,9 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 interface ChatMessageProps {
-  role: "user" | "assistant";
-  content: string;
-  isStreaming?: boolean;
+  role: "user" | "assistant"
+  content: string
+  isStreaming?: boolean
 }
 
 // Common toki pona words used for heuristic language detection
@@ -41,17 +41,19 @@ const TP_MARKERS = new Set([
   "mute",
   "wan",
   "tu",
-]);
+])
 
 /**
  * Heuristic: a line is "toki pona" if >40% of its words are TP markers
  * and it has at least 2 words.
  */
 function isTokiPona(line: string): boolean {
-  const words = line.toLowerCase().split(/\s+/).filter(Boolean);
-  if (words.length < 2) return false;
-  const tpCount = words.filter((w) => TP_MARKERS.has(w.replace(/[.,!?]/g, ""))).length;
-  return tpCount / words.length > 0.4;
+  const words = line.toLowerCase().split(/\s+/).filter(Boolean)
+  if (words.length < 2) return false
+  const tpCount = words.filter((w) =>
+    TP_MARKERS.has(w.replace(/[.,!?]/g, "")),
+  ).length
+  return tpCount / words.length > 0.4
 }
 
 /**
@@ -59,11 +61,11 @@ function isTokiPona(line: string): boolean {
  * with the font matching its detected language.
  */
 function renderContent(content: string) {
-  const paragraphs = content.split(/\n\s*\n/);
+  const paragraphs = content.split(/\n\s*\n/)
   return paragraphs.map((para, i) => {
-    const trimmed = para.trim();
-    if (!trimmed) return null;
-    const isTP = isTokiPona(trimmed);
+    const trimmed = para.trim()
+    if (!trimmed) return null
+    const isTP = isTokiPona(trimmed)
     return (
       <p
         key={i}
@@ -74,12 +76,12 @@ function renderContent(content: string) {
       >
         {trimmed}
       </p>
-    );
-  });
+    )
+  })
 }
 
 export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
-  const isUser = role === "user";
+  const isUser = role === "user"
 
   return (
     <div
@@ -104,5 +106,5 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
         ) : null}
       </div>
     </div>
-  );
+  )
 }
