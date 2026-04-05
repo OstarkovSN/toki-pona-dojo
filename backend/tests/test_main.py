@@ -1,66 +1,59 @@
 """Tests for app/main.py — Sentry initialization path."""
 
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 
 def test_sentry_init_called_when_dsn_set_and_not_local() -> None:
     """sentry_sdk.init should be called when SENTRY_DSN is set and env is not local."""
     fake_dsn = "https://abc123@o0.ingest.sentry.io/0"
 
+    mock_settings = MagicMock()
+    mock_settings.SENTRY_DSN = fake_dsn
+    mock_settings.ENVIRONMENT = "production"
+
     with (
-        patch("app.core.config.settings") as mock_settings,
-        patch("sentry_sdk.init") as mock_sentry_init,
+        patch("app.main.settings", mock_settings),
+        patch("app.main.sentry_sdk") as mock_sentry,
     ):
-        mock_settings.SENTRY_DSN = fake_dsn
-        mock_settings.ENVIRONMENT = "production"
+        from app.main import configure_sentry
 
-        # Re-evaluate the Sentry init logic directly (as it runs at module import time)
-        import sentry_sdk
+        configure_sentry()
 
-        from app.core.config import settings
-
-        if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
-            sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
-
-        mock_sentry_init.assert_called_once_with(dsn=str(fake_dsn), enable_tracing=True)
+        mock_sentry.init.assert_called_once_with(dsn=str(fake_dsn), enable_tracing=True)
 
 
 def test_sentry_not_called_when_environment_is_local() -> None:
     """sentry_sdk.init should NOT be called when environment is local."""
+    mock_settings = MagicMock()
+    mock_settings.SENTRY_DSN = "https://abc123@o0.ingest.sentry.io/0"
+    mock_settings.ENVIRONMENT = "local"
+
     with (
-        patch("app.core.config.settings") as mock_settings,
-        patch("sentry_sdk.init") as mock_sentry_init,
+        patch("app.main.settings", mock_settings),
+        patch("app.main.sentry_sdk") as mock_sentry,
     ):
-        mock_settings.SENTRY_DSN = "https://abc123@o0.ingest.sentry.io/0"
-        mock_settings.ENVIRONMENT = "local"
+        from app.main import configure_sentry
 
-        import sentry_sdk
+        configure_sentry()
 
-        from app.core.config import settings
-
-        if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
-            sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
-
-        mock_sentry_init.assert_not_called()
+        mock_sentry.init.assert_not_called()
 
 
 def test_sentry_not_called_when_no_dsn() -> None:
     """sentry_sdk.init should NOT be called when SENTRY_DSN is None."""
+    mock_settings = MagicMock()
+    mock_settings.SENTRY_DSN = None
+    mock_settings.ENVIRONMENT = "production"
+
     with (
-        patch("app.core.config.settings") as mock_settings,
-        patch("sentry_sdk.init") as mock_sentry_init,
+        patch("app.main.settings", mock_settings),
+        patch("app.main.sentry_sdk") as mock_sentry,
     ):
-        mock_settings.SENTRY_DSN = None
-        mock_settings.ENVIRONMENT = "production"
+        from app.main import configure_sentry
 
-        import sentry_sdk
+        configure_sentry()
 
-        from app.core.config import settings
-
-        if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
-            sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
-
-        mock_sentry_init.assert_not_called()
+        mock_sentry.init.assert_not_called()
 
 
 def test_app_is_fastapi_instance() -> None:

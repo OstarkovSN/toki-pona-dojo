@@ -60,15 +60,19 @@ class TestTestsPreStart:
             mock_init.assert_called_once()
 
     def test_main_guard_runs_main(self) -> None:
-        """Running tests_pre_start as __main__ should complete without error.
+        """Running tests_pre_start as __main__ calls main() which calls init().
 
-        runpy.run_module re-executes in a fresh namespace. The @retry-decorated
-        init function was already bound at import time, so Session patches don't
-        intercept the re-executed copy. The live DB is available in the test
-        environment, so we simply verify the __main__ guard doesn't raise.
+        runpy.run_module re-executes the module in a fresh namespace. We patch
+        Session in the module so that init() succeeds without touching the DB,
+        verifying the __main__ guard triggers main() -> init() without retries.
         """
-        # Should not raise — live DB is available in test container
-        runpy.run_module("app.tests_pre_start", run_name="__main__")
+        mock_session = MagicMock()
+        mock_context = MagicMock()
+        mock_context.__enter__ = MagicMock(return_value=mock_session)
+        mock_context.__exit__ = MagicMock(return_value=False)
+
+        with patch("app.tests_pre_start.Session", return_value=mock_context):
+            runpy.run_module("app.tests_pre_start", run_name="__main__")
 
 
 class TestBackendPreStart:
@@ -123,12 +127,16 @@ class TestBackendPreStart:
             mock_init.assert_called_once()
 
     def test_main_guard_runs_main(self) -> None:
-        """Running backend_pre_start as __main__ should complete without error.
+        """Running backend_pre_start as __main__ calls main() which calls init().
 
-        runpy.run_module re-executes in a fresh namespace. The @retry-decorated
-        init function was already bound at import time, so Session patches don't
-        intercept the re-executed copy. The live DB is available in the test
-        environment, so we simply verify the __main__ guard doesn't raise.
+        runpy.run_module re-executes the module in a fresh namespace. We patch
+        Session in the module so that init() succeeds without touching the DB,
+        verifying the __main__ guard triggers main() -> init() without retries.
         """
-        # Should not raise — live DB is available in test container
-        runpy.run_module("app.backend_pre_start", run_name="__main__")
+        mock_session = MagicMock()
+        mock_context = MagicMock()
+        mock_context.__enter__ = MagicMock(return_value=mock_session)
+        mock_context.__exit__ = MagicMock(return_value=False)
+
+        with patch("app.backend_pre_start.Session", return_value=mock_context):
+            runpy.run_module("app.backend_pre_start", run_name="__main__")
