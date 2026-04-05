@@ -353,7 +353,7 @@ app/data/grammar.json: OK (dict, 3 top-level)
 
 - [ ] **Step 6:** Commit with message: "Add sample toki pona JSON data files (words, exercises, grammar)"
 
-- [ ] **Step 7:** Record learnings to `.claude/learnings-json-data-files.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 7:** Record learnings to `learnings/learnings-json-data-files.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -616,7 +616,7 @@ Expected: All tests pass.
 
 - [ ] **Step 4:** Commit with message: "Add unit structure definition with 10-unit skill tree and tests"
 
-- [ ] **Step 5:** Record learnings to `.claude/learnings-unit-structure.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 5:** Record learnings to `learnings/learnings-unit-structure.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -966,7 +966,7 @@ Expected: All tests pass.
 
 - [ ] **Step 4:** Commit with message: "Add JSON data loader with search, filter, word-set filtering, and tests"
 
-- [ ] **Step 5:** Record learnings to `.claude/learnings-data-loader.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 5:** Record learnings to `learnings/learnings-data-loader.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -1141,7 +1141,7 @@ Expected: 2 tests pass.
 
 - [ ] **Step 8:** Commit with message: "Add UserProgress model with JSON columns and Alembic migration"
 
-- [ ] **Step 9:** Record learnings to `.claude/learnings-user-progress-model.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 9:** Record learnings to `learnings/learnings-user-progress-model.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -1450,7 +1450,7 @@ Expected: Error message about missing HTML artifacts, exit code 1.
 
 - [ ] **Step 3:** Commit with message: "Add data extraction script for HTML artifacts"
 
-- [ ] **Step 4:** Record learnings to `.claude/learnings-extract-data.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 4:** Record learnings to `learnings/learnings-extract-data.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -1682,7 +1682,7 @@ Expected: Validation PASSED (exit code 0). If any errors, fix the sample data.
 
 - [ ] **Step 3:** Commit with message: "Add data validation script for JSON files"
 
-- [ ] **Step 4:** Record learnings to `.claude/learnings-validate-data.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 4:** Record learnings to `learnings/learnings-validate-data.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -1912,7 +1912,7 @@ Expected: All 11 tests pass.
 
 - [ ] **Step 6:** Commit with message: "Add dictionary API endpoints with search and filter support"
 
-- [ ] **Step 7:** Record learnings to `.claude/learnings-dictionary-api.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 7:** Record learnings to `learnings/learnings-dictionary-api.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -2301,7 +2301,7 @@ Expected: All 6 tests pass.
 
 - [ ] **Step 6:** Commit with message: "Add lessons API endpoints with unit tree and exercise generation"
 
-- [ ] **Step 7:** Record learnings to `.claude/learnings-lessons-api.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 7:** Record learnings to `learnings/learnings-lessons-api.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -2525,7 +2525,7 @@ Expected: All tests pass.
 
 - [ ] **Step 4:** Commit with message: "Add data integrity tests for JSON data files"
 
-- [ ] **Step 5:** Record learnings to `.claude/learnings-data-integrity-tests.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 5:** Record learnings to `learnings/learnings-data-integrity-tests.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -2588,7 +2588,7 @@ Expected output should include:
 
 - [ ] **Step 6:** If any issues found in steps 1-5, fix them and re-run. Then commit any fixes with message: "Fix lint/type/test issues in Phase 2 data layer"
 
-- [ ] **Step 7:** Record learnings to `.claude/learnings-full-suite-verification.md` using the surfacing-subagent-learnings skill.
+- [ ] **Step 7:** Record learnings to `learnings/learnings-full-suite-verification.md` using the surfacing-subagent-learnings skill.
 
 ---
 
@@ -2596,7 +2596,7 @@ Expected output should include:
 
 **Goal:** Improve CLAUDE.md files with all learnings captured during this phase.
 
-- [ ] **Step 1:** Glob `.claude/learnings-*.md` and collect all scratch files written during this phase.
+- [ ] **Step 1:** Glob `learnings/learnings-*.md` and collect all scratch files written during this phase.
 - [ ] **Step 2:** For each scratch file, dispatch a subagent with the `claude-md-improver` skill, providing the scratch file path in the prompt.
 - [ ] **Step 3:** Verify all scratch files have been deleted after processing.
 
