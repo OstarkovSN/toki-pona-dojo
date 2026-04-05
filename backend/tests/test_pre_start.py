@@ -45,7 +45,10 @@ class TestTestsPreStart:
             ctx.__exit__ = MagicMock(return_value=False)
             return ctx
 
-        with patch("app.tests_pre_start.Session", side_effect=make_context):
+        with (
+            patch("time.sleep"),
+            patch("app.tests_pre_start.Session", side_effect=make_context),
+        ):
             # Should succeed on the second attempt
             init(mock_engine)
 
@@ -113,7 +116,10 @@ class TestBackendPreStart:
             ctx.__exit__ = MagicMock(return_value=False)
             return ctx
 
-        with patch("app.backend_pre_start.Session", side_effect=make_context):
+        with (
+            patch("time.sleep"),
+            patch("app.backend_pre_start.Session", side_effect=make_context),
+        ):
             init(mock_engine)
 
         assert call_count == 2
