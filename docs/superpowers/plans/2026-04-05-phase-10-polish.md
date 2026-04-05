@@ -925,98 +925,708 @@
 
 ---
 
-## Task 5: Telegram Bot (OPTIONAL)
+## Task 5: Telegram Access Gateway
 
 **Depends on:** Nothing
-**OPTIONAL:** Only implement if `TG_BOT_TOKEN` environment variable is set. All code must be no-op when the token is absent.
 **Files touched:**
+- MODIFY `backend/app/core/config.py` (add `TG_SUPERUSER_ID`, `TG_BOT_USERNAME`)
+- MODIFY `backend/app/models.py` (add `AccessRequest`, `InviteToken` models; add `invite_token` to `UserRegister`)
+- ADD `backend/alembic/versions/xxxx_add_access_requests_and_invite_tokens.py`
 - ADD `backend/app/services/telegram.py`
 - ADD `backend/app/api/routes/telegram.py`
-- MODIFY `backend/app/core/config.py` (add TG_BOT_TOKEN setting)
-- MODIFY `backend/app/models.py` (add telegram_chat_id to User)
-- MODIFY `backend/app/main.py` (register telegram router)
-- ADD Alembic migration for telegram_chat_id column
-- MODIFY frontend settings page (add "Connect Telegram" section)
+- ADD `backend/app/api/routes/config.py`
+- MODIFY `backend/app/api/routes/users.py` (signup requires invite token, add validate-token endpoint)
+- MODIFY `backend/app/api/main.py` (register telegram, config routers)
+- MODIFY `backend/app/main.py` (lifespan: set/delete webhook)
+- MODIFY `frontend/src/routes/signup.tsx` (invite-only gate, token validation)
+- MODIFY `frontend/src/routes/login.tsx` (add "request access" hint)
+- ADD `backend/tests/test_telegram_service.py`
+- ADD `backend/tests/test_invite_flow.py`
+- MODIFY `.env.example` (add `TG_SUPERUSER_ID`, `TG_BOT_USERNAME`)
 
 ### Steps
 
-- [ ] **Step 1: Add TG_BOT_TOKEN to Settings**
+- [ ] **Step 1: Add TG_SUPERUSER_ID and TG_BOT_USERNAME to Settings**
 
-  Edit `backend/app/core/config.py`. Add to the `Settings` class:
+  Edit `backend/app/core/config.py`. Add these fields to the `Settings` class, after the existing `FIRST_SUPERUSER_PASSWORD` field and before the `_check_default_secret` method:
 
   ```python
+  # Telegram bot settings (TG_BOT_TOKEN already exists if added in Phase 3;
+  # if not, add it here too)
   TG_BOT_TOKEN: str | None = None
+  TG_SUPERUSER_ID: int | None = None
+  TG_BOT_USERNAME: str | None = None
+  # Webhook secret for validating incoming Telegram updates.
+  # If unset, one is generated at startup — but this only works in
+  # single-worker mode (multiple workers would each generate a different
+  # secret). For multi-worker deployments, set this explicitly.
+  TG_WEBHOOK_SECRET: str | None = None
   ```
 
-  This field is optional and defaults to `None`, so the bot is a no-op when unset.
+  Also add to `.env.example` (after existing env vars):
 
-- [ ] **Step 2: Add telegram_chat_id to User model**
+  ```
+  # Telegram access gateway
+  TG_BOT_TOKEN=
+  TG_SUPERUSER_ID=
+  TG_BOT_USERNAME=
+  # Set explicitly for multi-worker deployments; leave blank for single-worker
+  TG_WEBHOOK_SECRET=
+  ```
 
-  Edit `backend/app/models.py`. Add to the `User` table model:
+  **Note:** `TG_BOT_TOKEN` may already exist from Phase 3. If so, only add `TG_SUPERUSER_ID`, `TG_BOT_USERNAME`, and `TG_WEBHOOK_SECRET`. Check the file first.
+
+- [ ] **Step 2: Create AccessRequest and InviteToken models + Alembic migration**
+
+  Edit `backend/app/models.py`. Add imports at the top (merge with existing):
 
   ```python
-  class User(UserBase, table=True):
-      id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-      hashed_password: str
-      created_at: datetime | None = Field(
+  import secrets
+  from datetime import datetime, timedelta, timezone
+
+  from sqlalchemy import DateTime, Integer, String
+  from sqlmodel import Column, Field, Relationship, SQLModel
+  ```
+
+  Add the `AccessRequest` model after the `Item` / `ItemPublic` / `ItemsPublic` block:
+
+  ```python
+  class AccessRequest(SQLModel, table=True):
+      __tablename__ = "access_request"
+
+      id: int | None = Field(default=None, primary_key=True)
+      telegram_user_id: int = Field(sa_column=Column(Integer, nullable=False, index=True))
+      telegram_username: str | None = Field(default=None, max_length=255)
+      telegram_first_name: str = Field(max_length=255)
+      telegram_last_name: str | None = Field(default=None, max_length=128)
+      status: str = Field(
+          default="pending",
+          max_length=20,
+          sa_column=Column(String(20), nullable=False),
+      )
+      created_at: datetime = Field(
           default_factory=get_datetime_utc,
           sa_type=DateTime(timezone=True),
       )
-      telegram_chat_id: str | None = Field(default=None, max_length=64, index=True)
-      telegram_link_code: str | None = Field(default=None, max_length=64)
-      items: list["Item"] = Relationship(back_populates="owner", cascade_delete=True)
+      decided_at: datetime | None = Field(
+          default=None,
+          sa_type=DateTime(timezone=True),
+      )
+
+      invite_tokens: list["InviteToken"] = Relationship(back_populates="access_request")
   ```
 
-  Also add `telegram_chat_id` to `UserPublic` for API responses:
+  Add the `InviteToken` model right after `AccessRequest`:
+
   ```python
-  class UserPublic(UserBase):
-      id: uuid.UUID
-      created_at: datetime | None = None
-      telegram_chat_id: str | None = None
+  def _default_token() -> str:
+      return secrets.token_hex(16)
+
+
+  def _default_expires_at() -> datetime:
+      return datetime.now(timezone.utc) + timedelta(days=7)
+
+
+  class InviteToken(SQLModel, table=True):
+      __tablename__ = "invite_token"
+
+      id: int | None = Field(default=None, primary_key=True)
+      token: str = Field(
+          default_factory=_default_token,
+          max_length=64,
+          sa_column=Column(String(64), unique=True, index=True, nullable=False),
+      )
+      access_request_id: int = Field(foreign_key="access_request.id", nullable=False)
+      created_at: datetime = Field(
+          default_factory=get_datetime_utc,
+          sa_type=DateTime(timezone=True),
+      )
+      expires_at: datetime = Field(
+          default_factory=_default_expires_at,
+          sa_type=DateTime(timezone=True),
+      )
+      used_at: datetime | None = Field(
+          default=None,
+          sa_type=DateTime(timezone=True),
+      )
+      used_by: uuid.UUID | None = Field(
+          default=None, foreign_key="user.id", nullable=True
+      )
+
+      access_request: AccessRequest | None = Relationship(back_populates="invite_tokens")
   ```
 
-- [ ] **Step 3: Create Alembic migration**
+  Modify the `UserRegister` schema to accept an invite token:
 
-  Run:
+  ```python
+  class UserRegister(SQLModel):
+      email: EmailStr = Field(max_length=255)
+      password: str = Field(min_length=8, max_length=128)
+      full_name: str | None = Field(default=None, max_length=255)
+      invite_token: str | None = Field(default=None, max_length=64)
+  ```
+
+  Generate the Alembic migration:
+
   ```bash
-  cd backend && alembic revision --autogenerate -m "add telegram fields to user"
+  cd backend && alembic revision --autogenerate -m "add access_request and invite_token tables"
   ```
 
-  Verify the generated migration adds `telegram_chat_id` and `telegram_link_code` columns to the `user` table with nullable=True.
+  Verify the generated migration creates both `access_request` and `invite_token` tables with correct columns, indexes, and foreign keys. Apply:
 
-- [ ] **Step 4: Create Telegram service**
+  ```bash
+  cd backend && alembic upgrade head
+  ```
+
+- [ ] **Step 3: Write tests for models and service (TDD red phase)**
+
+  Create `backend/tests/test_telegram_service.py`:
+
+  ```python
+  import secrets
+  from datetime import datetime, timedelta, timezone
+  from unittest.mock import AsyncMock, patch
+
+  import pytest
+  from sqlmodel import Session, select
+
+  from app.models import AccessRequest, InviteToken
+
+
+  # ---------------------------------------------------------------------------
+  # Model tests
+  # ---------------------------------------------------------------------------
+
+  def test_access_request_creation(db: Session) -> None:
+      """AccessRequest can be created and persisted."""
+      ar = AccessRequest(
+          telegram_user_id=123456,
+          telegram_username="testuser",
+          telegram_first_name="Test",
+          status="pending",
+      )
+      db.add(ar)
+      db.commit()
+      db.refresh(ar)
+
+      assert ar.id is not None
+      assert ar.telegram_user_id == 123456
+      assert ar.status == "pending"
+      assert ar.decided_at is None
+
+      # Cleanup
+      db.delete(ar)
+      db.commit()
+
+
+  def test_invite_token_creation(db: Session) -> None:
+      """InviteToken is created with defaults and linked to AccessRequest."""
+      ar = AccessRequest(
+          telegram_user_id=789,
+          telegram_first_name="Tokiuser",
+          status="approved",
+      )
+      db.add(ar)
+      db.commit()
+      db.refresh(ar)
+
+      token = InviteToken(access_request_id=ar.id)
+      db.add(token)
+      db.commit()
+      db.refresh(token)
+
+      assert token.id is not None
+      assert len(token.token) == 32  # token_hex(16) -> 32 chars
+      assert token.used_at is None
+      assert token.used_by is None
+      assert token.expires_at > datetime.now(timezone.utc)
+
+      # Cleanup
+      db.delete(token)
+      db.delete(ar)
+      db.commit()
+
+
+  def test_invite_token_expiry(db: Session) -> None:
+      """Expired tokens are distinguishable from valid ones."""
+      ar = AccessRequest(
+          telegram_user_id=999,
+          telegram_first_name="Expired",
+          status="approved",
+      )
+      db.add(ar)
+      db.commit()
+      db.refresh(ar)
+
+      token = InviteToken(
+          access_request_id=ar.id,
+          expires_at=datetime.now(timezone.utc) - timedelta(days=1),
+      )
+      db.add(token)
+      db.commit()
+      db.refresh(token)
+
+      assert token.expires_at < datetime.now(timezone.utc)
+
+      # Cleanup
+      db.delete(token)
+      db.delete(ar)
+      db.commit()
+
+
+  # ---------------------------------------------------------------------------
+  # Telegram service handler tests
+  # ---------------------------------------------------------------------------
+
+  @pytest.mark.asyncio
+  async def test_handle_start_new_user_creates_request_and_notifies_superuser(
+      db: Session, monkeypatch: pytest.MonkeyPatch
+  ) -> None:
+      """handle_start creates an AccessRequest and sends approve/reject buttons to superuser."""
+      from app.core.config import settings
+      from app.services import telegram as tg_service
+
+      monkeypatch.setattr(settings, "TG_BOT_TOKEN", "fake_token")
+      monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 999)
+
+      send_calls: list[dict] = []
+
+      async def mock_send(chat_id: int, text: str, reply_markup: dict | None = None) -> bool:
+          send_calls.append({"chat_id": chat_id, "text": text, "reply_markup": reply_markup})
+          return True
+
+      monkeypatch.setattr(tg_service, "send_message", mock_send)
+
+      message = {
+          "chat": {"id": 123},
+          "from": {"id": 42, "first_name": "Tester", "username": "tester42"},
+      }
+      await tg_service.handle_start(db, message)
+
+      # AccessRequest should be persisted
+      ar = db.exec(
+          select(AccessRequest).where(AccessRequest.telegram_user_id == 42)
+      ).first()
+      assert ar is not None
+      assert ar.status == "pending"
+
+      # Superuser should have been notified (one of the send_message calls)
+      superuser_msg = [c for c in send_calls if c["chat_id"] == 999]
+      assert len(superuser_msg) == 1
+      assert "wants to access" in superuser_msg[0]["text"]
+      assert superuser_msg[0]["reply_markup"] is not None
+
+      # Cleanup
+      db.delete(ar)
+      db.commit()
+
+
+  @pytest.mark.asyncio
+  async def test_handle_start_pending_user_gets_pending_message(
+      db: Session, monkeypatch: pytest.MonkeyPatch
+  ) -> None:
+      """handle_start for a user with a pending request sends 'pending' message."""
+      from app.core.config import settings
+      from app.services import telegram as tg_service
+
+      monkeypatch.setattr(settings, "TG_BOT_TOKEN", "fake_token")
+      monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 999)
+
+      # Pre-create a pending request
+      ar = AccessRequest(
+          telegram_user_id=55, telegram_first_name="Pending", status="pending"
+      )
+      db.add(ar)
+      db.commit()
+
+      send_calls: list[dict] = []
+
+      async def mock_send(chat_id: int, text: str, reply_markup: dict | None = None) -> bool:
+          send_calls.append({"chat_id": chat_id, "text": text})
+          return True
+
+      monkeypatch.setattr(tg_service, "send_message", mock_send)
+
+      message = {
+          "chat": {"id": 55},
+          "from": {"id": 55, "first_name": "Pending"},
+      }
+      await tg_service.handle_start(db, message)
+
+      assert any("pending" in c["text"].lower() for c in send_calls)
+
+      # Cleanup
+      db.delete(ar)
+      db.commit()
+
+
+  @pytest.mark.asyncio
+  async def test_handle_callback_approve_creates_token_and_notifies_user(
+      db: Session, monkeypatch: pytest.MonkeyPatch
+  ) -> None:
+      """Approving via callback creates an InviteToken and notifies the requesting user."""
+      from app.core.config import settings
+      from app.services import telegram as tg_service
+
+      monkeypatch.setattr(settings, "TG_BOT_TOKEN", "fake_token")
+      monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 999)
+      monkeypatch.setattr(settings, "FRONTEND_HOST", "http://localhost")
+
+      ar = AccessRequest(
+          telegram_user_id=77, telegram_first_name="Applicant", status="pending"
+      )
+      db.add(ar)
+      db.commit()
+      db.refresh(ar)
+
+      send_calls: list[dict] = []
+
+      async def mock_send(chat_id: int, text: str, reply_markup: dict | None = None) -> bool:
+          send_calls.append({"chat_id": chat_id, "text": text})
+          return True
+
+      async def mock_edit(*args, **kwargs) -> bool:
+          return True
+
+      async def mock_answer(*args) -> bool:
+          return True
+
+      monkeypatch.setattr(tg_service, "send_message", mock_send)
+      monkeypatch.setattr(tg_service, "edit_message_text", mock_edit)
+      monkeypatch.setattr(tg_service, "answer_callback_query", mock_answer)
+
+      callback_query = {
+          "id": "cb1",
+          "data": f"approve:{ar.id}",
+          "from": {"id": 999},
+          "message": {"chat": {"id": 999}, "message_id": 1},
+      }
+      await tg_service.handle_callback_query(db, callback_query)
+
+      # InviteToken should be created
+      token = db.exec(
+          select(InviteToken).where(InviteToken.access_request_id == ar.id)
+      ).first()
+      assert token is not None
+      assert token.used_at is None
+
+      # User should receive a message with the token
+      user_msg = [c for c in send_calls if c["chat_id"] == 77]
+      assert len(user_msg) == 1
+      assert token.token in user_msg[0]["text"]
+
+      # Cleanup
+      db.delete(token)
+      db.delete(ar)
+      db.commit()
+
+
+  @pytest.mark.asyncio
+  async def test_handle_callback_reject_updates_status_and_notifies_user(
+      db: Session, monkeypatch: pytest.MonkeyPatch
+  ) -> None:
+      """Rejecting via callback sets status to 'rejected' and notifies the user."""
+      from app.core.config import settings
+      from app.services import telegram as tg_service
+
+      monkeypatch.setattr(settings, "TG_BOT_TOKEN", "fake_token")
+      monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 999)
+
+      ar = AccessRequest(
+          telegram_user_id=88, telegram_first_name="Rejected", status="pending"
+      )
+      db.add(ar)
+      db.commit()
+      db.refresh(ar)
+
+      send_calls: list[dict] = []
+
+      async def mock_send(chat_id: int, text: str, reply_markup: dict | None = None) -> bool:
+          send_calls.append({"chat_id": chat_id, "text": text})
+          return True
+
+      async def mock_edit(*args, **kwargs) -> bool:
+          return True
+
+      async def mock_answer(*args) -> bool:
+          return True
+
+      monkeypatch.setattr(tg_service, "send_message", mock_send)
+      monkeypatch.setattr(tg_service, "edit_message_text", mock_edit)
+      monkeypatch.setattr(tg_service, "answer_callback_query", mock_answer)
+
+      callback_query = {
+          "id": "cb2",
+          "data": f"reject:{ar.id}",
+          "from": {"id": 999},
+          "message": {"chat": {"id": 999}, "message_id": 2},
+      }
+      await tg_service.handle_callback_query(db, callback_query)
+
+      db.refresh(ar)
+      assert ar.status == "rejected"
+      assert ar.decided_at is not None
+
+      # User should receive rejection message
+      user_msg = [c for c in send_calls if c["chat_id"] == 88]
+      assert len(user_msg) == 1
+      assert "not approved" in user_msg[0]["text"].lower()
+
+      # Cleanup
+      db.delete(ar)
+      db.commit()
+  ```
+
+  Create `backend/tests/test_invite_flow.py`:
+
+  ```python
+  import secrets
+  from datetime import datetime, timedelta, timezone
+
+  import pytest
+  from fastapi.testclient import TestClient
+  from sqlmodel import Session
+
+  from app.models import AccessRequest, InviteToken
+
+
+  def _create_valid_token(db: Session) -> str:
+      """Helper: create an access request + valid invite token, return token string."""
+      ar = AccessRequest(
+          telegram_user_id=42,
+          telegram_first_name="Invitee",
+          status="approved",
+      )
+      db.add(ar)
+      db.commit()
+      db.refresh(ar)
+
+      tok = InviteToken(access_request_id=ar.id)
+      db.add(tok)
+      db.commit()
+      db.refresh(tok)
+      return tok.token
+
+
+  def _create_expired_token(db: Session) -> str:
+      """Helper: create an expired invite token."""
+      ar = AccessRequest(
+          telegram_user_id=43,
+          telegram_first_name="Expired",
+          status="approved",
+      )
+      db.add(ar)
+      db.commit()
+      db.refresh(ar)
+
+      tok = InviteToken(
+          access_request_id=ar.id,
+          expires_at=datetime.now(timezone.utc) - timedelta(days=1),
+      )
+      db.add(tok)
+      db.commit()
+      db.refresh(tok)
+      return tok.token
+
+
+  def test_signup_with_valid_token(client: TestClient, db: Session) -> None:
+      """Signup succeeds with a valid, unused, non-expired token."""
+      token_str = _create_valid_token(db)
+      response = client.post(
+          "/api/v1/users/signup",
+          json={
+              "email": f"invite-{secrets.token_hex(4)}@example.com",
+              "password": "testpass123",
+              "full_name": "Invite User",
+              "invite_token": token_str,
+          },
+      )
+      assert response.status_code == 200
+      data = response.json()
+      assert "id" in data
+      assert data["email"].startswith("invite-")
+
+
+  def test_signup_without_token_fails_when_bot_configured(
+      client: TestClient, db: Session, monkeypatch: pytest.MonkeyPatch
+  ) -> None:
+      """Signup without invite_token returns 400 when TG_BOT_TOKEN is set."""
+      from app.core.config import settings
+
+      monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+
+      response = client.post(
+          "/api/v1/users/signup",
+          json={
+              "email": f"notoken-{secrets.token_hex(4)}@example.com",
+              "password": "testpass123",
+              "full_name": "No Token",
+          },
+      )
+      assert response.status_code == 400
+      assert "Invalid or expired" in response.json()["detail"]
+
+
+  def test_signup_with_expired_token_fails(
+      client: TestClient, db: Session
+  ) -> None:
+      """Signup with an expired token returns 400."""
+      token_str = _create_expired_token(db)
+      response = client.post(
+          "/api/v1/users/signup",
+          json={
+              "email": f"expired-{secrets.token_hex(4)}@example.com",
+              "password": "testpass123",
+              "full_name": "Expired Token User",
+              "invite_token": token_str,
+          },
+      )
+      assert response.status_code == 400
+      assert "Invalid or expired" in response.json()["detail"]
+
+
+  def test_signup_with_used_token_fails(
+      client: TestClient, db: Session
+  ) -> None:
+      """Signup with an already-used token returns 400."""
+      token_str = _create_valid_token(db)
+      # First signup succeeds
+      response1 = client.post(
+          "/api/v1/users/signup",
+          json={
+              "email": f"first-{secrets.token_hex(4)}@example.com",
+              "password": "testpass123",
+              "full_name": "First User",
+              "invite_token": token_str,
+          },
+      )
+      assert response1.status_code == 200
+
+      # Second signup with same token fails
+      response2 = client.post(
+          "/api/v1/users/signup",
+          json={
+              "email": f"second-{secrets.token_hex(4)}@example.com",
+              "password": "testpass123",
+              "full_name": "Second User",
+              "invite_token": token_str,
+          },
+      )
+      assert response2.status_code == 400
+      assert "Invalid or expired" in response2.json()["detail"]
+
+
+  def test_signup_with_invalid_token_fails(client: TestClient) -> None:
+      """Signup with a nonexistent token returns 400."""
+      response = client.post(
+          "/api/v1/users/signup",
+          json={
+              "email": f"bad-{secrets.token_hex(4)}@example.com",
+              "password": "testpass123",
+              "full_name": "Bad Token User",
+              "invite_token": "nonexistent_token_value",
+          },
+      )
+      assert response.status_code == 400
+      assert "Invalid or expired" in response.json()["detail"]
+
+
+  def test_validate_token_valid(client: TestClient, db: Session) -> None:
+      """GET /validate-token returns valid=true for a fresh token."""
+      token_str = _create_valid_token(db)
+      response = client.get(f"/api/v1/users/validate-token?token={token_str}")
+      assert response.status_code == 200
+      assert response.json()["valid"] is True
+
+
+  def test_validate_token_expired(client: TestClient, db: Session) -> None:
+      """GET /validate-token returns valid=false for an expired token."""
+      token_str = _create_expired_token(db)
+      response = client.get(f"/api/v1/users/validate-token?token={token_str}")
+      assert response.status_code == 200
+      assert response.json()["valid"] is False
+
+
+  def test_validate_token_nonexistent(client: TestClient) -> None:
+      """GET /validate-token returns valid=false for an unknown token."""
+      response = client.get("/api/v1/users/validate-token?token=doesnotexist")
+      assert response.status_code == 200
+      assert response.json()["valid"] is False
+
+
+  def test_webhook_rejects_missing_secret_header(
+      client: TestClient, monkeypatch: pytest.MonkeyPatch
+  ) -> None:
+      """POST to /api/v1/telegram/webhook without X-Telegram-Bot-Api-Secret-Token returns 403."""
+      from app.core.config import settings
+
+      monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+      monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 12345)
+
+      response = client.post(
+          "/api/v1/telegram/webhook",
+          json={"update_id": 1},
+          # Deliberately omit the X-Telegram-Bot-Api-Secret-Token header
+      )
+      assert response.status_code == 403
+  ```
+
+  Run tests to confirm they fail (red phase):
+
+  ```bash
+  cd backend && python -m pytest tests/test_telegram_service.py tests/test_invite_flow.py -x -v 2>&1 | head -50
+  ```
+
+- [ ] **Step 4: Create telegram.py service**
 
   Create `backend/app/services/telegram.py`:
 
   ```python
   import logging
   import secrets
+  from datetime import datetime, timedelta, timezone
 
   import httpx
+  from sqlmodel import Session, select
 
   from app.core.config import settings
+  from app.models import AccessRequest, InviteToken
 
   logger = logging.getLogger(__name__)
 
   TELEGRAM_API_BASE = "https://api.telegram.org/bot"
 
+  # Webhook secret: prefer the explicit setting for multi-worker safety;
+  # fall back to a one-time generated value (single-worker only).
+  _GENERATED_SECRET = secrets.token_urlsafe(32)
+
+
+  def get_webhook_secret() -> str:
+      """Return the webhook secret, preferring the configured value."""
+      return settings.TG_WEBHOOK_SECRET or _GENERATED_SECRET
+
 
   def is_telegram_enabled() -> bool:
-      return bool(settings.TG_BOT_TOKEN)
+      """Bot is enabled only when both token and superuser ID are set."""
+      return bool(settings.TG_BOT_TOKEN and settings.TG_SUPERUSER_ID)
 
 
-  def generate_link_code() -> str:
-      return secrets.token_urlsafe(16)
-
-
-  async def send_message(chat_id: str, text: str) -> bool:
-      if not is_telegram_enabled():
+  async def send_message(
+      chat_id: int,
+      text: str,
+      reply_markup: dict | None = None,
+  ) -> bool:
+      """Send a message via Telegram Bot API."""
+      if not settings.TG_BOT_TOKEN:
           return False
+      payload: dict = {"chat_id": chat_id, "text": text}
+      if reply_markup is not None:
+          payload["reply_markup"] = reply_markup
       try:
           async with httpx.AsyncClient(timeout=10.0) as client:
               response = await client.post(
                   f"{TELEGRAM_API_BASE}{settings.TG_BOT_TOKEN}/sendMessage",
-                  json={"chat_id": chat_id, "text": text},
+                  json=payload,
               )
               response.raise_for_status()
               return True
@@ -1025,26 +1635,291 @@
           return False
 
 
-  async def send_streak_reminder(
-      chat_id: str, streak: int, words_known: int
+  async def edit_message_text(
+      chat_id: int,
+      message_id: int,
+      text: str,
+      reply_markup: dict | None = None,
   ) -> bool:
-      if not is_telegram_enabled():
+      """Edit an existing message. Pass reply_markup=None to remove inline keyboard."""
+      if not settings.TG_BOT_TOKEN:
           return False
-      msg = (
-          f"o kama sona! Your streak is {streak} days. "
-          f"You know {words_known} words. Keep going!"
+      payload: dict = {
+          "chat_id": chat_id,
+          "message_id": message_id,
+          "text": text,
+      }
+      if reply_markup is not None:
+          payload["reply_markup"] = reply_markup
+      else:
+          # Send empty inline_keyboard to explicitly remove buttons;
+          # omitting reply_markup leaves the old keyboard in place.
+          payload["reply_markup"] = {"inline_keyboard": []}
+      try:
+          async with httpx.AsyncClient(timeout=10.0) as client:
+              response = await client.post(
+                  f"{TELEGRAM_API_BASE}{settings.TG_BOT_TOKEN}/editMessageText",
+                  json=payload,
+              )
+              response.raise_for_status()
+              return True
+      except httpx.HTTPError:
+          logger.exception(
+              "Failed to edit Telegram message chat_id=%s message_id=%s",
+              chat_id,
+              message_id,
+          )
+          return False
+
+
+  async def answer_callback_query(callback_query_id: str) -> bool:
+      """Acknowledge a callback query to remove the loading spinner."""
+      if not settings.TG_BOT_TOKEN:
+          return False
+      try:
+          async with httpx.AsyncClient(timeout=10.0) as client:
+              response = await client.post(
+                  f"{TELEGRAM_API_BASE}{settings.TG_BOT_TOKEN}/answerCallbackQuery",
+                  json={"callback_query_id": callback_query_id},
+              )
+              response.raise_for_status()
+              return True
+      except httpx.HTTPError:
+          logger.exception("Failed to answer callback query %s", callback_query_id)
+          return False
+
+
+  def _format_user_display(
+      first_name: str,
+      last_name: str | None,
+      username: str | None,
+  ) -> str:
+      """Build a display string like 'Jan Pona @janpona'."""
+      parts = [first_name]
+      if last_name:
+          parts.append(last_name)
+      if username:
+          parts.append(f"@{username}")
+      return " ".join(parts)
+
+
+  async def handle_start(session: Session, message: dict) -> None:
+      """Handle /start command: create access request or resend existing state."""
+      from_user = message.get("from", {})
+      chat_id: int = message["chat"]["id"]
+      tg_user_id: int = from_user.get("id", 0)
+      first_name: str = from_user.get("first_name", "Unknown")
+      last_name: str | None = from_user.get("last_name")
+      username: str | None = from_user.get("username")
+
+      # Check for existing access requests from this user (most recent first)
+      statement = (
+          select(AccessRequest)
+          .where(AccessRequest.telegram_user_id == tg_user_id)
+          .order_by(AccessRequest.created_at.desc())
       )
-      return await send_message(chat_id, msg)
+      existing = session.exec(statement).first()
+
+      if existing is not None:
+          if existing.status == "pending":
+              await send_message(
+                  chat_id, "Your request is pending approval. Please wait."
+              )
+              return
+
+          if existing.status == "rejected":
+              # Rate-limit re-requests to once per 24 hours
+              if existing.decided_at and (
+                  datetime.now(timezone.utc) - existing.decided_at
+                  < timedelta(hours=24)
+              ):
+                  await send_message(
+                      chat_id,
+                      "You can re-request access after 24 hours.",
+                  )
+                  return
+              # Allow re-request: fall through to create new request
+
+          if existing.status == "approved":
+              # Check if there's an unused, non-expired token
+              token_stmt = (
+                  select(InviteToken)
+                  .where(
+                      InviteToken.access_request_id == existing.id,
+                      InviteToken.used_at.is_(None),
+                      InviteToken.expires_at > datetime.now(timezone.utc),
+                  )
+              )
+              active_token = session.exec(token_stmt).first()
+              if active_token:
+                  signup_url = (
+                      f"{settings.FRONTEND_HOST}/signup?token={active_token.token}"
+                  )
+                  await send_message(
+                      chat_id,
+                      f"You're already approved! Use this token to create your "
+                      f"account: {active_token.token}\n\nGo to {signup_url}",
+                  )
+                  return
+
+              # Check if token was already used
+              used_token_stmt = (
+                  select(InviteToken)
+                  .where(
+                      InviteToken.access_request_id == existing.id,
+                      InviteToken.used_at.isnot(None),
+                  )
+              )
+              used_token = session.exec(used_token_stmt).first()
+              if used_token:
+                  await send_message(
+                      chat_id,
+                      f"You already have an account! "
+                      f"Log in at {settings.FRONTEND_HOST}",
+                  )
+                  return
+
+      # Create new access request
+      access_request = AccessRequest(
+          telegram_user_id=tg_user_id,
+          telegram_username=username,
+          telegram_first_name=first_name,
+          telegram_last_name=last_name,
+          status="pending",
+      )
+      session.add(access_request)
+      session.commit()
+      session.refresh(access_request)
+
+      display = _format_user_display(first_name, last_name, username)
+
+      # Notify superuser with inline Approve/Reject buttons
+      await send_message(
+          settings.TG_SUPERUSER_ID,
+          f"{display} wants to access the app",
+          reply_markup={
+              "inline_keyboard": [
+                  [
+                      {
+                          "text": "Approve",
+                          "callback_data": f"approve:{access_request.id}",
+                      },
+                      {
+                          "text": "Reject",
+                          "callback_data": f"reject:{access_request.id}",
+                      },
+                  ]
+              ]
+          },
+      )
+
+      await send_message(
+          chat_id,
+          "Your request has been sent to the admin. Please wait for approval.",
+      )
+
+
+  async def handle_callback_query(session: Session, callback_query: dict) -> None:
+      """Handle superuser Approve/Reject button press."""
+      callback_id: str = callback_query["id"]
+      data: str = callback_query.get("data", "")
+      from_user = callback_query.get("from", {})
+      caller_id: int = from_user.get("id", 0)
+      message = callback_query.get("message", {})
+      chat_id: int = message.get("chat", {}).get("id", 0)
+      message_id: int = message.get("message_id", 0)
+
+      # Only the superuser can approve/reject
+      if caller_id != settings.TG_SUPERUSER_ID:
+          await answer_callback_query(callback_id)
+          return
+
+      if ":" not in data:
+          await answer_callback_query(callback_id)
+          return
+
+      action, request_id_str = data.split(":", 1)
+      try:
+          request_id = int(request_id_str)
+      except ValueError:
+          await answer_callback_query(callback_id)
+          return
+
+      access_request = session.get(AccessRequest, request_id)
+      if not access_request:
+          await answer_callback_query(callback_id)
+          return
+
+      display = _format_user_display(
+          access_request.telegram_first_name,
+          access_request.telegram_last_name,
+          access_request.telegram_username,
+      )
+
+      if action == "approve":
+          # Race condition guard: check if token already exists
+          existing_token_stmt = select(InviteToken).where(
+              InviteToken.access_request_id == access_request.id
+          )
+          if session.exec(existing_token_stmt).first() is not None:
+              await answer_callback_query(callback_id)
+              return
+
+          access_request.status = "approved"
+          access_request.decided_at = datetime.now(timezone.utc)
+          session.add(access_request)
+
+          invite_token = InviteToken(access_request_id=access_request.id)
+          session.add(invite_token)
+          session.commit()
+          session.refresh(invite_token)
+
+          signup_url = f"{settings.FRONTEND_HOST}/signup?token={invite_token.token}"
+          await send_message(
+              access_request.telegram_user_id,
+              f"You're approved! Use this token to create your account: "
+              f"{invite_token.token}\n\nGo to {signup_url}",
+          )
+          await edit_message_text(chat_id, message_id, f"Approved: {display}")
+
+      elif action == "reject":
+          access_request.status = "rejected"
+          access_request.decided_at = datetime.now(timezone.utc)
+          session.add(access_request)
+          session.commit()
+
+          await send_message(
+              access_request.telegram_user_id,
+              "Sorry, your request was not approved.",
+          )
+          await edit_message_text(chat_id, message_id, f"Rejected: {display}")
+
+      await answer_callback_query(callback_id)
+
+
+  async def handle_update(session: Session, update: dict) -> None:
+      """Route an incoming Telegram update to the correct handler."""
+      if "message" in update:
+          message = update["message"]
+          text = message.get("text", "")
+          if text.startswith("/start"):
+              await handle_start(session, message)
+      elif "callback_query" in update:
+          await handle_callback_query(session, update["callback_query"])
 
 
   async def set_webhook(webhook_url: str) -> bool:
-      if not is_telegram_enabled():
+      """Register the webhook URL with Telegram, including secret_token."""
+      if not settings.TG_BOT_TOKEN:
           return False
       try:
           async with httpx.AsyncClient(timeout=10.0) as client:
               response = await client.post(
                   f"{TELEGRAM_API_BASE}{settings.TG_BOT_TOKEN}/setWebhook",
-                  json={"url": webhook_url},
+                  json={
+                      "url": webhook_url,
+                      "secret_token": get_webhook_secret(),
+                  },
               )
               response.raise_for_status()
               logger.info("Telegram webhook set to %s", webhook_url)
@@ -1052,306 +1927,839 @@
       except httpx.HTTPError:
           logger.exception("Failed to set Telegram webhook")
           return False
+
+
+  async def delete_webhook() -> bool:
+      """Remove the webhook on shutdown."""
+      if not settings.TG_BOT_TOKEN:
+          return False
+      try:
+          async with httpx.AsyncClient(timeout=10.0) as client:
+              response = await client.post(
+                  f"{TELEGRAM_API_BASE}{settings.TG_BOT_TOKEN}/deleteWebhook",
+              )
+              response.raise_for_status()
+              logger.info("Telegram webhook deleted")
+              return True
+      except httpx.HTTPError:
+          logger.exception("Failed to delete Telegram webhook")
+          return False
   ```
 
-- [ ] **Step 5: Create Telegram webhook route**
+- [ ] **Step 5: Create webhook route**
 
   Create `backend/app/api/routes/telegram.py`:
 
   ```python
   import logging
 
-  from fastapi import APIRouter, Depends, HTTPException
-  from sqlmodel import Session, select
+  from fastapi import APIRouter, HTTPException, Request
+  from sqlmodel import Session
 
-  from app.core.config import settings
-  from app.core.db import get_session
-  from app.models import User
-  from app.services.telegram import is_telegram_enabled, send_message
+  from app.api.deps import SessionDep
+  from app.services.telegram import get_webhook_secret, handle_update, is_telegram_enabled
 
   logger = logging.getLogger(__name__)
+
   router = APIRouter(prefix="/telegram", tags=["telegram"])
 
 
   @router.post("/webhook")
-  async def telegram_webhook(
-      update: dict,
-      session: Session = Depends(get_session),
-  ) -> dict:
+  async def telegram_webhook(request: Request, session: SessionDep) -> dict:
+      """Receive Telegram bot updates. Validates secret_token header."""
       if not is_telegram_enabled():
           raise HTTPException(status_code=404, detail="Telegram bot not configured")
 
-      message = update.get("message", {})
-      text = message.get("text", "")
-      chat_id = str(message.get("chat", {}).get("id", ""))
+      # Validate Telegram's secret token header
+      secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
+      if secret != get_webhook_secret():
+          raise HTTPException(status_code=403, detail="Invalid secret token")
 
-      if not chat_id:
-          return {"ok": True}
-
-      if text.startswith("/start"):
-          parts = text.split(maxsplit=1)
-          if len(parts) == 2:
-              link_code = parts[1].strip()
-              # Find user with this link code
-              statement = select(User).where(User.telegram_link_code == link_code)
-              user = session.exec(statement).first()
-              if user:
-                  user.telegram_chat_id = chat_id
-                  user.telegram_link_code = None  # Consume the code
-                  session.add(user)
-                  session.commit()
-                  await send_message(
-                      chat_id,
-                      "pona! Your Telegram is now linked to toki pona dojo. "
-                      "You'll receive daily streak reminders here.",
-                  )
-                  logger.info("Linked Telegram chat_id=%s to user=%s", chat_id, user.id)
-              else:
-                  await send_message(
-                      chat_id,
-                      "Invalid or expired code. Please generate a new code in Settings.",
-                  )
-          else:
-              await send_message(
-                  chat_id,
-                  "Welcome to toki pona dojo! "
-                  "Use /start <code> with the code from your Settings page.",
-              )
-
+      update = await request.json()
+      await handle_update(session, update)
       return {"ok": True}
   ```
 
-- [ ] **Step 6: Add API endpoint for generating link codes**
+- [ ] **Step 6: Create config route for public config**
 
-  Add to the users or settings routes (e.g., `backend/app/api/routes/users.py` or create a new endpoint):
+  Create `backend/app/api/routes/config.py`:
 
   ```python
-  from app.services.telegram import generate_link_code, is_telegram_enabled
+  from fastapi import APIRouter
 
-  @router.post("/me/telegram-link-code")
-  async def generate_telegram_link_code(
-      current_user: CurrentUser,
-      session: SessionDep,
-  ) -> dict:
-      if not is_telegram_enabled():
-          raise HTTPException(status_code=404, detail="Telegram bot not configured")
-      code = generate_link_code()
-      current_user.telegram_link_code = code
-      session.add(current_user)
-      session.commit()
+  from app.core.config import settings
+
+  router = APIRouter(prefix="/config", tags=["config"])
+
+
+  @router.get("/public")
+  def get_public_config() -> dict:
+      """Return public configuration (no auth required).
+
+      Exposes bot_username for frontend Telegram links.
+      """
       return {
-          "code": code,
-          "bot_username": f"Search for your bot on Telegram and send: /start {code}",
+          "bot_username": settings.TG_BOT_USERNAME,
       }
-
-  @router.delete("/me/telegram")
-  async def unlink_telegram(
-      current_user: CurrentUser,
-      session: SessionDep,
-  ) -> dict:
-      current_user.telegram_chat_id = None
-      current_user.telegram_link_code = None
-      session.add(current_user)
-      session.commit()
-      return {"message": "Telegram unlinked"}
   ```
 
-- [ ] **Step 7: Register Telegram router in main.py**
+- [ ] **Step 7: Modify signup to validate invite_token**
 
-  Edit `backend/app/main.py`:
-
-  ```python
-  from app.services.telegram import is_telegram_enabled
-
-  # After existing router includes:
-  if is_telegram_enabled():
-      from app.api.routes.telegram import router as telegram_router
-      app.include_router(telegram_router, prefix=settings.API_V1_STR)
-  ```
-
-- [ ] **Step 8: Add streak reminder background task**
-
-  Add a simple daily task. Create or add to `backend/app/services/streak_reminder.py`:
+  Edit `backend/app/api/routes/users.py`. Add imports at the top (merge with existing):
 
   ```python
-  import asyncio
-  import logging
   from datetime import datetime, timezone
 
-  from sqlmodel import Session, select
+  from sqlmodel import col, delete, func, select
 
-  from app.core.db import engine
-  from app.models import User
-  from app.services.telegram import is_telegram_enabled, send_streak_reminder
+  from app.models import (
+      InviteToken,
+      # ... existing imports ...
+  )
+  ```
+
+  Replace the `register_user` function. **Atomicity note:** `crud.create_user` internally calls `session.commit()`, which means the user creation and token consumption would happen in separate transactions. To keep both operations atomic, we use a modified call that skips the internal commit:
+
+  ```python
+  @router.post("/signup", response_model=UserPublic)
+  def register_user(session: SessionDep, user_in: UserRegister) -> Any:
+      """
+      Create new user without the need to be logged in.
+      When TG_BOT_TOKEN is set, a valid invite_token is required.
+      """
+      # Check if invite gate is active
+      if settings.TG_BOT_TOKEN:
+          if not user_in.invite_token:
+              raise HTTPException(
+                  status_code=400,
+                  detail="Invalid or expired invite token.",
+              )
+          # Look up the token
+          statement = select(InviteToken).where(
+              InviteToken.token == user_in.invite_token
+          )
+          invite_token = session.exec(statement).first()
+          if (
+              not invite_token
+              or invite_token.used_at is not None
+              or invite_token.expires_at < datetime.now(timezone.utc)
+          ):
+              raise HTTPException(
+                  status_code=400,
+                  detail="Invalid or expired invite token.",
+              )
+      else:
+          invite_token = None
+
+      user = crud.get_user_by_email(session=session, email=user_in.email)
+      if user:
+          raise HTTPException(
+              status_code=400,
+              detail="The user with this email already exists in the system",
+          )
+
+      user_create = UserCreate.model_validate(user_in)
+
+      # Build the user object without committing, so we can commit
+      # user creation + token consumption in a single transaction.
+      db_obj = User.model_validate(
+          user_create,
+          update={"hashed_password": get_password_hash(user_create.password)},
+      )
+      session.add(db_obj)
+
+      # Consume the invite token in the same transaction
+      if invite_token is not None:
+          invite_token.used_at = datetime.now(timezone.utc)
+          invite_token.used_by = db_obj.id  # UUID is assigned before flush
+          session.add(invite_token)
+
+      session.commit()
+      session.refresh(db_obj)
+      return db_obj
+  ```
+
+  This requires adding an import at the top of the file (merge with existing):
+
+  ```python
+  from app.core.security import get_password_hash
+  from app.models import User  # if not already imported
+  ```
+
+  **Important:** We deliberately avoid calling `crud.create_user` here because it commits internally. Instead, we inline the user creation logic (model_validate + hash password + session.add) so that both the user and the token update are committed atomically in a single `session.commit()`. If the commit fails (e.g., duplicate email race condition), neither the user nor the token consumption is persisted.
+
+- [ ] **Step 8: Add validate-token endpoint**
+
+  Add to `backend/app/api/routes/users.py`, after the `register_user` function.
+
+  Import the shared limiter established in Phase 3 (merge with existing imports):
+
+  ```python
+  from fastapi import Request  # add if not already imported
+  from app.core.rate_limit import limiter
+  ```
+
+  Then add the endpoint:
+
+  ```python
+  @router.get("/validate-token")
+  @limiter.limit("5/minute")
+  def validate_token(request: Request, session: SessionDep, token: str) -> dict:
+      """
+      Check if an invite token is valid (exists, unused, not expired).
+      Used by the frontend to show/hide the signup form.
+      Rate limited to 5 req/min per IP to prevent token enumeration.
+      """
+      statement = select(InviteToken).where(InviteToken.token == token)
+      invite_token = session.exec(statement).first()
+      if (
+          not invite_token
+          or invite_token.used_at is not None
+          or invite_token.expires_at < datetime.now(timezone.utc)
+      ):
+          return {"valid": False}
+      return {"valid": True}
+  ```
+
+  **Note:** The `limiter` instance and its exception handler are already registered in `app/main.py` from Phase 3 (`app.core.rate_limit` module). The `request: Request` parameter is required by slowapi to extract the client IP. No additional setup in `main.py` is needed.
+
+- [ ] **Step 9: Modify frontend signup page**
+
+  Edit `frontend/src/routes/signup.tsx`. Replace the entire file with:
+
+  ```tsx
+  import { zodResolver } from "@hookform/resolvers/zod"
+  import {
+    createFileRoute,
+    Link as RouterLink,
+    redirect,
+    useSearch,
+  } from "@tanstack/react-router"
+  import { useEffect, useState } from "react"
+  import { useForm } from "react-hook-form"
+  import { z } from "zod"
+  import { AuthLayout } from "@/components/Common/AuthLayout"
+  import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+  } from "@/components/ui/form"
+  import { Input } from "@/components/ui/input"
+  import { LoadingButton } from "@/components/ui/loading-button"
+  import { PasswordInput } from "@/components/ui/password-input"
+  import useAuth, { isLoggedIn } from "@/hooks/useAuth"
+
+  const formSchema = z
+    .object({
+      email: z.email(),
+      full_name: z.string().min(1, { message: "Full Name is required" }),
+      password: z
+        .string()
+        .min(1, { message: "Password is required" })
+        .min(8, { message: "Password must be at least 8 characters" }),
+      confirm_password: z
+        .string()
+        .min(1, { message: "Password confirmation is required" }),
+      invite_token: z.string().optional(),
+    })
+    .refine((data) => data.password === data.confirm_password, {
+      message: "The passwords don't match",
+      path: ["confirm_password"],
+    })
+
+  type FormData = z.infer<typeof formSchema>
+
+  const searchSchema = z.object({
+    token: z.string().optional(),
+  })
+
+  export const Route = createFileRoute("/signup")({
+    component: SignUp,
+    validateSearch: searchSchema,
+    beforeLoad: async () => {
+      if (isLoggedIn()) {
+        throw redirect({
+          to: "/",
+        })
+      }
+    },
+    head: () => ({
+      meta: [
+        {
+          title: "Sign Up - toki pona dojo",
+        },
+      ],
+    }),
+  })
+
+  function SignUp() {
+    const { signUpMutation } = useAuth()
+    const { token } = useSearch({ from: "/signup" })
+    const [tokenState, setTokenState] = useState<
+      "loading" | "valid" | "invalid" | "no-token"
+    >(token ? "loading" : "no-token")
+    const [botUsername, setBotUsername] = useState<string | null>(null)
+
+    const form = useForm<FormData>({
+      resolver: zodResolver(formSchema),
+      mode: "onBlur",
+      criteriaMode: "all",
+      defaultValues: {
+        email: "",
+        full_name: "",
+        password: "",
+        confirm_password: "",
+        invite_token: token ?? "",
+      },
+    })
+
+    // Fetch public config for bot username
+    useEffect(() => {
+      fetch("/api/v1/config/public")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.bot_username) {
+            setBotUsername(data.bot_username)
+          }
+        })
+        .catch(() => {
+          // Ignore — bot username is optional for display
+        })
+    }, [])
+
+    // Validate token on mount
+    useEffect(() => {
+      if (!token) return
+      fetch(`/api/v1/users/validate-token?token=${encodeURIComponent(token)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setTokenState(data.valid ? "valid" : "invalid")
+        })
+        .catch(() => {
+          setTokenState("invalid")
+        })
+    }, [token])
+
+    const onSubmit = (data: FormData) => {
+      if (signUpMutation.isPending) return
+      const { confirm_password: _confirm_password, ...submitData } = data
+      submitData.invite_token = token ?? ""
+      signUpMutation.mutate(submitData)
+    }
+
+    // No token in URL: show invite-only message
+    if (tokenState === "no-token") {
+      return (
+        <AuthLayout>
+          <div className="flex flex-col items-center gap-4 text-center">
+            <h1 className="text-2xl font-bold">This app is invite-only</h1>
+            <p className="text-muted-foreground">
+              Request access via our Telegram bot
+              {botUsername ? (
+                <>
+                  :{" "}
+                  <a
+                    href={`https://t.me/${botUsername}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-4"
+                    data-testid="telegram-bot-link"
+                  >
+                    @{botUsername}
+                  </a>
+                </>
+              ) : (
+                "."
+              )}
+            </p>
+            <div className="text-center text-sm">
+              Already have an account?{" "}
+              <RouterLink to="/login" className="underline underline-offset-4">
+                Log in
+              </RouterLink>
+            </div>
+          </div>
+        </AuthLayout>
+      )
+    }
+
+    // Token is loading
+    if (tokenState === "loading") {
+      return (
+        <AuthLayout>
+          <div className="flex flex-col items-center gap-4 text-center">
+            <p className="text-muted-foreground">Validating invite token...</p>
+          </div>
+        </AuthLayout>
+      )
+    }
+
+    // Token is invalid
+    if (tokenState === "invalid") {
+      return (
+        <AuthLayout>
+          <div
+            className="flex flex-col items-center gap-4 text-center"
+            data-testid="invalid-token-message"
+          >
+            <h1 className="text-2xl font-bold">Invalid invite token</h1>
+            <p className="text-muted-foreground">
+              This invite token is invalid or has already been used.
+            </p>
+            {botUsername && (
+              <p className="text-sm text-muted-foreground">
+                Request a new one via{" "}
+                <a
+                  href={`https://t.me/${botUsername}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4"
+                >
+                  @{botUsername}
+                </a>
+              </p>
+            )}
+            <div className="text-center text-sm">
+              Already have an account?{" "}
+              <RouterLink to="/login" className="underline underline-offset-4">
+                Log in
+              </RouterLink>
+            </div>
+          </div>
+        </AuthLayout>
+      )
+    }
+
+    // Token is valid: show the signup form
+    return (
+      <AuthLayout>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-6"
+          >
+            <div className="flex flex-col items-center gap-2 text-center">
+              <h1 className="text-2xl font-bold">Create an account</h1>
+            </div>
+
+            <div className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="full_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        data-testid="full-name-input"
+                        placeholder="User"
+                        type="text"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        data-testid="email-input"
+                        placeholder="user@example.com"
+                        type="email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        data-testid="password-input"
+                        placeholder="Password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirm_password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        data-testid="confirm-password-input"
+                        placeholder="Confirm Password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Hidden invite token field */}
+              <input type="hidden" {...form.register("invite_token")} />
+
+              <LoadingButton
+                type="submit"
+                className="w-full"
+                loading={signUpMutation.isPending}
+              >
+                Sign Up
+              </LoadingButton>
+            </div>
+
+            <div className="text-center text-sm">
+              Already have an account?{" "}
+              <RouterLink to="/login" className="underline underline-offset-4">
+                Log in
+              </RouterLink>
+            </div>
+          </form>
+        </Form>
+      </AuthLayout>
+    )
+  }
+
+  export default SignUp
+  ```
+
+  **Key changes:** `useSearch` reads `?token=` from URL. Three states: no-token (invite-only message), loading (validating), invalid (error), valid (show form). `invite_token` is included in form submission. `botUsername` fetched from `/api/v1/config/public`.
+
+- [ ] **Step 10: Modify frontend login page**
+
+  Edit `frontend/src/routes/login.tsx`. Replace the "Don't have an account yet?" block at the bottom of the form with:
+
+  ```tsx
+  <div className="text-center text-sm space-y-1">
+    <p>
+      Don't have an account yet?{" "}
+      <RouterLink to="/signup" className="underline underline-offset-4">
+        Sign up
+      </RouterLink>
+    </p>
+    <p className="text-xs text-muted-foreground" data-testid="request-access-hint">
+      Need an invite?{" "}
+      <a
+        href={botUsername ? `https://t.me/${botUsername}` : "#"}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline underline-offset-4"
+      >
+        Request access via Telegram
+      </a>
+    </p>
+  </div>
+  ```
+
+  Add state and effect at the top of the `Login` component to fetch the bot username:
+
+  ```tsx
+  const [botUsername, setBotUsername] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch("/api/v1/config/public")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.bot_username) setBotUsername(data.bot_username)
+      })
+      .catch(() => {})
+  }, [])
+  ```
+
+  Add the necessary imports:
+
+  ```tsx
+  import { useEffect, useState } from "react"
+  ```
+
+- [ ] **Step 11: Register new routers in main.py**
+
+  Edit `backend/app/api/main.py`. Add imports and router includes:
+
+  ```python
+  from fastapi import APIRouter
+
+  from app.api.routes import config, items, login, private, users, utils
+  from app.core.config import settings
+
+  api_router = APIRouter()
+  api_router.include_router(login.router)
+  api_router.include_router(users.router)
+  api_router.include_router(utils.router)
+  api_router.include_router(items.router)
+  api_router.include_router(config.router)
+
+  if settings.ENVIRONMENT == "local":
+      api_router.include_router(private.router)
+
+  # Telegram webhook route (only when bot is configured)
+  if settings.TG_BOT_TOKEN and settings.TG_SUPERUSER_ID:
+      from app.api.routes import telegram
+      api_router.include_router(telegram.router)
+  ```
+
+  Edit `backend/app/main.py` to add lifespan for webhook management:
+
+  ```python
+  import logging
+  from contextlib import asynccontextmanager
+
+  import sentry_sdk
+  from fastapi import FastAPI
+  from fastapi.routing import APIRoute
+  from starlette.middleware.cors import CORSMiddleware
+
+  from app.api.main import api_router
+  from app.core.config import settings
 
   logger = logging.getLogger(__name__)
 
 
-  async def check_and_send_reminders() -> None:
-      if not is_telegram_enabled():
-          return
-
-      with Session(engine) as session:
-          # Find users with Telegram linked
-          statement = select(User).where(User.telegram_chat_id.isnot(None))
-          users = session.exec(statement).all()
-
-          for user in users:
-              # Look up the user's progress record.
-              # The UserProgress model (added in a prior phase) stores streak and
-              # vocabulary stats per user.  If no progress routes/models exist yet,
-              # the implementer must first read backend/app/models.py and
-              # backend/app/api/routes/ to find the actual progress table name and
-              # fields.  The query below assumes:
-              #   - Model: UserProgress (table "userprogress")
-              #   - Fields: user_id (FK -> user.id), current_streak (int),
-              #             words_learned (int), last_practice_date (date)
-              from app.models import UserProgress  # noqa: E402
-
-              progress = session.exec(
-                  select(UserProgress).where(UserProgress.user_id == user.id)
-              ).first()
-
-              if progress is None:
-                  continue
-
-              # Skip users who already practiced today
-              today = datetime.now(timezone.utc).date()
-              if progress.last_practice_date and progress.last_practice_date >= today:
-                  continue
-
-              streak = progress.current_streak
-              words_known = progress.words_learned
-              if streak > 0:
-                  await send_streak_reminder(
-                      user.telegram_chat_id, streak, words_known
-                  )
-
-      logger.info("Streak reminders check completed for %d users", len(users))
+  def custom_generate_unique_id(route: APIRoute) -> str:
+      return f"{route.tags[0]}-{route.name}"
 
 
-  async def streak_reminder_loop() -> None:
-      """Run daily at a fixed hour (e.g., 9 AM UTC)."""
-      while True:
-          now = datetime.now(timezone.utc)
-          # Calculate seconds until next 9 AM UTC
-          target_hour = 9
-          if now.hour >= target_hour:
-              # Already past target, wait until tomorrow
-              seconds_until = (24 - now.hour + target_hour) * 3600 - now.minute * 60
-          else:
-              seconds_until = (target_hour - now.hour) * 3600 - now.minute * 60
+  if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
+      sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
 
-          await asyncio.sleep(max(seconds_until, 60))
-          await check_and_send_reminders()
-  ```
-
-  In `backend/app/main.py`, start the loop on app startup using the `lifespan` context manager pattern (`@app.on_event("startup")` is deprecated in FastAPI >= 0.93). Find the existing `app = FastAPI(...)` call and wrap it with a lifespan:
-
-  ```python
-  import asyncio
-  from contextlib import asynccontextmanager
-
-  from app.services.telegram import is_telegram_enabled
 
   @asynccontextmanager
   async def lifespan(app: FastAPI):
-      # Startup
-      if is_telegram_enabled():
-          from app.services.streak_reminder import streak_reminder_loop
-          task = asyncio.create_task(streak_reminder_loop())
+      # Startup: set Telegram webhook
+      if settings.TG_BOT_TOKEN and settings.TG_SUPERUSER_ID:
+          from app.services.telegram import set_webhook
+
+          webhook_url = (
+              f"{settings.FRONTEND_HOST}{settings.API_V1_STR}/telegram/webhook"
+          )
+          await set_webhook(webhook_url)
+          logger.info("Telegram webhook registered")
       yield
-      # Shutdown
-      if is_telegram_enabled():
-          task.cancel()
+      # Shutdown: delete Telegram webhook
+      if settings.TG_BOT_TOKEN and settings.TG_SUPERUSER_ID:
+          from app.services.telegram import delete_webhook
 
-  # Then pass lifespan to the FastAPI constructor:
-  # app = FastAPI(..., lifespan=lifespan)
+          await delete_webhook()
+          logger.info("Telegram webhook removed")
+
+
+  app = FastAPI(
+      title=settings.PROJECT_NAME,
+      openapi_url=f"{settings.API_V1_STR}/openapi.json",
+      generate_unique_id_function=custom_generate_unique_id,
+      lifespan=lifespan,
+  )
+
+  # Set all CORS enabled origins
+  if settings.all_cors_origins:
+      app.add_middleware(
+          CORSMiddleware,
+          allow_origins=settings.all_cors_origins,
+          allow_credentials=True,
+          allow_methods=["*"],
+          allow_headers=["*"],
+      )
+
+  app.include_router(api_router, prefix=settings.API_V1_STR)
   ```
 
-  If `backend/app/main.py` already defines a `lifespan` function, merge the Telegram startup logic into the existing one rather than replacing it.
+  **Note:** If `main.py` already has a `lifespan`, merge the webhook setup into it.
 
-- [ ] **Step 9: Add "Connect Telegram" section to frontend settings**
+- [ ] **Step 12: E2E tests for the invite flow**
 
-  Find the settings page (likely `frontend/src/routes/_layout/settings.tsx` or a component it renders). Add a new section:
+  These tests verify the full user-facing flow. Add to the E2E test suite (Playwright).
 
-  ```tsx
-  import { useState } from "react"
-  import { Button } from "@/components/ui/button"
-  import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-  import { Badge } from "@/components/ui/badge"
+  Create `frontend/tests/invite-flow.spec.ts`:
 
-  function TelegramSection() {
-    const [linkCode, setLinkCode] = useState<string | null>(null)
-    const [isLoading, setIsLoading] = useState(false)
+  ```ts
+  import { expect, test } from "@playwright/test"
 
-    const generateCode = async () => {
-      setIsLoading(true)
-      try {
-        const response = await fetch("/api/v1/users/me/telegram-link-code", {
-          method: "POST",
-          headers: { /* auth headers */ },
-        })
-        const data = await response.json()
-        setLinkCode(data.code)
-      } finally {
-        setIsLoading(false)
+  test.describe("Invite Flow", () => {
+    test("signup page without token shows invite-only message", async ({
+      page,
+    }) => {
+      await page.goto("/signup")
+      await expect(page.getByText("This app is invite-only")).toBeVisible()
+    })
+
+    test("signup page without token shows Telegram bot link", async ({
+      page,
+    }) => {
+      await page.goto("/signup")
+      const botLink = page.getByTestId("telegram-bot-link")
+      // Bot link may or may not be visible depending on config
+      // If TG_BOT_USERNAME is set, the link should be visible
+      const isVisible = await botLink.isVisible().catch(() => false)
+      if (isVisible) {
+        const href = await botLink.getAttribute("href")
+        expect(href).toMatch(/^https:\/\/t\.me\//)
       }
-    }
+    })
 
-    // Only render if Telegram is configured (check via a feature flags endpoint or user data)
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Telegram Notifications</CardTitle>
-          <CardDescription>
-            Get daily streak reminders via Telegram
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {user.telegram_chat_id ? (
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary">Connected</Badge>
-              <Button variant="outline" size="sm" onClick={unlinkTelegram}>
-                Disconnect
-              </Button>
-            </div>
-          ) : (
-            <>
-              <Button onClick={generateCode} disabled={isLoading}>
-                Generate Link Code
-              </Button>
-              {linkCode && (
-                <div className="rounded-md bg-muted p-4 space-y-2">
-                  <p className="text-sm font-medium">Your code:</p>
-                  <code className="text-lg font-mono select-all">{linkCode}</code>
-                  <p className="text-xs text-muted-foreground">
-                    Open your Telegram bot and send: <code>/start {linkCode}</code>
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-    )
-  }
+    test("signup page with invalid token shows error", async ({ page }) => {
+      await page.goto("/signup?token=invalid_token_12345")
+      await expect(
+        page.getByTestId("invalid-token-message")
+      ).toBeVisible({ timeout: 10000 })
+      await expect(
+        page.getByText("invalid or has already been used")
+      ).toBeVisible()
+    })
+
+    test("login page shows request access hint", async ({ page }) => {
+      await page.goto("/login")
+      await expect(
+        page.getByTestId("request-access-hint")
+      ).toBeVisible()
+      await expect(
+        page.getByText("Request access via Telegram")
+      ).toBeVisible()
+    })
+
+    test("valid invite token allows full signup flow", async ({ page, request }) => {
+      // Seed a valid invite token via API (requires a helper endpoint or direct DB seed).
+      // For E2E, we create the token through the test DB setup script or a test-only API.
+      // Here we assume a test utility endpoint or pre-seeded token.
+      // Alternative: use page.request to call an internal test helper.
+      const tokenResponse = await request.post("/api/v1/utils/seed-invite-token", {
+        data: {},
+      })
+      // If the seed endpoint doesn't exist, the implementer should create a
+      // lightweight test-only route behind ENVIRONMENT=local that creates an
+      // AccessRequest + InviteToken and returns the token string.
+      if (!tokenResponse.ok()) {
+        test.skip()
+        return
+      }
+      const { token } = await tokenResponse.json()
+
+      await page.goto(`/signup?token=${token}`)
+
+      // Form should be visible (token is valid)
+      await expect(page.getByTestId("full-name-input")).toBeVisible({ timeout: 10000 })
+
+      // Fill out the signup form
+      const uniqueEmail = `e2e-${Date.now()}@example.com`
+      await page.getByTestId("full-name-input").fill("E2E Test User")
+      await page.getByTestId("email-input").fill(uniqueEmail)
+      await page.getByTestId("password-input").fill("testpass123")
+      await page.getByTestId("confirm-password-input").fill("testpass123")
+      await page.getByRole("button", { name: /sign up/i }).click()
+
+      // Should redirect to the app after successful signup
+      await page.waitForURL("**/login**", { timeout: 15000 })
+    })
+
+    test("expired invite token shows error message", async ({ page, request }) => {
+      // Seed an expired invite token via the test utility endpoint.
+      const tokenResponse = await request.post(
+        "/api/v1/utils/seed-invite-token",
+        { data: { expired: true } },
+      )
+      if (!tokenResponse.ok()) {
+        test.skip()
+        return
+      }
+      const { token } = await tokenResponse.json()
+
+      await page.goto(`/signup?token=${token}`)
+
+      // Should show the invalid/expired token message
+      await expect(
+        page.getByTestId("invalid-token-message")
+      ).toBeVisible({ timeout: 10000 })
+      await expect(
+        page.getByText("invalid or has already been used")
+      ).toBeVisible()
+    })
+  })
   ```
 
-  The section should only render when Telegram is enabled on the backend. **Decision: check the user model field.** The `UserPublic` response (from `GET /api/v1/users/me`) already includes the `telegram_chat_id` field (added in Step 3 of this task). If the field key is present in the response JSON (even if its value is `null`), Telegram is enabled on the backend. If the key is absent, the backend was built without Telegram support. Use this check:
+  Run the E2E tests:
 
-  ```tsx
-  // In the settings page, after fetching the current user:
-  const showTelegram = user && "telegram_chat_id" in user
+  ```bash
+  cd frontend && npx playwright test tests/invite-flow.spec.ts --reporter=list
   ```
 
-  Do **not** create a separate `/api/v1/features` endpoint for this.
+- [ ] **Step 13: Run all tests and commit (incremental commits)**
 
-- [ ] **Step 10: Commit**
+  Throughout this task, make incremental commits at these checkpoints:
 
-  Stage all new and modified files. Commit with message: "feat: add optional Telegram bot for streak reminders"
+  **After Step 2** (models + migration):
+  ```bash
+  git add backend/app/models.py backend/alembic/versions/ backend/app/core/config.py .env.example
+  git commit -m "feat(models): add AccessRequest and InviteToken models + migration"
+  ```
 
-- [ ] **Step 11:** Record learnings to `.claude/learnings-telegram-bot.md` using the surfacing-subagent-learnings skill.
+  **After Step 3** (failing tests — TDD red phase):
+  ```bash
+  git add backend/tests/test_telegram_service.py backend/tests/test_invite_flow.py
+  git commit -m "test: add failing tests for telegram service and invite flow (red phase)"
+  ```
+
+  **After Step 8** (backend service + routes):
+  ```bash
+  git add backend/app/services/telegram.py backend/app/api/routes/telegram.py \
+        backend/app/api/routes/config.py backend/app/api/routes/users.py
+  git commit -m "feat: add telegram service, webhook route, invite-gated signup"
+  ```
+
+  **After Step 10** (frontend changes):
+  ```bash
+  git add frontend/src/routes/signup.tsx frontend/src/routes/login.tsx
+  git commit -m "feat(frontend): invite-only signup page with token validation"
+  ```
+
+  **After Step 11** (router registration + lifespan):
+  ```bash
+  git add backend/app/api/main.py backend/app/main.py
+  git commit -m "feat: register telegram/config routers and webhook lifespan"
+  ```
+
+  **After Step 12** (E2E tests — final commit):
+
+  Run backend tests:
+
+  ```bash
+  cd backend && python -m pytest tests/test_telegram_service.py tests/test_invite_flow.py -v
+  ```
+
+  Run all backend tests to check for regressions:
+
+  ```bash
+  cd backend && python -m pytest -x -v
+  ```
+
+  ```bash
+  git add frontend/tests/invite-flow.spec.ts
+  git commit -m "test: add E2E tests for invite flow"
+  ```
+
+- [ ] **Step 14:** Record learnings to `.claude/learnings-telegram-access-gateway.md` using the surfacing-subagent-learnings skill.
 
 ---
 
