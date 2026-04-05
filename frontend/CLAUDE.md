@@ -95,3 +95,6 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **Playwright tests** require the full stack running. The `playwright.config.ts` expects `http://localhost:5173` to be live.
 - **`generate-client`** reads from `frontend/openapi.json` (local file). Run `bash scripts/generate-client.sh` from repo root to regenerate JSON and client (imports backend in-process, no running server needed).
 - **`@` is an alias for `src/`** — configured in `vite.config.ts`. All internal imports use `@/components/...`, `@/hooks/...`, etc.
+- **PostToolUse:Edit hook runs Biome formatter after every Edit** — always Re-Read the file before a second Edit targeting the same region, or old_string matching will fail on reformatted content (quotes/semicolons/indent style shift).
+- **Use `git rm -r` for directory deletions** — `rm -r` only removes from filesystem. To stage deletions properly in git, use `git rm -r <path>`.
+- **Grep for "Items" feature produces false positives** — Tailwind `items-center`, shadcn `FormItem`/`SelectItem`/`DropdownMenuItem`, and `localStorage.getItem` are unrelated. Known safe false positives in `AppSidebar.tsx` (nav-item `Item` type) and `DeleteUser.tsx` (generic prose "All items associated...").
