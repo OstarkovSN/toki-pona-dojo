@@ -135,9 +135,9 @@ test.describe("ChatPanel", () => {
     // Open sheet — use force to bypass devtools overlay in dev mode
     await page.getByLabel("Open chat").click({ force: true })
 
-    // Chat content should be visible in sheet
-    await expect(page.getByTestId("chat-panel")).toBeVisible()
+    // Chat content should be visible in sheet (wait for Sheet animation)
     await expect(page.getByPlaceholder("toki...")).toBeVisible()
+    await expect(page.getByTestId("chat-panel")).toBeVisible()
   })
 
   test("mobile: bottom sheet can be closed", async ({ page }) => {
