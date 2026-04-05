@@ -21,14 +21,23 @@ test("Dictionary search input is functional", async ({ page }) => {
 test("POS filter pills are toggleable", async ({ page }) => {
   await page.goto("/dictionary")
   const nounFilter = page.getByTestId("pos-filter-noun")
+  // Initially not pressed
+  await expect(nounFilter).toHaveAttribute("aria-pressed", "false")
   await nounFilter.click()
-  // Noun filter should now be active (has teal styling)
-  await expect(nounFilter).toBeVisible()
+  // After clicking, noun filter is active
+  await expect(nounFilter).toHaveAttribute("aria-pressed", "true")
+  // "all" filter is no longer active
+  await expect(page.getByTestId("pos-filter-all")).toHaveAttribute("aria-pressed", "false")
 })
 
 test("Set filter pills are toggleable", async ({ page }) => {
   await page.goto("/dictionary")
   const puFilter = page.getByTestId("set-filter-pu")
+  // Initially not pressed
+  await expect(puFilter).toHaveAttribute("aria-pressed", "false")
   await puFilter.click()
-  await expect(puFilter).toBeVisible()
+  // After clicking, pu filter is active
+  await expect(puFilter).toHaveAttribute("aria-pressed", "true")
+  // "all" set filter is no longer active
+  await expect(page.getByTestId("set-filter-all")).toHaveAttribute("aria-pressed", "false")
 })

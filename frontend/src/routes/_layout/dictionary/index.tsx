@@ -87,6 +87,7 @@ function DictionaryPage() {
           <button
             key={pos}
             onClick={() => setPosFilter(pos)}
+            aria-pressed={posFilter === pos}
             className={cn(
               "font-label rounded-full border px-3 py-1 transition-colors",
               posFilter === pos
@@ -105,6 +106,7 @@ function DictionaryPage() {
           <button
             key={s}
             onClick={() => setSetFilter(s)}
+            aria-pressed={setFilter === s}
             className={cn(
               "font-label rounded-full border px-3 py-1 transition-colors",
               setFilter === s

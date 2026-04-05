@@ -50,7 +50,7 @@ export function UnitNode({ unitNumber, name, topic, status, prerequisites }: Uni
 
       {/* Current indicator dot */}
       {status === "current" && (
-        <span className="absolute -top-1 -right-1 flex size-3">
+        <span className="absolute -top-1 -right-1 flex size-3" data-testid="unit-current">
           <span className="absolute inline-flex size-full animate-ping rounded-full bg-zen-teal opacity-75" />
           <span className="relative inline-flex size-3 rounded-full bg-zen-teal" />
         </span>

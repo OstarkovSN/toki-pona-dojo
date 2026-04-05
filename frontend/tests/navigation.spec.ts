@@ -43,11 +43,11 @@ test("Theme toggle works", async ({ page }) => {
 test("Chat panel toggles open and closed", async ({ page }) => {
   await page.goto("/")
   // Chat panel should be hidden initially
-  await expect(page.getByText("jan sona")).not.toBeVisible()
+  await expect(page.getByTestId("chat-panel")).not.toBeVisible()
   // Click toggle
   await page.getByLabel("Toggle chat panel").click()
-  await expect(page.getByText("jan sona")).toBeVisible()
+  await expect(page.getByTestId("chat-panel")).toBeVisible()
   // Click toggle again to close
   await page.getByLabel("Toggle chat panel").click()
-  await expect(page.getByText("jan sona")).not.toBeVisible()
+  await expect(page.getByTestId("chat-panel")).not.toBeVisible()
 })

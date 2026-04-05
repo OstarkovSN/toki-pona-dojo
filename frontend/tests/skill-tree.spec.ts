@@ -13,9 +13,10 @@ test("Skill tree renders 10 unit nodes", async ({ page }) => {
 
 test("First unit is marked as current", async ({ page }) => {
   await page.goto("/")
-  // Unit 1 should be current (has pulsing dot)
-  const unit1 = page.getByText("toki!", { exact: true }).locator("..")
-  await expect(unit1).toBeVisible()
+  // Unit 1 should be current — pulsing dot indicator is present
+  await expect(page.getByTestId("unit-current")).toBeVisible()
+  // And only one unit is current
+  await expect(page.getByTestId("unit-current")).toHaveCount(1)
 })
 
 test("Greeting text is visible", async ({ page }) => {
