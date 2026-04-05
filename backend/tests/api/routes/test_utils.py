@@ -3,6 +3,7 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from app.core.config import settings
+from app.utils import EmailData
 
 
 def test_health_check(client: TestClient) -> None:
@@ -16,7 +17,11 @@ def test_test_email_superuser(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
     """Superuser can trigger test email send; returns 201 with success message."""
-    with patch("app.api.routes.utils.send_email") as mock_send:
+    stub_email_data = EmailData(html_content="<p>Test</p>", subject="Test email")
+    with (
+        patch("app.api.routes.utils.generate_test_email", return_value=stub_email_data),
+        patch("app.api.routes.utils.send_email") as mock_send,
+    ):
         r = client.post(
             f"{settings.API_V1_STR}/utils/test-email/",
             params={"email_to": "test@example.com"},
