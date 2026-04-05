@@ -17,6 +17,12 @@ import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
+import { Route as LayoutGrammarIndexRouteImport } from './routes/_layout/grammar/index'
+import { Route as LayoutDictionaryIndexRouteImport } from './routes/_layout/dictionary/index'
+import { Route as LayoutGrammarParticlesRouteImport } from './routes/_layout/grammar/particles'
+import { Route as LayoutGrammarModifiersRouteImport } from './routes/_layout/grammar/modifiers'
+import { Route as LayoutDictionaryWordRouteImport } from './routes/_layout/dictionary/$word'
+import { Route as LayoutLearnUnitLessonRouteImport } from './routes/_layout/learn/$unit.$lesson'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -57,6 +63,36 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutGrammarIndexRoute = LayoutGrammarIndexRouteImport.update({
+  id: '/grammar/',
+  path: '/grammar/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutDictionaryIndexRoute = LayoutDictionaryIndexRouteImport.update({
+  id: '/dictionary/',
+  path: '/dictionary/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutGrammarParticlesRoute = LayoutGrammarParticlesRouteImport.update({
+  id: '/grammar/particles',
+  path: '/grammar/particles',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutGrammarModifiersRoute = LayoutGrammarModifiersRouteImport.update({
+  id: '/grammar/modifiers',
+  path: '/grammar/modifiers',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutDictionaryWordRoute = LayoutDictionaryWordRouteImport.update({
+  id: '/dictionary/$word',
+  path: '/dictionary/$word',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutLearnUnitLessonRoute = LayoutLearnUnitLessonRouteImport.update({
+  id: '/learn/$unit/$lesson',
+  path: '/learn/$unit/$lesson',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
@@ -66,6 +102,12 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
   '/settings': typeof LayoutSettingsRoute
+  '/dictionary/$word': typeof LayoutDictionaryWordRoute
+  '/grammar/modifiers': typeof LayoutGrammarModifiersRoute
+  '/grammar/particles': typeof LayoutGrammarParticlesRoute
+  '/dictionary/': typeof LayoutDictionaryIndexRoute
+  '/grammar/': typeof LayoutGrammarIndexRoute
+  '/learn/$unit/$lesson': typeof LayoutLearnUnitLessonRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -75,6 +117,12 @@ export interface FileRoutesByTo {
   '/admin': typeof LayoutAdminRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
+  '/dictionary/$word': typeof LayoutDictionaryWordRoute
+  '/grammar/modifiers': typeof LayoutGrammarModifiersRoute
+  '/grammar/particles': typeof LayoutGrammarParticlesRoute
+  '/dictionary': typeof LayoutDictionaryIndexRoute
+  '/grammar': typeof LayoutGrammarIndexRoute
+  '/learn/$unit/$lesson': typeof LayoutLearnUnitLessonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,6 +134,12 @@ export interface FileRoutesById {
   '/_layout/admin': typeof LayoutAdminRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/dictionary/$word': typeof LayoutDictionaryWordRoute
+  '/_layout/grammar/modifiers': typeof LayoutGrammarModifiersRoute
+  '/_layout/grammar/particles': typeof LayoutGrammarParticlesRoute
+  '/_layout/dictionary/': typeof LayoutDictionaryIndexRoute
+  '/_layout/grammar/': typeof LayoutGrammarIndexRoute
+  '/_layout/learn/$unit/$lesson': typeof LayoutLearnUnitLessonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,6 +151,12 @@ export interface FileRouteTypes {
     | '/signup'
     | '/admin'
     | '/settings'
+    | '/dictionary/$word'
+    | '/grammar/modifiers'
+    | '/grammar/particles'
+    | '/dictionary/'
+    | '/grammar/'
+    | '/learn/$unit/$lesson'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -106,6 +166,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/settings'
     | '/'
+    | '/dictionary/$word'
+    | '/grammar/modifiers'
+    | '/grammar/particles'
+    | '/dictionary'
+    | '/grammar'
+    | '/learn/$unit/$lesson'
   id:
     | '__root__'
     | '/_layout'
@@ -116,6 +182,12 @@ export interface FileRouteTypes {
     | '/_layout/admin'
     | '/_layout/settings'
     | '/_layout/'
+    | '/_layout/dictionary/$word'
+    | '/_layout/grammar/modifiers'
+    | '/_layout/grammar/particles'
+    | '/_layout/dictionary/'
+    | '/_layout/grammar/'
+    | '/_layout/learn/$unit/$lesson'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,6 +256,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/grammar/': {
+      id: '/_layout/grammar/'
+      path: '/grammar'
+      fullPath: '/grammar/'
+      preLoaderRoute: typeof LayoutGrammarIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/dictionary/': {
+      id: '/_layout/dictionary/'
+      path: '/dictionary'
+      fullPath: '/dictionary/'
+      preLoaderRoute: typeof LayoutDictionaryIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/grammar/particles': {
+      id: '/_layout/grammar/particles'
+      path: '/grammar/particles'
+      fullPath: '/grammar/particles'
+      preLoaderRoute: typeof LayoutGrammarParticlesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/grammar/modifiers': {
+      id: '/_layout/grammar/modifiers'
+      path: '/grammar/modifiers'
+      fullPath: '/grammar/modifiers'
+      preLoaderRoute: typeof LayoutGrammarModifiersRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/dictionary/$word': {
+      id: '/_layout/dictionary/$word'
+      path: '/dictionary/$word'
+      fullPath: '/dictionary/$word'
+      preLoaderRoute: typeof LayoutDictionaryWordRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/learn/$unit/$lesson': {
+      id: '/_layout/learn/$unit/$lesson'
+      path: '/learn/$unit/$lesson'
+      fullPath: '/learn/$unit/$lesson'
+      preLoaderRoute: typeof LayoutLearnUnitLessonRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
@@ -191,12 +305,24 @@ interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutDictionaryWordRoute: typeof LayoutDictionaryWordRoute
+  LayoutGrammarModifiersRoute: typeof LayoutGrammarModifiersRoute
+  LayoutGrammarParticlesRoute: typeof LayoutGrammarParticlesRoute
+  LayoutDictionaryIndexRoute: typeof LayoutDictionaryIndexRoute
+  LayoutGrammarIndexRoute: typeof LayoutGrammarIndexRoute
+  LayoutLearnUnitLessonRoute: typeof LayoutLearnUnitLessonRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutDictionaryWordRoute: LayoutDictionaryWordRoute,
+  LayoutGrammarModifiersRoute: LayoutGrammarModifiersRoute,
+  LayoutGrammarParticlesRoute: LayoutGrammarParticlesRoute,
+  LayoutDictionaryIndexRoute: LayoutDictionaryIndexRoute,
+  LayoutGrammarIndexRoute: LayoutGrammarIndexRoute,
+  LayoutLearnUnitLessonRoute: LayoutLearnUnitLessonRoute,
 }
 
 const LayoutRouteWithChildren =

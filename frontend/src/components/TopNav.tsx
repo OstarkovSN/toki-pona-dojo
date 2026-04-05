@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router"
-import { Moon, Sun, Monitor, MessageCircle } from "lucide-react"
+import { MessageCircle, Monitor, Moon, Sun } from "lucide-react"
 import { useTheme } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,11 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 
-// Routes for dictionary/grammar added in Task 3 — cast to any until then
-const navLinks: { to: string; label: string }[] = [
-  { to: "/", label: "learn" },
-  { to: "/dictionary", label: "dictionary" },
-  { to: "/grammar", label: "grammar" },
+const navLinks = [
+  { to: "/" as const, label: "learn" },
+  { to: "/dictionary" as const, label: "dictionary" },
+  { to: "/grammar" as const, label: "grammar" },
 ]
 
 interface TopNavProps {
@@ -38,8 +37,7 @@ export function TopNav({ onToggleChat, chatOpen }: TopNavProps) {
         {navLinks.map((link) => (
           <Link
             key={link.to}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            to={link.to as any}
+            to={link.to}
             className={cn(
               "font-label relative py-4 transition-colors",
               isActive(link.to)
@@ -83,10 +81,16 @@ export function TopNav({ onToggleChat, chatOpen }: TopNavProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem data-testid="light-mode" onClick={() => setTheme("light")}>
+            <DropdownMenuItem
+              data-testid="light-mode"
+              onClick={() => setTheme("light")}
+            >
               <Sun className="mr-2 size-4" /> Light
             </DropdownMenuItem>
-            <DropdownMenuItem data-testid="dark-mode" onClick={() => setTheme("dark")}>
+            <DropdownMenuItem
+              data-testid="dark-mode"
+              onClick={() => setTheme("dark")}
+            >
               <Moon className="mr-2 size-4" /> Dark
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setTheme("system")}>
