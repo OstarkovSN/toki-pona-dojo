@@ -69,7 +69,7 @@ def test_check_default_secret_raises_on_staging(
     monkeypatch.setenv("FIRST_SUPERUSER", "admin@example.com")
     monkeypatch.setenv("FIRST_SUPERUSER_PASSWORD", "somepassword")
 
-    with pytest.raises((ValueError, Exception)):
+    with pytest.raises(ValueError):
         Settings()
 
 
@@ -86,5 +86,5 @@ def test_check_default_secret_raises_on_production(
     monkeypatch.setenv("FIRST_SUPERUSER", "admin@example.com")
     monkeypatch.setenv("FIRST_SUPERUSER_PASSWORD", "changethis")
 
-    with pytest.raises((ValueError, Exception)):
+    with pytest.raises(ValueError):
         Settings()

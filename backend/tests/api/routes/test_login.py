@@ -215,7 +215,7 @@ def test_reset_password_bad_token(client: TestClient) -> None:
 def test_recover_password_html_content_superuser(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    """GET /password-recovery-html-content/{email} as superuser → 200 HTML."""
+    """POST /password-recovery-html-content/{email} as superuser → 200 HTML."""
     r = client.post(
         f"{settings.API_V1_STR}/password-recovery-html-content/{settings.FIRST_SUPERUSER}",
         headers=superuser_token_headers,
@@ -227,7 +227,7 @@ def test_recover_password_html_content_superuser(
 def test_recover_password_html_content_non_superuser(
     client: TestClient, normal_user_token_headers: dict[str, str]
 ) -> None:
-    """GET /password-recovery-html-content/{email} as non-superuser → 403."""
+    """POST /password-recovery-html-content/{email} as non-superuser → 403."""
     r = client.post(
         f"{settings.API_V1_STR}/password-recovery-html-content/someone@example.com",
         headers=normal_user_token_headers,
@@ -238,7 +238,7 @@ def test_recover_password_html_content_non_superuser(
 def test_recover_password_html_content_unknown_email(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    """GET /password-recovery-html-content/{email} with unknown email as superuser → 404."""
+    """POST /password-recovery-html-content/{email} with unknown email as superuser → 404."""
     r = client.post(
         f"{settings.API_V1_STR}/password-recovery-html-content/nonexistent@unknown.example.com",
         headers=superuser_token_headers,
