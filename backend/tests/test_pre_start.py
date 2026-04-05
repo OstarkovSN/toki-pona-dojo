@@ -62,16 +62,16 @@ class TestTestsPreStart:
     def test_main_guard_runs_main(self) -> None:
         """Running tests_pre_start as __main__ calls main() which calls init().
 
-        runpy.run_module re-executes the module in a fresh namespace. We patch
-        Session in the module so that init() succeeds without touching the DB,
-        verifying the __main__ guard triggers main() -> init() without retries.
+        Patches sqlmodel.Session so runpy's fresh namespace gets the mock
+        instead of the real DB connection, verifying the __main__ guard
+        triggers main() -> init() without retries.
         """
         mock_session = MagicMock()
         mock_context = MagicMock()
         mock_context.__enter__ = MagicMock(return_value=mock_session)
         mock_context.__exit__ = MagicMock(return_value=False)
 
-        with patch("app.tests_pre_start.Session", return_value=mock_context):
+        with patch("sqlmodel.Session", return_value=mock_context):
             runpy.run_module("app.tests_pre_start", run_name="__main__")
 
 
@@ -129,14 +129,14 @@ class TestBackendPreStart:
     def test_main_guard_runs_main(self) -> None:
         """Running backend_pre_start as __main__ calls main() which calls init().
 
-        runpy.run_module re-executes the module in a fresh namespace. We patch
-        Session in the module so that init() succeeds without touching the DB,
-        verifying the __main__ guard triggers main() -> init() without retries.
+        Patches sqlmodel.Session so runpy's fresh namespace gets the mock
+        instead of the real DB connection, verifying the __main__ guard
+        triggers main() -> init() without retries.
         """
         mock_session = MagicMock()
         mock_context = MagicMock()
         mock_context.__enter__ = MagicMock(return_value=mock_session)
         mock_context.__exit__ = MagicMock(return_value=False)
 
-        with patch("app.backend_pre_start.Session", return_value=mock_context):
+        with patch("sqlmodel.Session", return_value=mock_context):
             runpy.run_module("app.backend_pre_start", run_name="__main__")
