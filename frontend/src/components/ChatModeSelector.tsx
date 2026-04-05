@@ -1,18 +1,18 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-export type ChatMode = "free" | "grammar" | "translate";
+export type ChatMode = "free" | "grammar" | "translate"
 
 interface ChatModeSelectorProps {
-  mode: ChatMode;
-  onModeChange: (mode: ChatMode) => void;
-  disabled?: boolean;
+  mode: ChatMode
+  onModeChange: (mode: ChatMode) => void
+  disabled?: boolean
 }
 
 const modes: { value: ChatMode; label: string }[] = [
   { value: "free", label: "free chat" },
   { value: "grammar", label: "grammar" },
   { value: "translate", label: "translate" },
-];
+]
 
 export function ChatModeSelector({
   mode,
@@ -20,13 +20,13 @@ export function ChatModeSelector({
   disabled = false,
 }: ChatModeSelectorProps) {
   return (
-    <div className="flex gap-1.5 px-3 py-2" role="radiogroup" aria-label="Chat mode">
+    <fieldset className="flex gap-1.5 px-3 py-2 border-0 p-0 m-0">
+      <legend className="sr-only">Chat mode</legend>
       {modes.map((m) => (
         <button
           key={m.value}
           type="button"
-          role="radio"
-          aria-checked={mode === m.value}
+          aria-pressed={mode === m.value}
           disabled={disabled}
           onClick={() => onModeChange(m.value)}
           className={cn(
@@ -41,6 +41,6 @@ export function ChatModeSelector({
           {m.label}
         </button>
       ))}
-    </div>
-  );
+    </fieldset>
+  )
 }
