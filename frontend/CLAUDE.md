@@ -32,7 +32,7 @@ frontend/src/
 │   │   ├── index.tsx     # Dashboard (/)
 │   │   ├── admin.tsx     # Admin panel (/admin) — superusers only
 │   │   ├── settings.tsx  # User settings (/settings)
-│   │   └── items.tsx     # Items demo — TO BE DELETED in Phase 1
+│   │   └── (no items route — removed in Phase 1)
 │   ├── login.tsx
 │   ├── signup.tsx
 │   ├── recover-password.tsx
@@ -44,7 +44,6 @@ frontend/src/
 │   ├── Sidebar/          # AppSidebar, SidebarNav
 │   ├── Admin/            # User management tables
 │   ├── UserSettings/     # Profile, password change forms
-│   ├── Items/            # Items demo — TO BE DELETED in Phase 1
 │   └── Pending/          # Skeleton loading states
 ├── hooks/
 │   ├── useAuth.ts        # Auth state (JWT in localStorage), login/logout
@@ -91,7 +90,6 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **Never edit `routeTree.gen.ts`** — regenerated on build or hot-reload.
 - **`bun` not `npm`** — the lockfile is `bun.lock`. Using `npm install` will corrupt deps.
 - **`biome` not ESLint** — `bun run lint` runs `biome check --write`. Config in `biome.json`.
-- **Items demo components** (`src/components/Items/`, `src/routes/_layout/items.tsx`) are from the original template and are slated for removal in Phase 1. Avoid building on top of them.
 - **Playwright tests** require the full stack running. The `playwright.config.ts` expects `http://localhost:5173` to be live.
 - **`generate-client`** reads from `frontend/openapi.json` (local file). Run `bash scripts/generate-client.sh` from repo root to regenerate JSON and client (imports backend in-process, no running server needed).
 - **`@` is an alias for `src/`** — configured in `vite.config.ts`. All internal imports use `@/components/...`, `@/hooks/...`, etc.

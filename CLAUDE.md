@@ -147,5 +147,5 @@ New services must use non-standard ports. LangFuse: 3100 (UI), 9190 (MinIO). Cro
 - **`compose.override.yml` is auto-applied** by `docker compose` — no flag needed. It mounts source as volumes for live reload.
 - **Backend reads `.env` from parent dir** (`env_file="../.env"` in Settings). Run `fastapi dev` from inside `backend/` or the container; don't move the `.env`.
 - **`bun` is the package manager** for frontend (not npm). Use `bun install`, `bun run`.
-- **Items demo code still exists** until Phase 1 is executed. The plans are the source of truth for what the app will become.
+- **Items demo code was removed** in Phase 1. The app now has only auth/users as a base.
 - **LangFuse uses `postgres:17`** (planned, Phase 4) (separate container+volume from the app's `postgres:18`). They must not share a Postgres instance.
