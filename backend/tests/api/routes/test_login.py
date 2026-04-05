@@ -162,6 +162,91 @@ def test_login_with_bcrypt_password_upgrades_to_argon2(
     assert updated_hash is None
 
 
+def test_login_inactive_user(client: TestClient, db: Session) -> None:
+    """POST /login/access-token with inactive user credentials → 400 Inactive user."""
+    email = random_email()
+    password = random_lower_string()
+
+    user_create = UserCreate(
+        email=email,
+        full_name="Inactive Test User",
+        password=password,
+        is_active=False,
+        is_superuser=False,
+    )
+    create_user(session=db, user_create=user_create)
+
+    login_data = {"username": email, "password": password}
+    r = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    assert r.status_code == 400
+    assert r.json()["detail"] == "Inactive user"
+
+
+def test_reset_password_inactive_user(client: TestClient, db: Session) -> None:
+    """POST /reset-password/ with valid token but inactive user → 400 Inactive user."""
+    email = random_email()
+    password = random_lower_string()
+
+    user_create = UserCreate(
+        email=email,
+        full_name="Inactive Reset User",
+        password=password,
+        is_active=False,
+        is_superuser=False,
+    )
+    create_user(session=db, user_create=user_create)
+
+    token = generate_password_reset_token(email=email)
+    data = {"new_password": "newpassword123", "token": token}
+
+    r = client.post(f"{settings.API_V1_STR}/reset-password/", json=data)
+    assert r.status_code == 400
+    assert r.json()["detail"] == "Inactive user"
+
+
+def test_reset_password_bad_token(client: TestClient) -> None:
+    """POST /reset-password/ with a bad/expired token → 400 Invalid token."""
+    data = {"new_password": "newpassword123", "token": "bad.token.value"}
+    r = client.post(f"{settings.API_V1_STR}/reset-password/", json=data)
+    assert r.status_code == 400
+    assert r.json()["detail"] == "Invalid token"
+
+
+def test_recover_password_html_content_superuser(
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+) -> None:
+    """GET /password-recovery-html-content/{email} as superuser → 200 HTML."""
+    r = client.post(
+        f"{settings.API_V1_STR}/password-recovery-html-content/{settings.FIRST_SUPERUSER}",
+        headers=superuser_token_headers,
+    )
+    assert r.status_code == 200
+    assert "text/html" in r.headers.get("content-type", "")
+
+
+def test_recover_password_html_content_non_superuser(
+    client: TestClient, normal_user_token_headers: dict[str, str]
+) -> None:
+    """GET /password-recovery-html-content/{email} as non-superuser → 403."""
+    r = client.post(
+        f"{settings.API_V1_STR}/password-recovery-html-content/someone@example.com",
+        headers=normal_user_token_headers,
+    )
+    assert r.status_code == 403
+
+
+def test_recover_password_html_content_unknown_email(
+    client: TestClient, superuser_token_headers: dict[str, str]
+) -> None:
+    """GET /password-recovery-html-content/{email} with unknown email as superuser → 404."""
+    r = client.post(
+        f"{settings.API_V1_STR}/password-recovery-html-content/nonexistent@unknown.example.com",
+        headers=superuser_token_headers,
+    )
+    assert r.status_code == 404
+    assert "does not exist" in r.json()["detail"]
+
+
 def test_login_with_argon2_password_keeps_hash(client: TestClient, db: Session) -> None:
     """Test that logging in with an argon2 password hash does not update it."""
     email = random_email()
