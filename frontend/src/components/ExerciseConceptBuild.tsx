@@ -47,7 +47,11 @@ export function ExerciseConceptBuild({ exercise, onComplete }: ExerciseProps) {
   const renderScore = (score: number) => {
     const filled = Math.round(score * 5)
     return (
-      <span className="text-amber" aria-label={`Score: ${score.toFixed(1)}`}>
+      <span
+        role="img"
+        className="text-amber"
+        aria-label={`Score: ${score.toFixed(1)}`}
+      >
         {"★".repeat(filled)}
         {"☆".repeat(5 - filled)}
       </span>

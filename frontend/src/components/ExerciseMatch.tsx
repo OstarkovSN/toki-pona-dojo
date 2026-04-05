@@ -7,12 +7,25 @@ interface ItemState {
   matched: boolean
 }
 
+const shuffle = <T,>(arr: T[]): T[] => {
+  const copy = [...arr]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  }
+  return copy
+}
+
 export function ExerciseMatch({ exercise, onComplete }: ExerciseProps) {
   const pairs = exercise.pairs ?? []
   const total = pairs.length
 
-  const [leftItems, setLeftItems] = useState<ItemState[]>([])
-  const [rightItems, setRightItems] = useState<ItemState[]>([])
+  const [leftItems, setLeftItems] = useState<ItemState[]>(() =>
+    shuffle(pairs.map((p) => ({ text: p.tokiPona, matched: false }))),
+  )
+  const [rightItems, setRightItems] = useState<ItemState[]>(() =>
+    shuffle(pairs.map((p) => ({ text: p.english, matched: false }))),
+  )
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null)
   const [selectedRight, setSelectedRight] = useState<number | null>(null)
   const [flashWrong, setFlashWrong] = useState<{
@@ -22,23 +35,6 @@ export function ExerciseMatch({ exercise, onComplete }: ExerciseProps) {
   const [firstTryCorrect, setFirstTryCorrect] = useState(0)
   const [matchedCount, setMatchedCount] = useState(0)
   const [attempts, setAttempts] = useState<Set<string>>(new Set())
-
-  useEffect(() => {
-    const shuffle = <T,>(arr: T[]): T[] => {
-      const copy = [...arr]
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
-        ;[copy[i], copy[j]] = [copy[j], copy[i]]
-      }
-      return copy
-    }
-    setLeftItems(
-      shuffle(pairs.map((p) => ({ text: p.tokiPona, matched: false }))),
-    )
-    setRightItems(
-      shuffle(pairs.map((p) => ({ text: p.english, matched: false }))),
-    )
-  }, [pairs])
 
   const tryMatch = useCallback(
     (leftIdx: number, rightIdx: number) => {
