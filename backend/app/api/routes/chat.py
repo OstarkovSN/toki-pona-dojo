@@ -6,6 +6,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
+from pydantic import ValidationError
 
 from app.api.deps import get_optional_current_user
 from app.core.config import settings
