@@ -1,7 +1,6 @@
 """Tests for unit structure definition."""
 
 
-
 def test_units_count():
     """There are exactly 10 units."""
     from app.data.units import UNITS
@@ -73,3 +72,18 @@ def test_parallel_units_have_correct_prereqs():
     assert get_unit_by_id(3)["requires"] == [1]
     assert get_unit_by_id(6)["requires"] == [5]
     assert get_unit_by_id(7)["requires"] == [5]
+
+
+def test_get_words_up_to_unit_unknown_id():
+    """Words up to a non-existent unit returns empty set."""
+    from app.data.units import get_words_up_to_unit
+
+    assert get_words_up_to_unit(99) == set()
+
+
+def test_no_duplicate_words_across_units():
+    """Each word appears in at most one unit."""
+    from app.data.units import UNITS
+
+    all_words = [w for unit in UNITS for w in unit["words"]]
+    assert len(all_words) == len(set(all_words)), "Duplicate words found across units"

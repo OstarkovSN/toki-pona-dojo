@@ -1,5 +1,7 @@
 """Toki pona skill tree: 10 units with word lists and prerequisites."""
 
+from typing import Any
+
 from pydantic import BaseModel
 
 
@@ -14,7 +16,7 @@ class UnitSummary(BaseModel):
     requires: list[int]
 
 
-UNITS: list[dict] = [
+UNITS: list[dict[str, Any]] = [
     {
         "id": 1,
         "name": "toki!",
@@ -119,7 +121,7 @@ UNITS: list[dict] = [
 ]
 
 
-def get_unit_by_id(unit_id: int) -> dict | None:
+def get_unit_by_id(unit_id: int) -> dict[str, Any] | None:
     """Return a unit dict by its id, or None if not found."""
     for unit in UNITS:
         if unit["id"] == unit_id:
