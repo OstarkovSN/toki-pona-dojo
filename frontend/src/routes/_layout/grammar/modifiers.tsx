@@ -309,7 +309,8 @@ function GrammarModifiersPage() {
     queryKey: ["grammar", "modifiers"],
     queryFn: async () => {
       const res = await fetch("/api/v1/dictionary/grammar")
-      if (!res.ok) throw new Error(`Failed to fetch grammar data (HTTP ${res.status})`)
+      if (!res.ok)
+        throw new Error(`Failed to fetch grammar data (HTTP ${res.status})`)
       return res.json()
     },
     retry: false,

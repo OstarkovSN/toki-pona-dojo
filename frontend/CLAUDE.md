@@ -116,3 +116,25 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **Build warnings on index.js (640KB unminified)** — pre-existing TanStack Router + shadcn bundling issue, not a Phase 5 error.
 - **Biome `useButtonType` rule requires explicit `type="button"`** — `--unsafe` flag does NOT auto-fix this; must be added manually on all `<button>` elements.
 - **Playwright test list via grep returns total count** — use `grep "^\s*\[chromium\]"` or check "Total:" line for accurate test counts; `grep -c "test"` counts false positives.
+
+## Phase 6 Gotchas
+
+- **`cn()` is imported from `@/lib/utils`, not `@/utils`** — shadcn/ui utilities live at `frontend/src/lib/utils.ts`, distinct from `frontend/src/utils.ts`.
+- **`OpenAPI.TOKEN` is typed `string | Resolver<string> | undefined`** — use `typeof token === "string"` guard before using as Bearer token header value.
+- **`frontend/src/lib/` is blocked by `.gitignore`** (Python convention carries over) — force-add files with `git add -f`; already noted in Phase 5 Gotchas but easy to forget.
+- **`res.json()` returns `any` in TypeScript without explicit cast** — use `res.json() as Promise<T>` to silence strict-mode complaints.
+- **`npx tsr generate` does not update `routeTree.gen.ts`** — route tree regenerates only via `bun run build` (Vite plugin); `tsr generate` just validates/reports.
+- **Git `add` with `$`-prefixed filenames requires single quotes** — `git add '$unit.$lesson.tsx'` prevents shell variable expansion; double quotes don't work.
+- **Badge `variant` prop is React-only, not an HTML attribute** — CSS selectors like `[variant="outline"]` don't work in Playwright; select by text or `aria-label` instead.
+- **ExerciseMatch shuffles pairs on mount** — never use positional `data-testid` (`match-left-0`); use `aria-label` (e.g., `toki pona: telo`, `english: water`) which are set explicitly on buttons.
+- **Lesson API base URL is dynamic via `OpenAPI.BASE`** — use glob pattern `**/api/v1/lessons/units/**` in `page.route()`, not a full URL.
+- **FeedbackToast "finish lesson" button only appears on last exercise** — all other exercises show "next"; controlled by `isLastExercise` check.
+- **Lesson progress text format is lowercase** — `exercise {n} of {total}` within a `font-mono` span, not a heading.
+- **`test.use({ storageState: ... })` is NOT needed for lesson tests** — the `_layout.tsx` auth guard was removed in Phase 5.
+- **`gradeMutation.data` remains after `onSuccess` fires** — both state flag and mutation data are accessible in same render; `submitted && gradeMutation.data` is valid.
+- **`exercise.hint` is passed as `context` in `GradeRequest`** — the `context` field (optional) on `GradeRequest` exists for this purpose.
+- **`ExerciseStory` completion fires once via `completed` state guard** — prevents race between two final answers from double-firing `onComplete`.
+- **TypeScript generic arrow function in `.tsx` requires trailing comma** — `<T,>(arr: T[])` not `<T>(arr: T[])` due to JSX parser ambiguity.
+- **PostToolUse Biome formatter runs after every Write** — re-read before Edit on same region to avoid stale `old_string` matching.
+- **`useEffect` on `pairs` (array) dependency causes shuffle re-run if pairs recreated each render** — safe here because exercise object is stable, but callers should memoize if pairs computed.
+- **`flashWrong` state as guard prevents rapid-fire clicks** — `if (flashWrong) return` during 500ms wrong-answer animation window.

@@ -31,6 +31,11 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* ── Shorthand color tokens (usable as bg-teal, text-coral, etc.) ── */
+  --color-teal: var(--teal);
+  --color-coral: var(--coral);
+  --color-amber: var(--amber);
+
   /* ── Zen custom colors (usable as bg-zen-teal, text-zen-coral, etc.) ── */
   --color-zen-teal: var(--teal);
   --color-zen-teal-bg: var(--teal-bg);
@@ -69,13 +74,13 @@
   --text3: #9a9890;
 
   /* ── Semantic colors ── */
-  --teal: #1d9e75;
+  --teal: oklch(0.6 0.12 170);
   --teal-bg: #e1f5ee;
   --teal-dark: #085041;
-  --coral: #d85a30;
+  --coral: oklch(0.55 0.18 30);
   --coral-bg: #faece7;
   --coral-dark: #712b13;
-  --amber: #b87020;
+  --amber: oklch(0.6 0.14 70);
   --amber-bg: #fdf0dc;
   --amber-dark: #6b3e08;
   --blue-bg: #e6f1fb;
@@ -116,10 +121,13 @@
   --text3: #6b6860;
 
   /* ── Semantic colors (dark) ── */
+  --teal: oklch(0.65 0.12 170);
   --teal-bg: #04342c;
   --teal-dark: #9fe1cb;
+  --coral: oklch(0.6 0.18 30);
   --coral-bg: #4a1b0c;
   --coral-dark: #f0997b;
+  --amber: oklch(0.65 0.14 70);
   --amber-bg: #3a2004;
   --amber-dark: #fac775;
   --blue-bg: #042c53;
