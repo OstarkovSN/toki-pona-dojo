@@ -1,0 +1,48 @@
+from unittest.mock import patch
+
+from fastapi.testclient import TestClient
+
+from app.core.config import settings
+
+
+def test_health_check(client: TestClient) -> None:
+    """Health check endpoint returns true with no auth required."""
+    r = client.get(f"{settings.API_V1_STR}/utils/health-check/")
+    assert r.status_code == 200
+    assert r.json() is True
+
+
+def test_test_email_superuser(
+    client: TestClient, superuser_token_headers: dict[str, str]
+) -> None:
+    """Superuser can trigger test email send; returns 201 with success message."""
+    with patch("app.api.routes.utils.send_email") as mock_send:
+        r = client.post(
+            f"{settings.API_V1_STR}/utils/test-email/",
+            params={"email_to": "test@example.com"},
+            headers=superuser_token_headers,
+        )
+    assert r.status_code == 201
+    assert r.json() == {"message": "Test email sent"}
+    mock_send.assert_called_once()
+
+
+def test_test_email_normal_user_forbidden(
+    client: TestClient, normal_user_token_headers: dict[str, str]
+) -> None:
+    """Normal (non-superuser) users cannot access the test-email endpoint."""
+    r = client.post(
+        f"{settings.API_V1_STR}/utils/test-email/",
+        params={"email_to": "test@example.com"},
+        headers=normal_user_token_headers,
+    )
+    assert r.status_code == 403
+
+
+def test_test_email_unauthenticated(client: TestClient) -> None:
+    """Unauthenticated requests to test-email endpoint are rejected."""
+    r = client.post(
+        f"{settings.API_V1_STR}/utils/test-email/",
+        params={"email_to": "test@example.com"},
+    )
+    assert r.status_code == 401
