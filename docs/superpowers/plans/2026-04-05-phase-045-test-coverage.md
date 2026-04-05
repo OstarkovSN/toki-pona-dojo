@@ -21,10 +21,10 @@
 | `backend/tests/api/routes/test_lessons.py` | Modify | Add gap-19, gap-20 |
 | `backend/tests/api/routes/test_dictionary.py` | Modify | Add gap-22 |
 | `backend/tests/api/routes/test_private.py` | Modify | Add gap-26 |
-| `backend/tests/core/test_config.py` | Create | Add gap-33 |
+| `backend/tests/core/test_config.py` | Modify | Add gap-33 |
 | `backend/tests/crud/test_crud_update.py` | Create | Add gap-40 |
 | `backend/tests/services/test_llm.py` | Modify | Add gap-46 |
-| `backend/tests/data/test_loader.py` | Create | Add gap-53 |
+| `backend/tests/data/test_loader.py` | Modify | Add gap-53 |
 | `backend/tests/test_main.py` | Modify | Add gap-56 |
 | `backend/tests/models/test_models.py` | Create | Add gap-36 |
 
@@ -594,11 +594,11 @@ Targets:
 
 - [ ] **Step 1: Create __init__.py files for new test packages**
 
-  Create empty `__init__.py` files:
-  - `backend/tests/core/__init__.py`
-  - `backend/tests/models/__init__.py`
-  - `backend/tests/crud/__init__.py`
-  - `backend/tests/data/__init__.py`
+  Create empty `__init__.py` files for packages that don't exist yet:
+  - `backend/tests/models/__init__.py` — new directory, must create
+  - `backend/tests/crud/__init__.py` — new directory, must create
+
+  Note: `backend/tests/core/__init__.py` and `backend/tests/data/__init__.py` already exist — skip them.
 
 - [ ] **Step 2: Write test for gap-33 (config EMAILS_FROM_NAME default)**
 
@@ -848,7 +848,9 @@ Targets:
 - [ ] **Step 11: Commit**
 
   ```bash
-  git add backend/tests/core/ backend/tests/models/ backend/tests/crud/ backend/tests/services/test_llm.py backend/tests/data/ backend/tests/test_main.py backend/tests/api/routes/test_private.py backend/app/main.py
+  git add backend/tests/core/ backend/tests/models/ backend/tests/crud/ backend/tests/services/test_llm.py backend/tests/data/ backend/tests/test_main.py backend/tests/api/routes/test_private.py
+  # Only include main.py if it was actually modified in Step 7 (gap-56 lifespan fix):
+  git diff --quiet backend/app/main.py || git add backend/app/main.py
   git commit -m "test: cover config defaults, UserProgress unique constraint, no-op update, prompt key fallbacks, duplicate word loader, lifespan LangFuse failure, private endpoint duplicate email"
   ```
 

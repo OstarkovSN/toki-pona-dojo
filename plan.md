@@ -35,7 +35,7 @@ Invoke superpowers:subagent-driven-development and execute the plan.
 Each task's agent chain (implementer → spec reviewer → code reviewer → fixers) writes learnings to `.claude/learnings-{task-name-slug}.md`. Your job:
 - **Before dispatching** each subagent, include in the prompt: `"Record learnings to .claude/learnings-{task-name-slug}.md using the surfacing-subagent-learnings skill."`
 - **After each task chain completes** (all reviews pass, task marked done): dispatch the `learnings-curator` agent with the scratch file path. It curates entries into the right CLAUDE.md files and deletes the scratch file.
-- **After all tasks complete**, glob `.claude/learnings-*.md` — if any remain, dispatch `learnings-curator` for each before finishing the branch.
+- **After all tasks complete**, glob `learnings/learnings-*.md` — if any remain, dispatch `learnings-curator` for each before finishing the branch.
 
 
 ### Branch & implementation
