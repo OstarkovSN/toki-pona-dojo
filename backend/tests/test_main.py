@@ -77,8 +77,6 @@ def test_app_has_api_router() -> None:
 
 def test_lifespan_continues_when_check_langfuse_auth_raises() -> None:
     """gap-56: App lifespan still completes when check_langfuse_auth raises."""
-    from unittest.mock import patch
-
     from fastapi.testclient import TestClient
 
     from app.main import app

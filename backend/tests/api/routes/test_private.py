@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 
 from app.core.config import settings
 from app.models import User
-from tests.utils.utils import random_email
+from tests.utils.utils import random_email, random_lower_string
 
 
 def test_create_user(client: TestClient, db: Session) -> None:
@@ -30,8 +30,6 @@ def test_create_user(client: TestClient, db: Session) -> None:
 
 def test_create_user_duplicate_email_returns_error(client: TestClient) -> None:
     """gap-26: Duplicate email to /private/users/ hits DB unique constraint."""
-    from tests.utils.utils import random_email, random_lower_string
-
     email = random_email()
     payload = {
         "email": email,
