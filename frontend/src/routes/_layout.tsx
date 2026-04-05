@@ -1,7 +1,7 @@
-import { useState } from "react"
 import { createFileRoute, Outlet } from "@tanstack/react-router"
-import { TopNav } from "@/components/TopNav"
+import { useState } from "react"
 import { ChatPanelPlaceholder } from "@/components/ChatPanelPlaceholder"
+import { TopNav } from "@/components/TopNav"
 import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout")({
@@ -13,7 +13,10 @@ function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-zen-bg">
-      <TopNav onToggleChat={() => setChatOpen((prev) => !prev)} chatOpen={chatOpen} />
+      <TopNav
+        onToggleChat={() => setChatOpen((prev) => !prev)}
+        chatOpen={chatOpen}
+      />
 
       <div className="flex flex-1 overflow-hidden">
         {/* Content panel */}

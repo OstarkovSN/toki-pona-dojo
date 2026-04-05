@@ -2,7 +2,10 @@ import { MessageCircle } from "lucide-react"
 
 export function ChatPanelPlaceholder() {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4 bg-zen-bg2 p-8 text-center" data-testid="chat-panel">
+    <div
+      className="flex h-full flex-col items-center justify-center gap-4 bg-zen-bg2 p-8 text-center"
+      data-testid="chat-panel"
+    >
       <div className="flex size-16 items-center justify-center rounded-full bg-zen-bg3">
         <MessageCircle className="size-8 text-zen-text3" />
       </div>

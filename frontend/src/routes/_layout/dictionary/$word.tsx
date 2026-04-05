@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { cn } from "@/lib/utils"
-import { POS_COLORS } from "@/lib/pos-colors"
 import type { WordData } from "@/components/WordCard"
+import { POS_COLORS } from "@/lib/pos-colors"
+import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout/dictionary/$word")({
   component: WordDetailPage,
@@ -17,16 +17,56 @@ export const Route = createFileRoute("/_layout/dictionary/$word")({
 // TODO: Replace this hardcoded map with data from the API when a
 // "word → units" endpoint is available (e.g. GET /api/v1/dictionary/words/:word/units).
 const WORD_UNITS: Record<string, number[]> = {
-  mi: [1], sina: [1], pona: [1], ike: [1], toki: [1], moku: [1, 3],
-  jan: [2], tomo: [2], telo: [2], soweli: [2], suno: [2], ma: [2], nimi: [2],
-  lukin: [3, 8], lape: [3], pali: [3], kama: [3], jo: [3],
-  li: [4], e: [4], ona: [4], ni: [4], seme: [4],
-  mute: [5], lili: [5], suli: [5], wawa: [5], sin: [5], ante: [5],
-  pi: [6], sona: [6], kalama: [6, 9], ilo: [6], nasin: [6],
-  la: [7], tenpo: [7], sike: [7], open: [7], pini: [7],
-  o: [8], wile: [8], ken: [8],
-  olin: [9], pilin: [9], musi: [9], sitelen: [9],
-  lon: [10], tawa: [10], tan: [10], kepeken: [10],
+  mi: [1],
+  sina: [1],
+  pona: [1],
+  ike: [1],
+  toki: [1],
+  moku: [1, 3],
+  jan: [2],
+  tomo: [2],
+  telo: [2],
+  soweli: [2],
+  suno: [2],
+  ma: [2],
+  nimi: [2],
+  lukin: [3, 8],
+  lape: [3],
+  pali: [3],
+  kama: [3],
+  jo: [3],
+  li: [4],
+  e: [4],
+  ona: [4],
+  ni: [4],
+  seme: [4],
+  mute: [5],
+  lili: [5],
+  suli: [5],
+  wawa: [5],
+  sin: [5],
+  ante: [5],
+  pi: [6],
+  sona: [6],
+  kalama: [6, 9],
+  ilo: [6],
+  nasin: [6],
+  la: [7],
+  tenpo: [7],
+  sike: [7],
+  open: [7],
+  pini: [7],
+  o: [8],
+  wile: [8],
+  ken: [8],
+  olin: [9],
+  pilin: [9],
+  musi: [9],
+  sitelen: [9],
+  lon: [10],
+  tawa: [10],
+  tan: [10],
+  kepeken: [10],
 }
 
 function WordDetailPage() {
@@ -35,7 +75,9 @@ function WordDetailPage() {
   const { data, isLoading, error } = useQuery<WordData>({
     queryKey: ["dictionary", "word", word],
     queryFn: async () => {
-      const res = await fetch(`/api/v1/dictionary/words/${encodeURIComponent(word)}`)
+      const res = await fetch(
+        `/api/v1/dictionary/words/${encodeURIComponent(word)}`,
+      )
       if (!res.ok) throw new Error("Word not found")
       return res.json()
     },
@@ -84,13 +126,19 @@ function WordDetailPage() {
             <Badge
               key={p}
               variant="outline"
-              className={cn("border-0 font-label", POS_COLORS[p] || "bg-zen-bg3 text-zen-text2")}
+              className={cn(
+                "border-0 font-label",
+                POS_COLORS[p] || "bg-zen-bg3 text-zen-text2",
+              )}
             >
               {p}
             </Badge>
           ))}
           {data.ku && (
-            <Badge variant="outline" className="border-zen-border text-zen-text3 font-label">
+            <Badge
+              variant="outline"
+              className="border-zen-border text-zen-text3 font-label"
+            >
               ku suli
             </Badge>
           )}
@@ -105,7 +153,9 @@ function WordDetailPage() {
             <div key={pos}>
               <h2 className="font-label text-zen-text3 mb-1">{pos}</h2>
               {defs.map((def, i) => (
-                <p key={i} className="text-zen-text2">{def.definition}</p>
+                <p key={i} className="text-zen-text2">
+                  {def.definition}
+                </p>
               ))}
             </div>
           )

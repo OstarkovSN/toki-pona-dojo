@@ -95,3 +95,24 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **PostToolUse:Edit hook runs Biome formatter after every Edit** — always Re-Read the file before a second Edit targeting the same region, or old_string matching will fail on reformatted content (quotes/semicolons/indent style shift).
 - **Use `git rm -r` for directory deletions** — `rm -r` only removes from filesystem. To stage deletions properly in git, use `git rm -r <path>`.
 - **Grep for "Items" feature produces false positives** — Tailwind `items-center`, shadcn `FormItem`/`SelectItem`/`DropdownMenuItem`, and `localStorage.getItem` are unrelated. Known safe false positives in `AppSidebar.tsx` (nav-item `Item` type).
+
+## Phase 5 Gotchas
+
+- **TanStack Router's `Link` `to` prop is strictly typed** — referencing not-yet-created routes (e.g. `/dictionary`, `/grammar`) causes TS2322 build error; cast to `any` temporarily until routes exist.
+- **`theme-provider.tsx` is flat at `frontend/src/components/`** (not in a subfolder), exports `useTheme` and `ThemeProvider` — import path is `@/components/theme-provider`.
+- **Removing `_layout.tsx` `beforeLoad` guard makes layout public-first** — auth guard was intentionally dropped in Phase 5 per plan; routes can now be accessed without login.
+- **`routeTree.gen.ts` must be regenerated before `bun run build` completes** — if stale, `tsc` fails on new routes before Vite can regenerate; run `bunx vite build` first, then full `bun run build`.
+- **File-based route params use dot separators in filename, slashes in route ID** — `$unit.$lesson.tsx` generates `/_layout/learn/$unit/$lesson` route ID; `createFileRoute` string must use `/$unit/$lesson` (slashes), not `/$unit.$lesson`.
+- **TopNav nav link `to` props need `as const` on values** — to satisfy TanStack Router's `Link` `to` prop, use `as const` on each value (not just type annotation) once routes exist in `FileRoutesByPath`.
+- **Dictionary endpoint is `/api/v1/dictionary/words`** — frontend fetches from this contract; backend endpoint needs implementation to match.
+- **WordData type is already exported from WordCard.tsx** — reuse rather than duplicate in other components.
+- **WORD_UNITS hardcoded map is temporary** (TODO comment in spec) — needs future API endpoint for word→units relationship.
+- **`.gitignore` blocks `lib/` (Python packages convention)** — requires `git add -f` to force-add frontend `lib/ts` files like `pos-colors.ts`.
+- **POS filter buttons use `zen-teal` colors, set filters use `zen-amber`** — distinct color choices for visual hierarchy.
+- **Alphabet skip list is hardcoded as `"ABCDEFGHIJKLMNOPRSTUW"`** (no J, no Q) — matches toki pona phonetics, not a mistake.
+- **Zen color scheme uses `zen-border2` for connecting lines** (not `zen-border`) — maintains visual hierarchy in SkillTree.
+- **Link params require object with string values** — `params={{ unit: String(unitNumber), lesson: "1" }}` ensures type safety.
+- **Home page stats section conditionally renders** only when `completedUnits.length > 0` — hides empty stats initially.
+- **Build warnings on index.js (640KB unminified)** — pre-existing TanStack Router + shadcn bundling issue, not a Phase 5 error.
+- **Biome `useButtonType` rule requires explicit `type="button"`** — `--unsafe` flag does NOT auto-fix this; must be added manually on all `<button>` elements.
+- **Playwright test list via grep returns total count** — use `grep "^\s*\[chromium\]"` or check "Total:" line for accurate test counts; `grep -c "test"` counts false positives.

@@ -27,7 +27,10 @@ test("POS filter pills are toggleable", async ({ page }) => {
   // After clicking, noun filter is active
   await expect(nounFilter).toHaveAttribute("aria-pressed", "true")
   // "all" filter is no longer active
-  await expect(page.getByTestId("pos-filter-all")).toHaveAttribute("aria-pressed", "false")
+  await expect(page.getByTestId("pos-filter-all")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  )
 })
 
 test("Set filter pills are toggleable", async ({ page }) => {
@@ -39,5 +42,8 @@ test("Set filter pills are toggleable", async ({ page }) => {
   // After clicking, pu filter is active
   await expect(puFilter).toHaveAttribute("aria-pressed", "true")
   // "all" set filter is no longer active
-  await expect(page.getByTestId("set-filter-all")).toHaveAttribute("aria-pressed", "false")
+  await expect(page.getByTestId("set-filter-all")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  )
 })

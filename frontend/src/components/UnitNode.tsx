@@ -12,21 +12,32 @@ export interface UnitNodeProps {
   prerequisites?: number[]
 }
 
-export function UnitNode({ unitNumber, name, topic, status, prerequisites }: UnitNodeProps) {
+export function UnitNode({
+  unitNumber,
+  name,
+  topic,
+  status,
+  prerequisites,
+}: UnitNodeProps) {
   const isClickable = status === "available" || status === "current"
 
   const nodeContent = (
     <div
       className={cn(
         "group relative flex w-56 flex-col items-center rounded-xl border-2 px-4 py-5 text-center transition-all duration-200",
-        status === "locked" && "border-zen-border bg-zen-bg2 opacity-60 cursor-not-allowed",
-        status === "available" && "border-zen-teal bg-zen-bg hover:bg-zen-teal-bg cursor-pointer hover:shadow-md",
-        status === "current" && "border-zen-teal bg-zen-teal-bg cursor-pointer shadow-md",
-        status === "completed" && "border-zen-teal bg-zen-teal-bg/50 cursor-default",
+        status === "locked" &&
+          "border-zen-border bg-zen-bg2 opacity-60 cursor-not-allowed",
+        status === "available" &&
+          "border-zen-teal bg-zen-bg hover:bg-zen-teal-bg cursor-pointer hover:shadow-md",
+        status === "current" &&
+          "border-zen-teal bg-zen-teal-bg cursor-pointer shadow-md",
+        status === "completed" &&
+          "border-zen-teal bg-zen-teal-bg/50 cursor-default",
       )}
-      title={status === "locked" && prerequisites?.length
-        ? `Requires unit${prerequisites.length > 1 ? "s" : ""} ${prerequisites.join(" & ")}`
-        : undefined
+      title={
+        status === "locked" && prerequisites?.length
+          ? `Requires unit${prerequisites.length > 1 ? "s" : ""} ${prerequisites.join(" & ")}`
+          : undefined
       }
     >
       {/* Status indicator */}
@@ -50,7 +61,10 @@ export function UnitNode({ unitNumber, name, topic, status, prerequisites }: Uni
 
       {/* Current indicator dot */}
       {status === "current" && (
-        <span className="absolute -top-1 -right-1 flex size-3" data-testid="unit-current">
+        <span
+          className="absolute -top-1 -right-1 flex size-3"
+          data-testid="unit-current"
+        >
           <span className="absolute inline-flex size-full animate-ping rounded-full bg-zen-teal opacity-75" />
           <span className="relative inline-flex size-3 rounded-full bg-zen-teal" />
         </span>
@@ -63,7 +77,10 @@ export function UnitNode({ unitNumber, name, topic, status, prerequisites }: Uni
 
   if (isClickable) {
     return (
-      <Link to="/learn/$unit/$lesson" params={{ unit: String(unitNumber), lesson: "1" }}>
+      <Link
+        to="/learn/$unit/$lesson"
+        params={{ unit: String(unitNumber), lesson: "1" }}
+      >
         {nodeContent}
       </Link>
     )

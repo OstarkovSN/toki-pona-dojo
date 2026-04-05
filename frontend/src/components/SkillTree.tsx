@@ -11,13 +11,33 @@ const UNITS: UnitData[] = [
   { unitNumber: 1, name: "toki!", topic: "Greetings", prerequisites: [] },
   { unitNumber: 2, name: "ijo", topic: "Core nouns", prerequisites: [1] },
   { unitNumber: 3, name: "pali", topic: "Actions", prerequisites: [1] },
-  { unitNumber: 4, name: "li · e", topic: "Sentence structure", prerequisites: [2, 3] },
+  {
+    unitNumber: 4,
+    name: "li · e",
+    topic: "Sentence structure",
+    prerequisites: [2, 3],
+  },
   { unitNumber: 5, name: "nasin nimi", topic: "Modifiers", prerequisites: [4] },
   { unitNumber: 6, name: "pi", topic: "Modifier grouping", prerequisites: [5] },
   { unitNumber: 7, name: "la", topic: "Context & time", prerequisites: [5] },
-  { unitNumber: 8, name: "o!", topic: "Commands & wishes", prerequisites: [6, 7] },
-  { unitNumber: 9, name: "toki musi", topic: "Creative expression", prerequisites: [8] },
-  { unitNumber: 10, name: "jan sona", topic: "Fluency practice", prerequisites: [9] },
+  {
+    unitNumber: 8,
+    name: "o!",
+    topic: "Commands & wishes",
+    prerequisites: [6, 7],
+  },
+  {
+    unitNumber: 9,
+    name: "toki musi",
+    topic: "Creative expression",
+    prerequisites: [8],
+  },
+  {
+    unitNumber: 10,
+    name: "jan sona",
+    topic: "Fluency practice",
+    prerequisites: [9],
+  },
 ]
 
 interface SkillTreeProps {
@@ -37,16 +57,19 @@ function getUnitStatus(
   return "locked"
 }
 
-export function SkillTree({ completedUnits = [], currentUnit = 1 }: SkillTreeProps) {
+export function SkillTree({
+  completedUnits = [],
+  currentUnit = 1,
+}: SkillTreeProps) {
   const rows: UnitData[][] = [
-    [UNITS[0]],           // Unit 1
+    [UNITS[0]], // Unit 1
     [UNITS[1], UNITS[2]], // Units 2 & 3 (parallel)
-    [UNITS[3]],           // Unit 4
-    [UNITS[4]],           // Unit 5
+    [UNITS[3]], // Unit 4
+    [UNITS[4]], // Unit 5
     [UNITS[5], UNITS[6]], // Units 6 & 7 (parallel)
-    [UNITS[7]],           // Unit 8
-    [UNITS[8]],           // Unit 9
-    [UNITS[9]],           // Unit 10
+    [UNITS[7]], // Unit 8
+    [UNITS[8]], // Unit 9
+    [UNITS[9]], // Unit 10
   ]
 
   return (
@@ -69,11 +92,13 @@ export function SkillTree({ completedUnits = [], currentUnit = 1 }: SkillTreePro
           )}
 
           {/* Unit nodes */}
-          <div className={
-            row.length > 1
-              ? "flex items-start justify-center gap-8"
-              : "flex justify-center"
-          }>
+          <div
+            className={
+              row.length > 1
+                ? "flex items-start justify-center gap-8"
+                : "flex justify-center"
+            }
+          >
             {row.map((unit) => (
               <UnitNode
                 key={unit.unitNumber}

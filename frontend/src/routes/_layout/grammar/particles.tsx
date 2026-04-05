@@ -31,7 +31,10 @@ const PARTICLES: ParticleSection[] = [
       { tp: "jan Ali li moku", en: "Ali eats" },
       { tp: "mi pona", en: "I am good (no li needed)" },
       { tp: "sina moku", en: "you eat (no li needed)" },
-      { tp: "mi mute li tawa", en: "we go (li needed because 'mi' has modifier)" },
+      {
+        tp: "mi mute li tawa",
+        en: "we go (li needed because 'mi' has modifier)",
+      },
     ],
     mistakes: [
       "mi li pona -- wrong: don't use li after bare 'mi'",
@@ -59,7 +62,10 @@ const PARTICLES: ParticleSection[] = [
     examples: [
       { tp: "tenpo ni la mi moku", en: "now I eat (at this time, I eat)" },
       { tp: "sina pona la mi pilin pona", en: "if you are good, I feel good" },
-      { tp: "toki pona la jan li ken toki kepeken nimi lili", en: "in toki pona, people can speak with few words" },
+      {
+        tp: "toki pona la jan li ken toki kepeken nimi lili",
+        en: "in toki pona, people can speak with few words",
+      },
     ],
     mistakes: [
       "mi moku la tenpo ni -- wrong: context goes BEFORE la, not after",
@@ -71,8 +77,14 @@ const PARTICLES: ParticleSection[] = [
     rule: "pi regroups modifiers. Without pi, each modifier applies to the head word directly. With pi, the words after pi form a compound modifier. Always needs at least two words after it.",
     examples: [
       { tp: "tomo telo suli", en: "big bathroom (suli modifies tomo)" },
-      { tp: "tomo pi telo suli", en: "building of big water (suli modifies telo)" },
-      { tp: "jan pi sona mute", en: "person of much knowledge (knowledgeable person)" },
+      {
+        tp: "tomo pi telo suli",
+        en: "building of big water (suli modifies telo)",
+      },
+      {
+        tp: "jan pi sona mute",
+        en: "person of much knowledge (knowledgeable person)",
+      },
     ],
     mistakes: [
       "jan pi sona -- wrong: pi needs at least two words after it",
@@ -90,9 +102,7 @@ const PARTICLES: ParticleSection[] = [
       { tp: "jan Ali o, o moku!", en: "Ali, eat!" },
       { tp: "mi o pali", en: "I should work (self-command)" },
     ],
-    mistakes: [
-      "moku o -- wrong for commands: o comes BEFORE the verb",
-    ],
+    mistakes: ["moku o -- wrong for commands: o comes BEFORE the verb"],
   },
 ]
 
@@ -114,7 +124,9 @@ function GrammarParticlesPage() {
       {PARTICLES.map((section) => (
         <section key={section.particle} className="space-y-4">
           <div className="flex items-baseline gap-3">
-            <span className="font-tp text-3xl text-zen-teal">{section.particle}</span>
+            <span className="font-tp text-3xl text-zen-teal">
+              {section.particle}
+            </span>
             <span className="font-label text-zen-text3">{section.name}</span>
           </div>
 
@@ -122,7 +134,10 @@ function GrammarParticlesPage() {
 
           <div className="space-y-2">
             {section.examples.map((ex, i) => (
-              <div key={i} className="flex flex-col gap-0.5 rounded-md bg-zen-bg2 px-4 py-2">
+              <div
+                key={i}
+                className="flex flex-col gap-0.5 rounded-md bg-zen-bg2 px-4 py-2"
+              >
                 <span className="font-tp text-sm">{ex.tp}</span>
                 <span className="text-xs text-zen-text3">{ex.en}</span>
               </div>
@@ -134,7 +149,9 @@ function GrammarParticlesPage() {
               <p className="font-label text-zen-coral mb-2">common mistakes</p>
               <div className="space-y-1">
                 {section.mistakes.map((m, i) => (
-                  <p key={i} className="text-sm text-zen-text2">{m}</p>
+                  <p key={i} className="text-sm text-zen-text2">
+                    {m}
+                  </p>
                 ))}
               </div>
             </div>

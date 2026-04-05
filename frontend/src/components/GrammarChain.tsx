@@ -49,9 +49,7 @@ export function GrammarChain({ words, meaning }: GrammarChainProps) {
           </div>
         ))}
       </div>
-      <p className="mt-3 text-sm text-zen-text2 italic">
-        = {meaning}
-      </p>
+      <p className="mt-3 text-sm text-zen-text2 italic">= {meaning}</p>
     </div>
   )
 }

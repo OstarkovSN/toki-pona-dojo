@@ -53,101 +53,101 @@
   --color-zen-border2: var(--zen-border2);
 
   /* ── Font families ── */
-  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
-  --font-mono: 'DM Mono', 'Courier New', monospace;
+  --font-serif: "Lora", Georgia, "Times New Roman", serif;
+  --font-mono: "DM Mono", "Courier New", monospace;
 }
 
 :root {
   --radius: 6px;
 
   /* ── Earth tones (light) ── */
-  --bg: #F7F4EE;
-  --bg2: #EDEAE2;
-  --bg3: #E2DFDA;
-  --text: #1C1A16;
-  --text2: #5C5A54;
-  --text3: #9A9890;
+  --bg: #f7f4ee;
+  --bg2: #edeae2;
+  --bg3: #e2dfda;
+  --text: #1c1a16;
+  --text2: #5c5a54;
+  --text3: #9a9890;
 
   /* ── Semantic colors ── */
-  --teal: #1D9E75;
-  --teal-bg: #E1F5EE;
+  --teal: #1d9e75;
+  --teal-bg: #e1f5ee;
   --teal-dark: #085041;
-  --coral: #D85A30;
-  --coral-bg: #FAECE7;
-  --coral-dark: #712B13;
-  --amber: #B87020;
-  --amber-bg: #FDF0DC;
-  --amber-dark: #6B3E08;
-  --blue-bg: #E6F1FB;
-  --blue-dark: #0C3060;
+  --coral: #d85a30;
+  --coral-bg: #faece7;
+  --coral-dark: #712b13;
+  --amber: #b87020;
+  --amber-bg: #fdf0dc;
+  --amber-dark: #6b3e08;
+  --blue-bg: #e6f1fb;
+  --blue-dark: #0c3060;
 
   /* ── Borders ── */
-  --zen-border: rgba(28, 26, 22, 0.10);
+  --zen-border: rgba(28, 26, 22, 0.1);
   --zen-border2: rgba(28, 26, 22, 0.18);
 
   /* ── shadcn/ui tokens mapped to zen palette ── */
-  --background: #F7F4EE;
-  --foreground: #1C1A16;
-  --card: #FFFFFF;
-  --card-foreground: #1C1A16;
-  --popover: #FFFFFF;
-  --popover-foreground: #1C1A16;
-  --primary: #1D9E75;
-  --primary-foreground: #FFFFFF;
-  --secondary: #EDEAE2;
-  --secondary-foreground: #1C1A16;
-  --muted: #EDEEA2;
-  --muted-foreground: #5C5A54;
-  --accent: #E2DFDA;
-  --accent-foreground: #1C1A16;
-  --destructive: #D85A30;
-  --border: rgba(28, 26, 22, 0.10);
-  --input: rgba(28, 26, 22, 0.10);
-  --ring: #1D9E75;
+  --background: #f7f4ee;
+  --foreground: #1c1a16;
+  --card: #ffffff;
+  --card-foreground: #1c1a16;
+  --popover: #ffffff;
+  --popover-foreground: #1c1a16;
+  --primary: #1d9e75;
+  --primary-foreground: #ffffff;
+  --secondary: #edeae2;
+  --secondary-foreground: #1c1a16;
+  --muted: #edeea2;
+  --muted-foreground: #5c5a54;
+  --accent: #e2dfda;
+  --accent-foreground: #1c1a16;
+  --destructive: #d85a30;
+  --border: rgba(28, 26, 22, 0.1);
+  --input: rgba(28, 26, 22, 0.1);
+  --ring: #1d9e75;
 }
 
 .dark {
   /* ── Earth tones (dark) ── */
-  --bg: #18170F;
-  --bg2: #201F16;
-  --bg3: #2A291E;
-  --text: #F0EDE6;
-  --text2: #A8A59C;
-  --text3: #6B6860;
+  --bg: #18170f;
+  --bg2: #201f16;
+  --bg3: #2a291e;
+  --text: #f0ede6;
+  --text2: #a8a59c;
+  --text3: #6b6860;
 
   /* ── Semantic colors (dark) ── */
-  --teal-bg: #04342C;
-  --teal-dark: #9FE1CB;
-  --coral-bg: #4A1B0C;
-  --coral-dark: #F0997B;
-  --amber-bg: #3A2004;
-  --amber-dark: #FAC775;
-  --blue-bg: #042C53;
-  --blue-dark: #B5D4F4;
+  --teal-bg: #04342c;
+  --teal-dark: #9fe1cb;
+  --coral-bg: #4a1b0c;
+  --coral-dark: #f0997b;
+  --amber-bg: #3a2004;
+  --amber-dark: #fac775;
+  --blue-bg: #042c53;
+  --blue-dark: #b5d4f4;
 
   /* ── Borders (dark) ── */
   --zen-border: rgba(240, 237, 230, 0.08);
   --zen-border2: rgba(240, 237, 230, 0.16);
 
   /* ── shadcn/ui tokens (dark) ── */
-  --background: #18170F;
-  --foreground: #F0EDE6;
-  --card: #201F16;
-  --card-foreground: #F0EDE6;
-  --popover: #201F16;
-  --popover-foreground: #F0EDE6;
-  --primary: #1D9E75;
-  --primary-foreground: #FFFFFF;
-  --secondary: #2A291E;
-  --secondary-foreground: #F0EDE6;
-  --muted: #2A291E;
-  --muted-foreground: #A8A59C;
-  --accent: #2A291E;
-  --accent-foreground: #F0EDE6;
-  --destructive: #F0997B;
+  --background: #18170f;
+  --foreground: #f0ede6;
+  --card: #201f16;
+  --card-foreground: #f0ede6;
+  --popover: #201f16;
+  --popover-foreground: #f0ede6;
+  --primary: #1d9e75;
+  --primary-foreground: #ffffff;
+  --secondary: #2a291e;
+  --secondary-foreground: #f0ede6;
+  --muted: #2a291e;
+  --muted-foreground: #a8a59c;
+  --accent: #2a291e;
+  --accent-foreground: #f0ede6;
+  --destructive: #f0997b;
   --border: rgba(240, 237, 230, 0.08);
   --input: rgba(240, 237, 230, 0.16);
-  --ring: #1D9E75;
+  --ring: #1d9e75;
 }
 
 @layer base {

@@ -1,7 +1,7 @@
-import { useState, useMemo, useRef } from "react"
-import { createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
+import { createFileRoute } from "@tanstack/react-router"
 import { Search } from "lucide-react"
+import { useMemo, useRef, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { WordCard, type WordData } from "@/components/WordCard"
@@ -14,7 +14,16 @@ export const Route = createFileRoute("/_layout/dictionary/")({
   }),
 })
 
-const POS_FILTERS = ["all", "noun", "verb", "adjective", "particle", "number", "pre-verb", "preposition"] as const
+const POS_FILTERS = [
+  "all",
+  "noun",
+  "verb",
+  "adjective",
+  "particle",
+  "number",
+  "pre-verb",
+  "preposition",
+] as const
 const SET_FILTERS = ["all", "pu", "ku suli"] as const
 const ALPHABET = "ABCDEFGHIJKLMNOPRSTUW".split("")
 
@@ -61,7 +70,10 @@ function DictionaryPage() {
   }, [filtered])
 
   const scrollToLetter = (letter: string) => {
-    sectionRefs.current[letter]?.scrollIntoView({ behavior: "smooth", block: "start" })
+    sectionRefs.current[letter]?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
   }
 
   return (
@@ -85,6 +97,7 @@ function DictionaryPage() {
       <div className="flex flex-wrap gap-2">
         {POS_FILTERS.map((pos) => (
           <button
+            type="button"
             key={pos}
             onClick={() => setPosFilter(pos)}
             aria-pressed={posFilter === pos}
@@ -104,6 +117,7 @@ function DictionaryPage() {
       <div className="flex gap-2">
         {SET_FILTERS.map((s) => (
           <button
+            type="button"
             key={s}
             onClick={() => setSetFilter(s)}
             aria-pressed={setFilter === s}
@@ -123,6 +137,7 @@ function DictionaryPage() {
       <div className="flex flex-wrap gap-1">
         {ALPHABET.map((letter) => (
           <button
+            type="button"
             key={letter}
             onClick={() => scrollToLetter(letter)}
             className={cn(
@@ -150,19 +165,24 @@ function DictionaryPage() {
         </div>
       )}
 
-      {!isLoading && Object.keys(grouped).sort().map((letter) => (
-        <div
-          key={letter}
-          ref={(el) => { sectionRefs.current[letter] = el }}
-        >
-          <h2 className="font-tp mb-3 text-lg text-zen-text3">{letter}</h2>
-          <div className="space-y-2">
-            {grouped[letter].map((word) => (
-              <WordCard key={word.word} data={word} />
-            ))}
-          </div>
-        </div>
-      ))}
+      {!isLoading &&
+        Object.keys(grouped)
+          .sort()
+          .map((letter) => (
+            <div
+              key={letter}
+              ref={(el) => {
+                sectionRefs.current[letter] = el
+              }}
+            >
+              <h2 className="font-tp mb-3 text-lg text-zen-text3">{letter}</h2>
+              <div className="space-y-2">
+                {grouped[letter].map((word) => (
+                  <WordCard key={word.word} data={word} />
+                ))}
+              </div>
+            </div>
+          ))}
 
       {!isLoading && filtered.length === 0 && (
         <div className="py-12 text-center text-zen-text3">

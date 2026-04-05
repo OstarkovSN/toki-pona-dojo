@@ -42,7 +42,9 @@ test("Modifiers page has interactive quiz", async ({ page }) => {
 test("Particles page renders all five particles", async ({ page }) => {
   await page.goto("/grammar/particles")
   for (const particle of ["li", "e", "la", "pi", "o"]) {
-    await expect(page.getByText(particle, { exact: true }).first()).toBeVisible()
+    await expect(
+      page.getByText(particle, { exact: true }).first(),
+    ).toBeVisible()
   }
 })
 

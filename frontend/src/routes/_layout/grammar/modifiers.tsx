@@ -1,8 +1,8 @@
-import { useState } from "react"
-import { createFileRoute, Link } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft } from "lucide-react"
-import { GrammarChain, type ChainWord } from "@/components/GrammarChain"
+import { useState } from "react"
+import { type ChainWord, GrammarChain } from "@/components/GrammarChain"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 
@@ -44,7 +44,8 @@ const FALLBACK_SECTIONS: GrammarSection[] = [
     id: "core-rule",
     number: "01",
     title: "The core rule",
-    content: "In toki pona, modifiers always come AFTER the word they describe. The first word is the head — it carries the core meaning. Everything after it narrows or describes it.",
+    content:
+      "In toki pona, modifiers always come AFTER the word they describe. The first word is the head — it carries the core meaning. Everything after it narrows or describes it.",
     chains: [
       {
         words: [
@@ -62,14 +63,18 @@ const FALLBACK_SECTIONS: GrammarSection[] = [
       },
     ],
     callouts: [
-      { type: "rule", text: "Head word always comes first. Modifiers follow and narrow the meaning." },
+      {
+        type: "rule",
+        text: "Head word always comes first. Modifiers follow and narrow the meaning.",
+      },
     ],
   },
   {
     id: "stacking",
     number: "02",
     title: "Stacking modifiers",
-    content: "You can stack multiple modifiers. Each one further narrows the meaning, reading left to right.",
+    content:
+      "You can stack multiple modifiers. Each one further narrows the meaning, reading left to right.",
     chains: [
       {
         words: [
@@ -93,7 +98,8 @@ const FALLBACK_SECTIONS: GrammarSection[] = [
     id: "pi",
     number: "03",
     title: "Regrouping with pi",
-    content: "Without pi, each modifier applies to the head individually. The particle pi creates a sub-group: everything after pi forms a modifier phrase that applies as a unit.",
+    content:
+      "Without pi, each modifier applies to the head individually. The particle pi creates a sub-group: everything after pi forms a modifier phrase that applies as a unit.",
     chains: [
       {
         words: [
@@ -106,15 +112,22 @@ const FALLBACK_SECTIONS: GrammarSection[] = [
       },
     ],
     callouts: [
-      { type: "rule", text: "pi regroups: without pi, each word modifies the head separately. With pi, the words after pi form a compound modifier." },
-      { type: "warning", text: "Never use pi with a single word after it — pi always needs at least two words to form a group." },
+      {
+        type: "rule",
+        text: "pi regroups: without pi, each word modifies the head separately. With pi, the words after pi form a compound modifier.",
+      },
+      {
+        type: "warning",
+        text: "Never use pi with a single word after it — pi always needs at least two words to form a group.",
+      },
     ],
   },
   {
     id: "comparison",
     number: "04",
     title: "With vs without pi",
-    content: "The difference is in what modifies what. Compare these pairs carefully.",
+    content:
+      "The difference is in what modifies what. Compare these pairs carefully.",
     chains: [
       {
         words: [
@@ -141,10 +154,26 @@ const FALLBACK_COMPARISONS: GrammarComparison[] = [
   {
     title: "mute vs suli — placement matters",
     rows: [
-      { left: "jan pona mute", right: "many good people", note: "mute modifies jan" },
-      { left: "jan pi pona mute", right: "person of great goodness", note: "mute modifies pona" },
-      { left: "tomo telo suli", right: "big bathroom", note: "suli modifies tomo" },
-      { left: "tomo pi telo suli", right: "building of big water", note: "suli modifies telo" },
+      {
+        left: "jan pona mute",
+        right: "many good people",
+        note: "mute modifies jan",
+      },
+      {
+        left: "jan pi pona mute",
+        right: "person of great goodness",
+        note: "mute modifies pona",
+      },
+      {
+        left: "tomo telo suli",
+        right: "big bathroom",
+        note: "suli modifies tomo",
+      },
+      {
+        left: "tomo pi telo suli",
+        right: "building of big water",
+        note: "suli modifies telo",
+      },
     ],
   },
 ]
@@ -152,22 +181,43 @@ const FALLBACK_COMPARISONS: GrammarComparison[] = [
 const FALLBACK_QUIZ: QuizQuestion[] = [
   {
     question: "What does 'tomo telo suli' mean?",
-    options: ["big bathroom", "building of big water", "big water building", "water of big building"],
+    options: [
+      "big bathroom",
+      "building of big water",
+      "big water building",
+      "water of big building",
+    ],
     correct: 0,
   },
   {
     question: "What does 'tomo pi telo suli' mean?",
-    options: ["big bathroom", "building of big water", "big water building", "water of big building"],
+    options: [
+      "big bathroom",
+      "building of big water",
+      "big water building",
+      "water of big building",
+    ],
     correct: 1,
   },
   {
     question: "Which is correct for 'person of much knowledge'?",
-    options: ["jan sona mute", "jan pi sona mute", "jan mute sona", "jan pi mute sona"],
+    options: [
+      "jan sona mute",
+      "jan pi sona mute",
+      "jan mute sona",
+      "jan pi mute sona",
+    ],
     correct: 1,
   },
 ]
 
-function CalloutBox({ type, text }: { type: "rule" | "warning"; text: string }) {
+function CalloutBox({
+  type,
+  text,
+}: {
+  type: "rule" | "warning"
+  text: string
+}) {
   return (
     <div
       className={cn(
@@ -175,10 +225,12 @@ function CalloutBox({ type, text }: { type: "rule" | "warning"; text: string }) 
         type === "rule" ? "border-l-zen-teal" : "border-l-zen-coral",
       )}
     >
-      <span className={cn(
-        "font-label mr-2",
-        type === "rule" ? "text-zen-teal" : "text-zen-coral",
-      )}>
+      <span
+        className={cn(
+          "font-label mr-2",
+          type === "rule" ? "text-zen-teal" : "text-zen-coral",
+        )}
+      >
         {type === "rule" ? "rule" : "warning"}
       </span>
       <span className="text-zen-text2">{text}</span>
@@ -200,20 +252,33 @@ function QuizSection({ questions }: { questions: QuizQuestion[] }) {
         const answered = answers[qi] !== undefined && answers[qi] !== null
         const correct = answered && answers[qi] === q.correct
         return (
-          <div key={qi} className="rounded-lg border border-zen-border bg-zen-bg p-4">
+          <div
+            key={qi}
+            className="rounded-lg border border-zen-border bg-zen-bg p-4"
+          >
             <p className="mb-3 font-tp">{q.question}</p>
             <div className="space-y-2">
               {q.options.map((opt, oi) => (
                 <button
+                  type="button"
                   key={oi}
                   onClick={() => !answered && handleAnswer(qi, oi)}
                   disabled={answered}
                   className={cn(
                     "w-full rounded-md border px-4 py-2 text-left text-sm transition-colors",
-                    !answered && "border-zen-border hover:border-zen-border2 hover:bg-zen-bg2",
-                    answered && oi === q.correct && "border-zen-teal bg-zen-teal-bg text-zen-teal-dark",
-                    answered && oi === answers[qi] && oi !== q.correct && "border-zen-coral bg-zen-coral-bg text-zen-coral-dark",
-                    answered && oi !== q.correct && oi !== answers[qi] && "border-zen-border opacity-50",
+                    !answered &&
+                      "border-zen-border hover:border-zen-border2 hover:bg-zen-bg2",
+                    answered &&
+                      oi === q.correct &&
+                      "border-zen-teal bg-zen-teal-bg text-zen-teal-dark",
+                    answered &&
+                      oi === answers[qi] &&
+                      oi !== q.correct &&
+                      "border-zen-coral bg-zen-coral-bg text-zen-coral-dark",
+                    answered &&
+                      oi !== q.correct &&
+                      oi !== answers[qi] &&
+                      "border-zen-border opacity-50",
                   )}
                 >
                   {opt}
@@ -221,8 +286,15 @@ function QuizSection({ questions }: { questions: QuizQuestion[] }) {
               ))}
             </div>
             {answered && (
-              <p className={cn("mt-2 text-sm", correct ? "text-zen-teal" : "text-zen-coral")}>
-                {correct ? "pona! correct!" : `not quite -- the answer is: ${q.options[q.correct]}`}
+              <p
+                className={cn(
+                  "mt-2 text-sm",
+                  correct ? "text-zen-teal" : "text-zen-coral",
+                )}
+              >
+                {correct
+                  ? "pona! correct!"
+                  : `not quite -- the answer is: ${q.options[q.correct]}`}
               </p>
             )}
           </div>
@@ -292,9 +364,15 @@ function GrammarModifiersPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-zen-bg2">
-                  <th className="font-label px-4 py-2 text-left text-zen-text3">toki pona</th>
-                  <th className="font-label px-4 py-2 text-left text-zen-text3">english</th>
-                  <th className="font-label px-4 py-2 text-left text-zen-text3">note</th>
+                  <th className="font-label px-4 py-2 text-left text-zen-text3">
+                    toki pona
+                  </th>
+                  <th className="font-label px-4 py-2 text-left text-zen-text3">
+                    english
+                  </th>
+                  <th className="font-label px-4 py-2 text-left text-zen-text3">
+                    note
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -302,7 +380,9 @@ function GrammarModifiersPage() {
                   <tr key={ri} className="border-t border-zen-border">
                     <td className="font-tp px-4 py-2">{row.left}</td>
                     <td className="px-4 py-2 text-zen-text2">{row.right}</td>
-                    <td className="px-4 py-2 text-xs text-zen-text3">{row.note || ""}</td>
+                    <td className="px-4 py-2 text-xs text-zen-text3">
+                      {row.note || ""}
+                    </td>
                   </tr>
                 ))}
               </tbody>
