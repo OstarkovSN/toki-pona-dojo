@@ -41,13 +41,8 @@ function Layout() {
               <Footer />
             </div>
 
-            {/* Chat panel column — hidden on mobile (uses Sheet instead) */}
-            <div className="hidden md:flex md:w-[340px] lg:w-[400px] shrink-0">
-              <ChatPanel />
-            </div>
-
-            {/* Mobile chat (floating button + bottom sheet) — visible only on mobile */}
-            <div className="md:hidden">
+            {/* Chat panel — desktop sidebar or mobile sheet, single instance */}
+            <div className="md:w-[340px] lg:w-[400px] shrink-0">
               <ChatPanel />
             </div>
           </div>

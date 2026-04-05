@@ -1,78 +1,87 @@
+import { MessageSquare, Send, Trash2, X } from "lucide-react"
 import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
   type FormEvent,
   type KeyboardEvent,
-} from "react";
-import { MessageSquare, Trash2, Send, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { ChatMessage } from "@/components/ChatMessage";
-import { ChatModeSelector, type ChatMode } from "@/components/ChatModeSelector";
-import { useChat } from "@/hooks/useChat";
-import { useChatContext } from "@/contexts/ChatContext";
-import { useIsMobile } from "@/hooks/useMobile";
-import { cn } from "@/lib/utils";
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
+import { ChatMessage } from "@/components/ChatMessage"
+import { type ChatMode, ChatModeSelector } from "@/components/ChatModeSelector"
+import { Button } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
+import { useChatContext } from "@/contexts/ChatContext"
+import { useChat } from "@/hooks/useChat"
+import { useIsMobile } from "@/hooks/useMobile"
+import { cn } from "@/lib/utils"
 
 /**
  * The chat panel interior — shared between desktop sidebar and mobile sheet.
  */
 function ChatPanelContent({ onClose }: { onClose?: () => void }) {
-  const [mode, setMode] = useState<ChatMode>("free");
-  const [input, setInput] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [mode, setMode] = useState<ChatMode>("free")
+  const [input, setInput] = useState("")
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const { messages, sendMessage, isStreaming, error, clearHistory, isBYOM } = useChat({
-    mode,
-    knownWords: [], // TODO: Wire to progress store in Phase 8
-    currentUnit: 1, // TODO: Wire to progress store in Phase 8
-    recentErrors: [], // TODO: Wire to progress store in Phase 8
-  });
+  const { messages, sendMessage, isStreaming, error, clearHistory, isBYOM } =
+    useChat({
+      mode,
+      knownWords: [], // TODO: Wire to progress store in Phase 8
+      currentUnit: 1, // TODO: Wire to progress store in Phase 8
+      recentErrors: [], // TODO: Wire to progress store in Phase 8
+    })
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [])
 
   // Auto-resize textarea
   const adjustTextarea = useCallback(() => {
-    const el = textareaRef.current;
+    const el = textareaRef.current
     if (el) {
-      el.style.height = "auto";
-      el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+      el.style.height = "auto"
+      el.style.height = `${Math.min(el.scrollHeight, 120)}px`
     }
-  }, []);
+  }, [])
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
-      e.preventDefault();
-      if (!input.trim() || isStreaming) return;
-      const msg = input;
-      setInput("");
+      e.preventDefault()
+      if (!input.trim() || isStreaming) return
+      const msg = input
+      setInput("")
       // Reset textarea height
-      if (textareaRef.current) textareaRef.current.style.height = "auto";
-      await sendMessage(msg);
+      if (textareaRef.current) textareaRef.current.style.height = "auto"
+      await sendMessage(msg)
     },
     [input, isStreaming, sendMessage],
-  );
+  )
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleSubmit(e as unknown as FormEvent);
+        e.preventDefault()
+        handleSubmit(e as unknown as FormEvent)
       }
     },
     [handleSubmit],
-  );
+  )
 
   return (
-    <div className="flex h-full flex-col" data-testid="chat-panel-content">
+    <div className="flex h-full flex-col" data-testid="chat-panel">
       {/* Header */}
-      <div className="flex items-center justify-between border-b px-3 py-2.5">
+      <div
+        className="flex items-center justify-between border-b px-3 py-2.5"
+        data-testid="chat-header"
+      >
         <div className="flex items-center gap-2">
           <span className="font-mono text-sm font-bold">jan sona</span>
           <span
@@ -115,7 +124,11 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
       </div>
 
       {/* Mode selector */}
-      <ChatModeSelector mode={mode} onModeChange={setMode} disabled={isStreaming} />
+      <ChatModeSelector
+        mode={mode}
+        onModeChange={setMode}
+        disabled={isStreaming}
+      />
 
       {/* Message list */}
       <div className="flex-1 overflow-y-auto px-3 py-2 space-y-3">
@@ -158,8 +171,8 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
             ref={textareaRef}
             value={input}
             onChange={(e) => {
-              setInput(e.target.value);
-              adjustTextarea();
+              setInput(e.target.value)
+              adjustTextarea()
             }}
             onKeyDown={handleKeyDown}
             placeholder="toki..."
@@ -184,15 +197,15 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
         </div>
       </form>
     </div>
-  );
+  )
 }
 
 /**
  * ChatPanel — Desktop: renders as a sidebar column. Mobile: renders as a Sheet.
  */
 export function ChatPanel() {
-  const isMobile = useIsMobile();
-  const { isChatOpen, setChatOpen, toggleChat } = useChatContext();
+  const isMobile = useIsMobile()
+  const { isChatOpen, setChatOpen, toggleChat } = useChatContext()
 
   // Mobile: bottom sheet
   if (isMobile) {
@@ -226,7 +239,7 @@ export function ChatPanel() {
           </SheetContent>
         </Sheet>
       </>
-    );
+    )
   }
 
   // Desktop: inline sidebar column
@@ -243,12 +256,12 @@ export function ChatPanel() {
       >
         <MessageSquare className="h-4 w-4" />
       </button>
-    );
+    )
   }
 
   return (
     <aside className="flex h-full w-full flex-col border-l bg-card">
       <ChatPanelContent onClose={() => setChatOpen(false)} />
     </aside>
-  );
+  )
 }
