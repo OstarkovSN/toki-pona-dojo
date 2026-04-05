@@ -1,7 +1,7 @@
 import asyncio
 import json
 import logging
-from collections.abc import Iterator
+from collections.abc import AsyncGenerator, Iterator
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
@@ -35,18 +35,25 @@ _task_is_authed: dict[int, bool] = {}
 async def _set_auth_state(
     request: Request,
     user: Annotated[User | None, Depends(get_optional_current_user)],
-) -> User | None:
+) -> AsyncGenerator[User | None, None]:
     """Async dependency: resolve user and record auth status by task id.
 
     Because this is async, it runs directly in the event loop (not a
     threadpool), so asyncio.current_task() returns the same Task that
     slowapi's exempt_when() will later be called from.
+
+    Uses yield so cleanup is guaranteed even if the endpoint raises.
     """
-    request.state.user = user
     task = asyncio.current_task()
-    if task is not None:
-        _task_is_authed[id(task)] = user is not None
-    return user
+    task_id = id(task) if task else None
+    if task_id is not None:
+        _task_is_authed[task_id] = user is not None
+    request.state.user = user
+    try:
+        yield user
+    finally:
+        if task_id is not None:
+            _task_is_authed.pop(task_id, None)
 
 
 # Convenience alias for endpoint signatures
@@ -84,10 +91,6 @@ async def chat_stream(
     Anonymous users: rate-limited to CHAT_FREE_DAILY_LIMIT/day, max_tokens capped.
     Authenticated users: exempt from rate limit, higher max_tokens.
     """
-    task = asyncio.current_task()
-    if task is not None:
-        _task_is_authed.pop(id(task), None)
-
     client = get_llm_client()
     system = build_chat_system_prompt(
         mode=body.mode,
@@ -101,12 +104,23 @@ async def chat_stream(
 
     max_tokens = settings.CHAT_FREE_MAX_TOKENS if user is None else 1500
 
-    stream = client.chat.completions.create(
-        model=settings.OPENAI_MODEL,
-        messages=messages,  # type: ignore[arg-type]
-        max_tokens=max_tokens,
-        stream=True,
-    )
+    try:
+        stream = client.chat.completions.create(
+            model=settings.OPENAI_MODEL,
+            messages=messages,  # type: ignore[arg-type]
+            max_tokens=max_tokens,
+            stream=True,
+        )
+    except Exception:
+        logger.exception("LLM API call failed")
+
+        async def _error_stream() -> AsyncGenerator[str, None]:
+            yield 'data: {"error": "LLM service unavailable"}\n\n'
+            yield "data: [DONE]\n\n"
+
+        return StreamingResponse(
+            _error_stream(), media_type="text/event-stream", status_code=503
+        )
 
     def generate() -> Iterator[str]:
         for chunk in stream:
@@ -129,10 +143,6 @@ async def grade_exercise(
     user: RequestUser,  # noqa: ARG001  # triggers _set_auth_state dep
 ) -> ExerciseGradeResponse:
     """Grade a free-form toki pona exercise using the LLM."""
-    task = asyncio.current_task()
-    if task is not None:
-        _task_is_authed.pop(id(task), None)
-
     client = get_llm_client()
     system = build_grade_system_prompt(body.known_words)
 
@@ -142,16 +152,16 @@ async def grade_exercise(
         f"User's answer: {body.user_answer}"
     )
 
-    response = client.chat.completions.create(
-        model=settings.OPENAI_MODEL,
-        messages=[
-            {"role": "system", "content": system},
-            {"role": "user", "content": user_msg},
-        ],
-        max_tokens=300,
-    )
-
     try:
+        response = await asyncio.to_thread(
+            client.chat.completions.create,  # type: ignore[arg-type]
+            model=settings.OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user_msg},
+            ],
+            max_tokens=300,
+        )
         content = response.choices[0].message.content or ""
         result = json.loads(content)
         return ExerciseGradeResponse(**result)
@@ -161,5 +171,13 @@ async def grade_exercise(
             correct=False,
             score=0.0,
             feedback="I couldn't grade this — please try rephrasing your answer.",
+            suggested_answer=None,
+        )
+    except Exception:
+        logger.exception("LLM API call failed for /chat/grade")
+        return ExerciseGradeResponse(
+            correct=False,
+            score=0.0,
+            feedback="The grading service is temporarily unavailable.",
             suggested_answer=None,
         )
