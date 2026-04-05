@@ -94,6 +94,23 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER: EmailStr
     FIRST_SUPERUSER_PASSWORD: str
 
+    # LLM provider (OpenAI-compatible)
+    OPENAI_BASE_URL: str = "https://api.openai.com/v1"
+    OPENAI_API_KEY: str = "changethis"
+    OPENAI_MODEL: str = "gpt-4o-mini"
+
+    # LLM rate limiting (anonymous users)
+    CHAT_FREE_DAILY_LIMIT: int = 20
+    CHAT_FREE_MAX_TOKENS: int = 500
+
+    # Telegram bot (optional, used in Phase 5)
+    TG_BOT_TOKEN: str | None = None
+
+    # LangFuse observability (wired in Phase 4)
+    LANGFUSE_PUBLIC_KEY: str = ""
+    LANGFUSE_SECRET_KEY: str = ""
+    LANGFUSE_HOST: str = "http://langfuse-server:3000"
+
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
             message = (
@@ -112,6 +129,7 @@ class Settings(BaseSettings):
         self._check_default_secret(
             "FIRST_SUPERUSER_PASSWORD", self.FIRST_SUPERUSER_PASSWORD
         )
+        self._check_default_secret("OPENAI_API_KEY", self.OPENAI_API_KEY)
 
         return self
 

@@ -206,6 +206,35 @@ mocker.patch("app.utils.send_email", ...)
 
 ## Gotchas
 
+### Phase 3: LLM Integration
+
+- **slowapi `exempt_when` receives zero arguments** — function signature `exempt_when(request: Request)` raises `TypeError`; use `exempt_when()` with no params.
+- **slowapi `exempt_when` runs after FastAPI dependency resolution** — async dependencies execute before the exempt check; for per-request state tracking via ContextVars from async deps, use `asyncio.current_task()` to get the Task object.
+- **ContextVars written in threadpool are not visible to caller** — sync `Depends` run via `run_in_threadpool`, writes to ContextVars stay thread-local; make auth-recording deps `async` to run in the event loop and share state with slowapi's `exempt_when`.
+- **slowapi limit string is evaluated at decoration time** — `f"{settings.X}/day"` is frozen when the route is defined; use `lambda: f"{settings.X}/day"` to make it dynamic for tests that mutate settings.
+- **`docker cp` with non-existent destination requires parent to exist** — `docker cp backend/schemas backend:/app/backend/app/schemas/` requires `/app/backend/app/` to exist; use `docker exec mkdir -p` first or copy individual files.
+- **Worktree does not inherit `.env`** — gitignored files don't copy to worktrees; create or manually copy `.env` to worktree root; `backend/app/core/config.py` reads `../.env` relative to its own directory.
+- **`OPENAI_API_KEY` vs `OPENAI_API_TOKEN`** — existing `.env` uses `OPENAI_API_KEY` (OpenAI SDK default); Phase 3 config must use the same name; the SDK will NOT auto-pick up a different env var name.
+- **`PROJECT_NAME` and `FIRST_SUPERUSER_PASSWORD` are required** — importing `Settings` fails if these are absent/empty; even a quick `python -c` verify will error.
+- **`uv sync` creates `.venv` at worktree root** — not inside `backend/`; this matches uv workspace resolution but is easy to assume otherwise.
+- **Phase 3 schemas live in `backend/app/schemas/`** — new package created in Phase 3; prior phases had all Pydantic models in `backend/app/models.py`.
+- **`list[dict[str, object]]` passes strict mypy** — cleaner than `list[dict[str, Any]]` when annotating recent_errors or error lists; uses `object` instead of importing `Any` from `typing`.
+- **Session-scoped `db` fixture in `tests/conftest.py` is `autouse=True`** — any new test subdirectory that doesn't need DB must add its own `conftest.py` overriding this fixture with a no-op mock; otherwise all tests error at collection time.
+- **`SYSTEM_PROMPT_CHAT` uses `.format()` placeholders** — e.g. `{unit}`, `{words}`, `{errors}`, `{mode}`; the `{{...}}` double-brace escaping in `SYSTEM_PROMPT_GRADE` is needed because that prompt contains a literal JSON format example that must survive `.format()`.
+- **`reusable_oauth2` vs `optional_oauth2` are separate instances** — `reusable_oauth2` has `auto_error=True` (default); new `optional_oauth2` must be a separate instance with `auto_error=False`; reusing the same instance breaks required-auth routes.
+- **`OptionalTokenDep` type is `str | None`** — `auto_error=False` allows FastAPI to pass `None` when no token is provided.
+- **Container venv doesn't auto-install new deps** — `uv add` inside container updates `pyproject.toml`/`uv.lock` but NOT the active `.venv`; use `pip install` directly: `python -m ensurepip && python -m pip install <pkg>`.
+- **`docker compose watch` syncs tests automatically; standalone `up` does not** — when using `docker compose up -d`, `docker cp` the app and tests before running test suite.
+- **Container working directory matters for test scripts** — `tests-start.sh` must run with `-w /app/backend`; running from `/app` produces "No such file or directory: scripts/tests-start.sh".
+- **mypy `--ignore-missing-imports` makes `# type: ignore[import-untyped]` unused** — the `emails` import in `app/utils.py` triggers `[unused-ignore]` when mypy is invoked with that flag; pre-existing template issue.
+- **Stale `tests/tests/` mirror from prior `docker cp`** — after repeated whole-directory copies, a nested `tests/tests/` can exist inside container, doubling test counts harmlessly but inflating numbers.
+- **Ruff E741 fires on single-letter loop variables** — always use descriptive names like `line` even in short comprehensions to avoid this lint error.
+- **`_rate_limit_exceeded_handler` from slowapi causes mypy `arg-type` error** — suppress with `# type: ignore[arg-type]` on `app.add_exception_handler()` call; known false positive.
+- **mypy on `client.chat.completions.create(..., stream=True)` returns union** — result is `tuple[str, Any] | ChatCompletionChunk`; suppress with `# type: ignore[union-attr]` on `chunk.choices` access lines.
+- **`response.choices[0].message.content` is `str | None`** — must coerce to `str` (e.g. `or ""`) before passing to `json.loads` to satisfy mypy.
+- **Post-edit hooks (ruff formatter) revert partial `Edit` calls** — when adding new imports to existing import lines, use `Write` to rewrite the whole file; partial edits get reformatted and changes lost.
+- **All required imports for optional auth were already present** — `InvalidTokenError`, `ValidationError`, `jwt`, `OAuth2PasswordBearer` already exist in `app/api/deps.py`.
+
 ### Phase 2: Data Layer
 
 - **`uv run python` required** — bare `python`/`python3` not in PATH; all scripts must use `uv run python`.
