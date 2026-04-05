@@ -43,6 +43,15 @@ export default defineConfig({
       dependencies: ['setup'],
     },
 
+    // Project for tests that manage their own auth via localStorage
+    {
+      name: 'no-auth',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: { cookies: [], origins: [] },
+      },
+    },
+
     // {
     //   name: 'firefox',
     //   use: {
