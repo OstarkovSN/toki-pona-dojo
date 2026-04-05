@@ -1,41 +1,50 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
-
-import { Footer } from "@/components/Common/Footer"
-import AppSidebar from "@/components/Sidebar/AppSidebar"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { isLoggedIn } from "@/hooks/useAuth"
+import { useState } from "react"
+import { createFileRoute, Outlet } from "@tanstack/react-router"
+import { TopNav } from "@/components/TopNav"
+import { ChatPanelPlaceholder } from "@/components/ChatPanelPlaceholder"
+import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout")({
   component: Layout,
-  beforeLoad: async () => {
-    if (!isLoggedIn()) {
-      throw redirect({
-        to: "/login",
-      })
-    }
-  },
 })
 
 function Layout() {
+  const [chatOpen, setChatOpen] = useState(false)
+
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1 text-muted-foreground" />
-        </header>
-        <main className="flex-1 p-6 md:p-8">
-          <div className="mx-auto max-w-7xl">
+    <div className="flex min-h-screen flex-col bg-zen-bg">
+      <TopNav onToggleChat={() => setChatOpen((prev) => !prev)} chatOpen={chatOpen} />
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Content panel */}
+        <main
+          className={cn(
+            "flex-1 overflow-y-auto p-6 md:p-8 transition-all duration-300",
+            chatOpen ? "md:w-3/5" : "w-full",
+          )}
+        >
+          <div className="mx-auto max-w-4xl">
             <Outlet />
           </div>
         </main>
-        <Footer />
-      </SidebarInset>
-    </SidebarProvider>
+
+        {/* Chat panel (placeholder) */}
+        {chatOpen && (
+          <aside className="hidden md:flex md:w-2/5 border-l border-zen-border overflow-y-auto">
+            <div className="flex-1">
+              <ChatPanelPlaceholder />
+            </div>
+          </aside>
+        )}
+
+        {/* Mobile: chat as bottom sheet (placeholder) */}
+        {chatOpen && (
+          <div className="fixed inset-x-0 bottom-0 z-40 h-1/2 border-t border-zen-border md:hidden">
+            <ChatPanelPlaceholder />
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 
