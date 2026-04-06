@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { Search } from "lucide-react"
 import { useMemo, useRef, useState } from "react"
 import { DictionarySkeleton } from "@/components/Common/DictionarySkeleton"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
 import { Input } from "@/components/ui/input"
 import { WordCard, type WordData } from "@/components/WordCard"
 import { cn } from "@/lib/utils"
@@ -33,7 +34,12 @@ function DictionaryPage() {
   const [setFilter, setSetFilter] = useState<string>("all")
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
-  const { data: words = [], isLoading } = useQuery<WordData[]>({
+  const {
+    data: words = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<WordData[]>({
     queryKey: ["dictionary", "words"],
     queryFn: async () => {
       const res = await fetch("/api/v1/dictionary/words")
@@ -161,7 +167,12 @@ function DictionaryPage() {
 
       {isLoading && <DictionarySkeleton />}
 
+      {error && !isLoading && (
+        <ErrorBanner type="api-unreachable" onRetry={() => refetch()} />
+      )}
+
       {!isLoading &&
+        !error &&
         Object.keys(grouped)
           .sort()
           .map((letter) => (
@@ -180,7 +191,7 @@ function DictionaryPage() {
             </div>
           ))}
 
-      {!isLoading && filtered.length === 0 && (
+      {!isLoading && !error && filtered.length === 0 && (
         <div className="py-12 text-center text-zen-text3">
           <p className="font-tp text-lg">ala</p>
           <p className="mt-1 text-sm">no words match your search</p>

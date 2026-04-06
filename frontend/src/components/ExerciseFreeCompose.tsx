@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
 import { GradingSpinner } from "@/components/Common/GradingSpinner"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -96,9 +97,16 @@ export function ExerciseFreeCompose({ exercise, onComplete }: ExerciseProps) {
         </div>
       )}
       {submitted && gradeMutation.isError && (
-        <p className="mt-4 text-sm text-coral">
-          Could not reach the grading service. Please try again later.
-        </p>
+        <div className="mt-4">
+          <ErrorBanner
+            type="api-unreachable"
+            suggestedAnswer={exercise.suggestedAnswer}
+            onRetry={() => {
+              gradeMutation.reset()
+              setSubmitted(false)
+            }}
+          />
+        </div>
       )}
     </div>
   )

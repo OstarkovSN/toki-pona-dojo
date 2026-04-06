@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react"
 import { useState } from "react"
 import { type ChainWord, GrammarChain } from "@/components/GrammarChain"
 import { GrammarSkeleton } from "@/components/Common/GrammarSkeleton"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
 import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout/grammar/modifiers")({
@@ -316,10 +317,6 @@ function GrammarModifiersPage() {
     retry: false,
   })
 
-  if (error) {
-    console.error("[grammar/modifiers] fetch failed:", error)
-  }
-
   const sections = data?.sections ?? FALLBACK_SECTIONS
   const comparisons = data?.comparisons ?? FALLBACK_COMPARISONS
   const quiz = data?.quiz ?? FALLBACK_QUIZ
@@ -339,6 +336,10 @@ function GrammarModifiersPage() {
       </div>
 
       {isLoading && <GrammarSkeleton />}
+
+      {error && !isLoading && (
+        <ErrorBanner type="api-unreachable" />
+      )}
 
       {sections.map((section) => (
         <section key={section.id} className="space-y-3">

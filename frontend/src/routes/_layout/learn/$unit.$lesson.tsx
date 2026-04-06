@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ExerciseConceptBuild } from "@/components/ExerciseConceptBuild"
 import { ExerciseFillParticle } from "@/components/ExerciseFillParticle"
@@ -11,6 +11,7 @@ import { FeedbackToast } from "@/components/FeedbackToast"
 import { LessonComplete } from "@/components/LessonComplete"
 import { ProgressBar } from "@/components/ProgressBar"
 import { LessonSkeleton } from "@/components/Common/LessonSkeleton"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
 import { useLessons } from "@/hooks/useLessons"
 import { useProgress } from "@/hooks/useProgress"
 import type { Exercise, ExerciseResult } from "@/types/exercises"
@@ -58,6 +59,7 @@ function LessonPage() {
   const { unit, lesson: lessonParam } = Route.useParams()
   const unitId = Number(unit)
   const lessonId = Number(lessonParam)
+  const navigate = useNavigate()
 
   const {
     lesson,
@@ -116,11 +118,11 @@ function LessonPage() {
 
   if (isError) {
     return (
-      <div className="py-12 text-center">
-        <p className="font-mono text-lg text-coral">Failed to load lesson.</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Check your connection and try again.
-        </p>
+      <div className="py-6">
+        <ErrorBanner
+          type="api-unreachable"
+          onRetry={() => navigate({ to: "/" })}
+        />
       </div>
     )
   }

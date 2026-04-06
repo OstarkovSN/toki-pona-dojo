@@ -7,8 +7,10 @@ import {
   useRef,
   useState,
 } from "react"
+import { useNavigate } from "@tanstack/react-router"
 import { ChatMessage } from "@/components/ChatMessage"
 import { type ChatMode, ChatModeSelector } from "@/components/ChatModeSelector"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -29,6 +31,7 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
   const [input, setInput] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const navigate = useNavigate()
 
   const { messages, sendMessage, isStreaming, error, clearHistory, isBYOM } =
     useChat({
@@ -159,8 +162,29 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
 
       {/* Error display */}
       {error && (
-        <div className="mx-3 mb-2 rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
-          {error}
+        <div className="mx-3 mb-2">
+          {error.toLowerCase().includes("rate limit") ? (
+            <ErrorBanner
+              type="rate-limit"
+              onNavigateToSettings={() => navigate({ to: "/settings" })}
+            />
+          ) : isBYOM &&
+            (error.toLowerCase().includes("provider") ||
+              error.toLowerCase().includes("cors") ||
+              error.toLowerCase().includes("connection")) ? (
+            <ErrorBanner
+              type="byom-failure"
+              onRetry={clearHistory}
+              onNavigateToSettings={() => navigate({ to: "/settings" })}
+            />
+          ) : error.toLowerCase().includes("503") ||
+            error.toLowerCase().includes("unavailable") ? (
+            <ErrorBanner type="llm-unavailable" />
+          ) : (
+            <div className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              {error}
+            </div>
+          )}
         </div>
       )}
 
