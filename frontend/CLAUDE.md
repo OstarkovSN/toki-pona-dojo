@@ -177,12 +177,24 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 ### Phase 10: E2E Testing Patterns
 
 - **Most spec files already existed** — before adding new spec files, check `frontend/tests/` for existing: `skill-tree.spec.ts`, `lesson-exercises.spec.ts`, `dictionary.spec.ts`, `chat-panel.spec.ts`, `navigation.spec.ts`, `grammar.spec.ts`, `progress.spec.ts`, `user-settings.spec.ts`, `login.spec.ts`, `invite-flow.spec.ts`, `auth.setup.ts`.
+- **`Dictionary $word.tsx` word detail tests already existed** — always read the full spec file (`dictionary.spec.ts`) before adding tests to avoid duplication of word detail route tests.
 - **`ErrorBanner` uses dynamic testid** — `ErrorBanner` already uses `data-testid={`error-banner-${type}`}`, so `error-banner-llm-unavailable`, `error-banner-rate-limit`, `error-banner-api-unreachable` are generated dynamically from the `type` prop. No changes needed.
 - **`UnitNode` testid uses unitNumber (1–10), not array index** — new testids are `skill-tree-node-1` through `skill-tree-node-10`, NOT `skill-tree-node-0` through `skill-tree-node-9`. Also add `data-state={status}` on the inner div.
 - **`ChatMessage` testids by role** — added `data-testid="chat-message-user"` and `data-testid="chat-message-bot"` (via conditional `isUser`).
 - **WordCard testid includes the word itself** — `data-testid={`word-card-${data.word}`}` on the Link element for easy filtering in tests.
 - **ChatPanel mobile uses floating button and bottom Sheet** — mobile floating button uses `data-testid="mobile-chat-button"`, Sheet uses `data-testid="mobile-chat-sheet"`, textarea uses `data-testid="chat-input"`.
 - **Dictionary empty state testid** — `data-testid="dictionary-no-results"` on the "ala" empty state div.
+- **`GradingSpinner` uses `data-testid="grading-spinner"`** — reliable testid for grading state assertions in lesson exercise tests.
+- **`ExerciseConceptBuild` and `ExerciseFreeCompose` gate spinner on `gradeMutation.isPending`** — slowing the `/api/v1/lessons/grade` route is the correct way to observe the grading spinner in tests.
+- **Grammar particles.tsx is 100% static** — no async fetch, no skeleton; direct navigation tests are near-redundant with existing navigation tests, only add if testing a meaningfully different path.
+- **Settings page (`/settings`) returns null when user absent** — BYOM tests using `page.goto("/settings")` without `storageState` override only work in auth-seeded runs; `addInitScript` sets localStorage but page may still redirect to login before render.
+- **Dark mode tests that navigate away rely on `next-themes` class persistence** — `next-themes` persists class to `<html>` via localStorage; re-navigating within same page context preserves the dark class correctly.
+- **`page.route()` for dictionary words list uses no trailing path** — pattern `**/api/v1/dictionary/words` (no trailing path) matches the exact words list endpoint used by dictionary index page.
 - **Grammar page does not need skeleton tests** — the grammar/modifiers page renders `FALLBACK_SECTIONS` synchronously. Even with a slowed API route, the skeleton may not appear because fallback data renders immediately. Loading-state tests for grammar should only assert page content renders, not that the skeleton appears.
 - **ChatContext uses `"tp-chat-open"` localStorage key** — to force mobile floating button visible in tests, use `localStorage.setItem("tp-chat-open", "false")` in `addInitScript`.
 - **Biome auto-formats test files on `bun run lint`** — after writing new test files, run lint to auto-fix import ordering and rename unused variables with `_` prefix (e.g., `_skeleton`). Always run lint after test creation.
+- **`ruff` post-edit hook drops newly added top-level imports if a duplicate exists elsewhere in the file** — when adding imports like `import pytest`, if the file body has a duplicate like `from unittest.mock import patch`, the formatter removes the new import; use `Write` to rewrite the entire file to survive the formatter.
+- **`llm-client.ts` stores BYOM config as three separate localStorage keys** (`tp-byom-url`, `tp-byom-key`, `tp-byom-model`), not a single JSON blob — Playwright `addInitScript` must set all three individually.
+- **`ProviderSettings.tsx` renders "Connected to your provider" text in a `<span>` when BYOM is configured** — concrete assertion target for configured-state tests.
+- **`settings.tsx` is under `_layout/` and uses `useAuth()`, so `/settings` requires auth; do NOT add anonymous `storageState` override to byom-settings.spec.ts.**
+- **`dark-mode.spec.ts` only navigates to public pages (`/`, `/dictionary`) so anonymous `storageState` override is safe and correct there.**

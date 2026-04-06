@@ -36,7 +36,6 @@ test("Greeting text is visible", async ({ page }) => {
   await expect(page.getByText("learn toki pona")).toBeVisible()
 })
 
-
 test("clicking a unit node navigates to its lesson", async ({ page }) => {
   await page.goto("/")
   await expect(page.getByTestId("skill-tree-skeleton")).not.toBeVisible({

@@ -73,6 +73,16 @@ test("Word detail page shows error state for unknown word", async ({
   await expect(errorOrContent.first()).toBeVisible()
 })
 
+test("word detail page mobile layout", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 })
+  await page.goto("/dictionary/toki")
+  await expect(page.locator("main")).toBeVisible()
+  const mainWidth = await page
+    .locator("main")
+    .evaluate((el) => el.getBoundingClientRect().width)
+  expect(mainWidth).toBeLessThanOrEqual(380) // with small tolerance
+})
+
 test("search with no matching results shows empty state", async ({ page }) => {
   await page.goto("/dictionary")
   await expect(page.getByTestId("dictionary-skeleton")).not.toBeVisible({

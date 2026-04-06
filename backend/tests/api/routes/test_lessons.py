@@ -110,6 +110,56 @@ def test_lesson_exercises_capped_at_max(client: TestClient) -> None:
         assert capping_calls[0][1] == 7
 
 
+def test_lesson_exercise_type_field_present_and_valid(
+    client: TestClient,
+) -> None:
+    """gap-22: Each exercise in a lesson response has a 'type' field with a known value."""
+    valid_types = {
+        "match",
+        "multichoice",
+        "word_bank",
+        "fill_particle",
+        "story",
+        "free_compose",
+        "concept_build",
+    }
+    r = client.get(f"{settings.API_V1_STR}/lessons/units/1/lessons/1")
+    assert r.status_code == 200
+    exercises = r.json()["exercises"]
+    for ex in exercises:
+        assert "type" in ex, f"Exercise missing 'type' field: {ex}"
+        assert ex["type"] in valid_types, f"Unknown exercise type: {ex['type']}"
+
+
+def test_lesson_empty_exercises_when_builders_return_nothing(
+    client: TestClient,
+) -> None:
+    """gap-21: When filtered exercises are all empty, endpoint returns 200 with empty exercises."""
+    from unittest.mock import patch
+
+    empty_filtered = {
+        "unscramble": [],
+        "particles": [],
+        "reverse_build": [],
+        "word_building": [],
+        "stories": [],
+        "flashcards": [],
+        "sentence_quiz": {"tp2en": [], "en2tp": []},
+        "sitelen_pona": [],
+    }
+
+    with patch(
+        "app.api.routes.lessons.get_exercises_by_words",
+        return_value=empty_filtered,
+    ):
+        r = client.get(f"{settings.API_V1_STR}/lessons/units/10/lessons/1")
+
+    assert r.status_code == 200
+    data = r.json()
+    assert "exercises" in data
+    assert isinstance(data["exercises"], list)
+
+
 def test_lesson_word_bank_skips_malformed_entries(client: TestClient) -> None:
     """gap-19: Malformed unscramble entries are skipped; good entries still returned."""
     from unittest.mock import patch
@@ -124,6 +174,9 @@ def test_lesson_word_bank_skips_malformed_entries(client: TestClient) -> None:
         "reverse_build": [],
         "word_building": [],
         "stories": [],
+        "flashcards": [],
+        "sentence_quiz": {"tp2en": [], "en2tp": []},
+        "sitelen_pona": [],
     }
 
     with patch(

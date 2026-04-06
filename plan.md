@@ -23,6 +23,8 @@
 | 8 | **Progress & Persistence** | localStorage for anonymous users, server sync for auth'd users, SM-2 spaced repetition, streak tracking | [spec](docs/superpowers/specs/2026-04-05-phase-08-progress-persistence-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-08-progress-persistence.md) |
 | 9 | **Security** | CrowdSec + Traefik bouncer for automatic DDoS protection and malicious IP blocking | [spec](docs/superpowers/specs/2026-04-05-phase-09-security-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-09-security.md) |
 | 10 | **Polish** | Mobile responsiveness, dark mode, loading/error states, comprehensive E2E tests | [spec](docs/superpowers/specs/2026-04-05-phase-10-polish-design.md) | [plan](docs/superpowers/plans/2026-04-05-phase-10-polish.md) |
+| 10.5.1 | **Test Gaps Search** | 1. Dispatch an agent to comprehensively audit all test gaps across backend and frontend (unit, integration, E2E)<br>2. Dispatch an agent to use writing-plans skill to write the plan for section 10.5.2 that will close those gaps<br>3. Add it to [this file](plan.md) | — | — |
+| 10.5.2 | **Test Coverage** | Fill the test gaps that were found | — | [plan](docs/superpowers/plans/2026-04-06-phase-105-test-coverage.md) |
 
 ---
 

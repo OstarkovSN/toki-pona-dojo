@@ -220,3 +220,25 @@ def test_duplicate_word_second_entry_overwrites_first() -> None:
     finally:
         # Always clean up the sentinel key regardless of test outcome
         loader_mod._WORD_INDEX.pop(sentinel_word, None)
+
+
+def test_get_word_with_no_definitions_returns_entry() -> None:
+    """gap-54: get_word for a word that exists but has empty definitions returns the entry."""
+    import app.data.loader as loader_mod
+
+    sentinel_word = "__test_no_defs__"
+    entry_no_defs = {
+        "word": sentinel_word,
+        "definitions": [],
+        "pos": ["noun"],
+        "ku": False,
+    }
+
+    loader_mod._WORD_INDEX[sentinel_word] = entry_no_defs
+    try:
+        result = loader_mod.get_word(sentinel_word)
+        assert result is not None
+        assert result["word"] == sentinel_word
+        assert result["definitions"] == []
+    finally:
+        loader_mod._WORD_INDEX.pop(sentinel_word, None)

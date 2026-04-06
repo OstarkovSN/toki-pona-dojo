@@ -52,3 +52,23 @@ test("Particles page shows common mistakes callouts", async ({ page }) => {
   await page.goto("/grammar/particles")
   await expect(page.getByText("common mistakes").first()).toBeVisible()
 })
+
+test("particles page direct navigation renders content", async ({ page }) => {
+  await page.goto("/grammar/particles")
+  await expect(page).toHaveURL(/\/grammar\/particles/)
+  await expect(page.locator("main")).toBeVisible()
+  // Particles page should show toki pona particles
+  for (const particle of ["li", "e", "la", "pi"]) {
+    await expect(page.getByText(particle, { exact: true }).first()).toBeVisible(
+      { timeout: 8000 },
+    )
+  }
+})
+
+test("modifiers page direct navigation renders content", async ({ page }) => {
+  await page.goto("/grammar/modifiers")
+  await expect(page).toHaveURL(/\/grammar\/modifiers/)
+  await expect(page.locator("main")).toBeVisible()
+  // Modifiers page should show examples with tomo, telo
+  await expect(page.getByText("tomo").first()).toBeVisible({ timeout: 8000 })
+})

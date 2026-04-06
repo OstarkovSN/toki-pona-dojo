@@ -141,3 +141,35 @@ def test_build_chat_system_prompt_missing_word_key_falls_back() -> None:
     assert "?: some context" in result
     assert "pona: ?" in result
     assert "?: ?" in result
+
+
+def test_build_chat_system_prompt_invalid_mode_still_renders() -> None:
+    """gap-47: An unrecognized mode string is included in the prompt without raising."""
+    result = build_chat_system_prompt(
+        mode="invalid_mode_xyz",
+        known_words=["mi", "sina"],
+        current_unit=1,
+        recent_errors=[],
+    )
+    assert isinstance(result, str)
+    assert len(result) > 0
+
+
+def test_build_chat_system_prompt_empty_known_words_does_not_crash() -> None:
+    """gap-48: Empty known_words list does not raise AttributeError."""
+    result = build_chat_system_prompt(
+        mode="free_chat",
+        known_words=[],
+        current_unit=1,
+        recent_errors=[],
+    )
+    assert isinstance(result, str)
+    assert len(result) > 0
+
+
+def test_build_grade_system_prompt_empty_known_words_returns_prompt() -> None:
+    """gap-50: build_grade_system_prompt with empty list returns valid prompt string."""
+    result = build_grade_system_prompt(known_words=[])
+    assert isinstance(result, str)
+    assert len(result) > 0
+    assert "JSON" in result

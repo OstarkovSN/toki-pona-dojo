@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.core.config import settings
@@ -51,3 +52,26 @@ def test_test_email_unauthenticated(client: TestClient) -> None:
         params={"email_to": "test@example.com"},
     )
     assert r.status_code == 401
+
+
+def test_test_email_send_failure_propagates_or_returns_error(
+    client: TestClient, superuser_token_headers: dict[str, str]
+) -> None:
+    """send_email raising propagates through TestClient (not silently swallowed)."""
+    stub_email_data = EmailData(html_content="<p>Test</p>", subject="Test email")
+    with (
+        patch(
+            "app.api.routes.utils.generate_test_email",
+            return_value=stub_email_data,
+        ),
+        patch(
+            "app.api.routes.utils.send_email",
+            side_effect=Exception("SMTP connection refused"),
+        ),
+    ):
+        with pytest.raises(Exception, match="SMTP connection refused"):
+            client.post(
+                f"{settings.API_V1_STR}/utils/test-email/",
+                params={"email_to": "test@example.com"},
+                headers=superuser_token_headers,
+            )

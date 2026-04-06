@@ -36,7 +36,7 @@ test.describe("BYOM Settings", () => {
     const stored = await page.evaluate(
       () =>
         localStorage.getItem("tp-byom-key") ??
-        localStorage.getItem("byom-settings")
+        localStorage.getItem("byom-settings"),
     )
     expect(stored).toBeTruthy()
   })
@@ -57,7 +57,23 @@ test.describe("BYOM Settings", () => {
 
     await clearBtn.click()
 
-    const stored = await page.evaluate(() => localStorage.getItem("tp-byom-key"))
+    const stored = await page.evaluate(() =>
+      localStorage.getItem("tp-byom-key"),
+    )
     expect(stored).toBeFalsy()
+  })
+
+  test("BYOM settings show configured state when key is stored", async ({
+    page,
+  }) => {
+    // Pre-configure BYOM via llm-client storage keys
+    await page.addInitScript(() => {
+      localStorage.setItem("tp-byom-url", "https://api.example.com/v1")
+      localStorage.setItem("tp-byom-key", "sk-test-key-123")
+      localStorage.setItem("tp-byom-model", "gpt-4o-mini")
+    })
+    await page.goto("/settings")
+    // When BYOM is configured, ProviderSettings shows "Connected to your provider"
+    await expect(page.getByText("Connected to your provider")).toBeVisible()
   })
 })
