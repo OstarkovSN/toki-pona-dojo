@@ -118,6 +118,18 @@ def test_optional_auth_invalid_token_returns_anonymous(client: TestClient) -> No
         assert call_kwargs["max_tokens"] == settings.CHAT_FREE_MAX_TOKENS
 
 
+def test_non_superuser_cannot_access_superuser_endpoint(
+    client: TestClient, normal_user_token_headers: dict[str, str]
+) -> None:
+    """gap-30: A regular user accessing a superuser-only endpoint gets 403."""
+    r = client.post(
+        f"{settings.API_V1_STR}/utils/test-email/",
+        params={"email_to": "test@example.com"},
+        headers=normal_user_token_headers,
+    )
+    assert r.status_code == 403
+
+
 def test_optional_auth_inactive_user_returns_anonymous(
     client: TestClient, db: Session
 ) -> None:
