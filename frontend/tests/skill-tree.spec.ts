@@ -35,3 +35,19 @@ test("Greeting text is visible", async ({ page }) => {
   await expect(page.getByText("o kama sona")).toBeVisible()
   await expect(page.getByText("learn toki pona")).toBeVisible()
 })
+
+
+test("clicking a unit node navigates to its lesson", async ({ page }) => {
+  await page.goto("/")
+  await expect(page.getByTestId("skill-tree-skeleton")).not.toBeVisible({
+    timeout: 10000,
+  })
+
+  // Click the first available unit node
+  const firstNode = page.locator("[data-testid^='skill-tree-node-']").first()
+  await firstNode.click()
+
+  // Should navigate to a learn route
+  await page.waitForURL(/\/learn\//, { timeout: 10000 })
+  await expect(page.locator("main")).toBeVisible()
+})

@@ -72,3 +72,17 @@ test("Word detail page shows error state for unknown word", async ({
   const errorOrContent = page.locator("p.font-tp, h1")
   await expect(errorOrContent.first()).toBeVisible()
 })
+
+test("search with no matching results shows empty state", async ({ page }) => {
+  await page.goto("/dictionary")
+  await expect(page.getByTestId("dictionary-skeleton")).not.toBeVisible({
+    timeout: 10000,
+  })
+
+  const searchInput = page.locator("input[data-testid='dictionary-search']")
+  await searchInput.fill("xyznonexistentword")
+  await page.waitForTimeout(500)
+
+  const noResults = page.locator("[data-testid='dictionary-no-results']")
+  await expect(noResults).toBeVisible({ timeout: 5000 })
+})
