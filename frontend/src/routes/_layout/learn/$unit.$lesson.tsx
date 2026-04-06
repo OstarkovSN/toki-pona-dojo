@@ -10,7 +10,7 @@ import { ExerciseWordBank } from "@/components/ExerciseWordBank"
 import { FeedbackToast } from "@/components/FeedbackToast"
 import { LessonComplete } from "@/components/LessonComplete"
 import { ProgressBar } from "@/components/ProgressBar"
-import { Skeleton } from "@/components/ui/skeleton"
+import { LessonSkeleton } from "@/components/Common/LessonSkeleton"
 import { useLessons } from "@/hooks/useLessons"
 import { useProgress } from "@/hooks/useProgress"
 import type { Exercise, ExerciseResult } from "@/types/exercises"
@@ -111,13 +111,7 @@ function LessonPage() {
   }, [nextExercise])
 
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-1.5 w-full" />
-        <Skeleton className="h-4 w-48" />
-        <Skeleton className="h-64 w-full" />
-      </div>
-    )
+    return <LessonSkeleton />
   }
 
   if (isError) {

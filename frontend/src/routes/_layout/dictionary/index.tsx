@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { Search } from "lucide-react"
 import { useMemo, useRef, useState } from "react"
+import { DictionarySkeleton } from "@/components/Common/DictionarySkeleton"
 import { Input } from "@/components/ui/input"
-import { Skeleton } from "@/components/ui/skeleton"
 import { WordCard, type WordData } from "@/components/WordCard"
 import { cn } from "@/lib/utils"
 
@@ -159,13 +159,7 @@ function DictionaryPage() {
         {filtered.length} of {words.length} words
       </p>
 
-      {isLoading && (
-        <div className="space-y-3">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-20 w-full rounded-lg" />
-          ))}
-        </div>
-      )}
+      {isLoading && <DictionarySkeleton />}
 
       {!isLoading &&
         Object.keys(grouped)

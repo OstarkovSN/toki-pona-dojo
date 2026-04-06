@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft } from "lucide-react"
 import { useState } from "react"
 import { type ChainWord, GrammarChain } from "@/components/GrammarChain"
-import { Skeleton } from "@/components/ui/skeleton"
+import { GrammarSkeleton } from "@/components/Common/GrammarSkeleton"
 import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout/grammar/modifiers")({
@@ -338,13 +338,7 @@ function GrammarModifiersPage() {
         <p className="text-sm text-zen-text3">modifier rules</p>
       </div>
 
-      {isLoading && (
-        <div className="space-y-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-lg" />
-          ))}
-        </div>
-      )}
+      {isLoading && <GrammarSkeleton />}
 
       {sections.map((section) => (
         <section key={section.id} className="space-y-3">

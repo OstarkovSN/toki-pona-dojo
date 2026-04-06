@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
+import { GradingSpinner } from "@/components/Common/GradingSpinner"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { gradeExercise } from "@/lib/api/lessons"
@@ -77,12 +78,7 @@ export function ExerciseFreeCompose({ exercise, onComplete }: ExerciseProps) {
           check
         </Button>
       )}
-      {gradeMutation.isPending && (
-        <div className="flex items-center justify-center py-4 gap-2 text-muted-foreground">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          <span className="text-sm">grading...</span>
-        </div>
-      )}
+      {gradeMutation.isPending && <GradingSpinner />}
       {submitted && gradeMutation.data && (
         <div className="mt-4 space-y-2">
           <div className="text-lg">{renderScore(gradeMutation.data.score)}</div>

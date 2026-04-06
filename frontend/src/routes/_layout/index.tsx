@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { SkillTree } from "@/components/SkillTree"
+import { SkillTreeSkeleton } from "@/components/Common/SkillTreeSkeleton"
 import { useProgress } from "@/hooks/useProgress"
 
 export const Route = createFileRoute("/_layout/")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/_layout/")({
 })
 
 function HomePage() {
-  const { progress, streak } = useProgress()
+  const { progress, streak, isLoading } = useProgress()
   const completedCount = progress.completedUnits.length
 
   return (
@@ -45,10 +46,14 @@ function HomePage() {
         </div>
       </div>
 
-      <SkillTree
-        completedUnits={progress.completedUnits}
-        currentUnit={progress.currentUnit}
-      />
+      {isLoading ? (
+        <SkillTreeSkeleton />
+      ) : (
+        <SkillTree
+          completedUnits={progress.completedUnits}
+          currentUnit={progress.currentUnit}
+        />
+      )}
     </div>
   )
 }
