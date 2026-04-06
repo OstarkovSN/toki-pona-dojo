@@ -7,7 +7,7 @@ from sqlmodel import Session, delete
 from app.core.config import settings
 from app.core.db import engine, init_db
 from app.main import app
-from app.models import User, UserProgress
+from app.models import AccessRequest, InviteToken, User, UserProgress
 from tests.utils.user import authentication_token_from_email
 from tests.utils.utils import get_superuser_token_headers
 
@@ -19,6 +19,9 @@ def db() -> Generator[Session, None, None]:
         yield session
         # Delete child records before parent to avoid FK constraint violations
         session.execute(delete(UserProgress))
+        # InviteToken has FK to both AccessRequest and User; delete before both
+        session.execute(delete(InviteToken))
+        session.execute(delete(AccessRequest))
         session.execute(delete(User))
         session.commit()
 

@@ -2,11 +2,13 @@ from fastapi import APIRouter
 
 from app.api.routes import (
     chat,
+    config,
     dictionary,
     lessons,
     login,
     private,
     progress,
+    telegram,
     users,
     utils,
 )
@@ -20,7 +22,10 @@ api_router.include_router(dictionary.router)
 api_router.include_router(lessons.router)
 api_router.include_router(chat.router)
 api_router.include_router(progress.router)
-
+api_router.include_router(config.router)
+# Telegram webhook route is always registered; the handler returns 404 when bot
+# is not configured (is_telegram_enabled() check inside the handler).
+api_router.include_router(telegram.router)
 
 if settings.ENVIRONMENT == "local":
     api_router.include_router(private.router)

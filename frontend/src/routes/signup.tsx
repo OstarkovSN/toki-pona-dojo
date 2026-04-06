@@ -3,7 +3,9 @@ import {
   createFileRoute,
   Link as RouterLink,
   redirect,
+  useSearch,
 } from "@tanstack/react-router"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { AuthLayout } from "@/components/Common/AuthLayout"
@@ -31,6 +33,7 @@ const formSchema = z
     confirm_password: z
       .string()
       .min(1, { message: "Password confirmation is required" }),
+    invite_token: z.string().optional(),
   })
   .refine((data) => data.password === data.confirm_password, {
     message: "The passwords don't match",
@@ -39,8 +42,13 @@ const formSchema = z
 
 type FormData = z.infer<typeof formSchema>
 
+const searchSchema = z.object({
+  token: z.string().optional(),
+})
+
 export const Route = createFileRoute("/signup")({
   component: SignUp,
+  validateSearch: searchSchema,
   beforeLoad: async () => {
     if (isLoggedIn()) {
       throw redirect({
@@ -59,6 +67,12 @@ export const Route = createFileRoute("/signup")({
 
 function SignUp() {
   const { signUpMutation } = useAuth()
+  const { token } = useSearch({ from: "/signup" })
+  const [tokenState, setTokenState] = useState<
+    "loading" | "valid" | "invalid" | "no-token"
+  >(token ? "loading" : "no-token")
+  const [botUsername, setBotUsername] = useState<string | null>(null)
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -68,17 +82,128 @@ function SignUp() {
       full_name: "",
       password: "",
       confirm_password: "",
+      invite_token: token ?? "",
     },
   })
 
+  // Fetch public config for bot username
+  useEffect(() => {
+    fetch("/api/v1/config/public")
+      .then((res) => res.json())
+      .then((data: { bot_username?: string }) => {
+        if (data.bot_username) {
+          setBotUsername(data.bot_username)
+        }
+      })
+      .catch(() => {
+        // Ignore — bot username is optional for display
+      })
+  }, [])
+
+  // Validate token on mount
+  useEffect(() => {
+    if (!token) return
+    fetch(`/api/v1/users/validate-token?token=${encodeURIComponent(token)}`)
+      .then((res) => res.json())
+      .then((data: { valid: boolean }) => {
+        setTokenState(data.valid ? "valid" : "invalid")
+      })
+      .catch(() => {
+        setTokenState("invalid")
+      })
+  }, [token])
+
   const onSubmit = (data: FormData) => {
     if (signUpMutation.isPending) return
-
-    // exclude confirm_password from submission data
     const { confirm_password: _confirm_password, ...submitData } = data
+    submitData.invite_token = token ?? ""
     signUpMutation.mutate(submitData)
   }
 
+  // No token in URL: show invite-only message
+  if (tokenState === "no-token") {
+    return (
+      <AuthLayout>
+        <div className="flex flex-col items-center gap-4 text-center">
+          <h1 className="text-2xl font-bold">This app is invite-only</h1>
+          <p className="text-muted-foreground">
+            Request access via our Telegram bot
+            {botUsername ? (
+              <>
+                :{" "}
+                <a
+                  href={`https://t.me/${botUsername}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4"
+                  data-testid="telegram-bot-link"
+                >
+                  @{botUsername}
+                </a>
+              </>
+            ) : (
+              "."
+            )}
+          </p>
+          <div className="text-center text-sm">
+            Already have an account?{" "}
+            <RouterLink to="/login" className="underline underline-offset-4">
+              Log in
+            </RouterLink>
+          </div>
+        </div>
+      </AuthLayout>
+    )
+  }
+
+  // Token is loading
+  if (tokenState === "loading") {
+    return (
+      <AuthLayout>
+        <div className="flex flex-col items-center gap-4 text-center">
+          <p className="text-muted-foreground">Validating invite token...</p>
+        </div>
+      </AuthLayout>
+    )
+  }
+
+  // Token is invalid
+  if (tokenState === "invalid") {
+    return (
+      <AuthLayout>
+        <div
+          className="flex flex-col items-center gap-4 text-center"
+          data-testid="invalid-token-message"
+        >
+          <h1 className="text-2xl font-bold">Invalid invite token</h1>
+          <p className="text-muted-foreground">
+            This invite token is invalid or has already been used.
+          </p>
+          {botUsername && (
+            <p className="text-sm text-muted-foreground">
+              Request a new one via{" "}
+              <a
+                href={`https://t.me/${botUsername}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4"
+              >
+                @{botUsername}
+              </a>
+            </p>
+          )}
+          <div className="text-center text-sm">
+            Already have an account?{" "}
+            <RouterLink to="/login" className="underline underline-offset-4">
+              Log in
+            </RouterLink>
+          </div>
+        </div>
+      </AuthLayout>
+    )
+  }
+
+  // Token is valid: show the signup form
   return (
     <AuthLayout>
       <Form {...form}>
@@ -164,6 +289,9 @@ function SignUp() {
                 </FormItem>
               )}
             />
+
+            {/* Hidden invite token field */}
+            <input type="hidden" {...form.register("invite_token")} />
 
             <LoadingButton
               type="submit"

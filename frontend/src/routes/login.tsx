@@ -4,6 +4,7 @@ import {
   Link as RouterLink,
   redirect,
 } from "@tanstack/react-router"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -52,6 +53,17 @@ export const Route = createFileRoute("/login")({
 
 function Login() {
   const { loginMutation } = useAuth()
+  const [botUsername, setBotUsername] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch("/api/v1/config/public")
+      .then((res) => res.json())
+      .then((data: { bot_username?: string }) => {
+        if (data.bot_username) setBotUsername(data.bot_username)
+      })
+      .catch(() => {})
+  }, [])
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -129,11 +141,29 @@ function Login() {
             </LoadingButton>
           </div>
 
-          <div className="text-center text-sm">
-            Don't have an account yet?{" "}
-            <RouterLink to="/signup" className="underline underline-offset-4">
-              Sign up
-            </RouterLink>
+          <div className="text-center text-sm space-y-1">
+            <p>
+              Don't have an account yet?{" "}
+              <RouterLink to="/signup" className="underline underline-offset-4">
+                Sign up
+              </RouterLink>
+            </p>
+            <p
+              className="text-xs text-muted-foreground"
+              data-testid="request-access-hint"
+            >
+              Need an invite?{" "}
+              <a
+                href={
+                  botUsername ? `https://t.me/${botUsername}` : "#"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4"
+              >
+                Request access via Telegram
+              </a>
+            </p>
           </div>
         </form>
       </Form>

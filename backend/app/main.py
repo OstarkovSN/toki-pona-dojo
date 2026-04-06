@@ -37,8 +37,21 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
         check_langfuse_auth()
     except Exception:
         logger.exception("LangFuse auth check raised unexpectedly during startup")
+
+    # Startup: register Telegram webhook if bot is configured
+    if settings.TG_BOT_TOKEN and settings.TG_SUPERUSER_ID:
+        from app.services.telegram import set_webhook
+
+        webhook_url = f"{settings.FRONTEND_HOST}{settings.API_V1_STR}/telegram/webhook"
+        await set_webhook(webhook_url)
+
     yield
-    # Shutdown: nothing to clean up
+
+    # Shutdown: remove Telegram webhook
+    if settings.TG_BOT_TOKEN and settings.TG_SUPERUSER_ID:
+        from app.services.telegram import delete_webhook
+
+        await delete_webhook()
 
 
 app = FastAPI(

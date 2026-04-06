@@ -1,0 +1,200 @@
+import secrets
+from datetime import datetime, timedelta, timezone
+
+import pytest
+from fastapi.testclient import TestClient
+from sqlmodel import Session
+
+from app.models import AccessRequest, InviteToken
+
+
+def _create_valid_token(db: Session) -> str:
+    """Helper: create an access request + valid invite token, return token string."""
+    ar = AccessRequest(
+        telegram_user_id=42,
+        telegram_first_name="Invitee",
+        status="approved",
+    )
+    db.add(ar)
+    db.commit()
+    db.refresh(ar)
+
+    tok = InviteToken(access_request_id=ar.id)
+    db.add(tok)
+    db.commit()
+    db.refresh(tok)
+    return tok.token
+
+
+def _create_expired_token(db: Session) -> str:
+    """Helper: create an expired invite token."""
+    ar = AccessRequest(
+        telegram_user_id=43,
+        telegram_first_name="Expired",
+        status="approved",
+    )
+    db.add(ar)
+    db.commit()
+    db.refresh(ar)
+
+    tok = InviteToken(
+        access_request_id=ar.id,
+        expires_at=datetime.now(timezone.utc) - timedelta(days=1),
+    )
+    db.add(tok)
+    db.commit()
+    db.refresh(tok)
+    return tok.token
+
+
+def test_signup_with_valid_token(client: TestClient, db: Session) -> None:
+    """Signup succeeds with a valid, unused, non-expired token."""
+    token_str = _create_valid_token(db)
+    response = client.post(
+        "/api/v1/users/signup",
+        json={
+            "email": f"invite-{secrets.token_hex(4)}@example.com",
+            "password": "testpass123",
+            "full_name": "Invite User",
+            "invite_token": token_str,
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "id" in data
+    assert data["email"].startswith("invite-")
+
+
+def test_signup_without_token_fails_when_bot_configured(
+    client: TestClient, db: Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Signup without invite_token returns 400 when TG_BOT_TOKEN is set."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+
+    response = client.post(
+        "/api/v1/users/signup",
+        json={
+            "email": f"notoken-{secrets.token_hex(4)}@example.com",
+            "password": "testpass123",
+            "full_name": "No Token",
+        },
+    )
+    assert response.status_code == 400
+    assert "Invalid or expired" in response.json()["detail"]
+
+
+def test_signup_with_expired_token_fails(
+    client: TestClient, db: Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Signup with an expired token returns 400."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+
+    token_str = _create_expired_token(db)
+    response = client.post(
+        "/api/v1/users/signup",
+        json={
+            "email": f"expired-{secrets.token_hex(4)}@example.com",
+            "password": "testpass123",
+            "full_name": "Expired Token User",
+            "invite_token": token_str,
+        },
+    )
+    assert response.status_code == 400
+    assert "Invalid or expired" in response.json()["detail"]
+
+
+def test_signup_with_used_token_fails(
+    client: TestClient, db: Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Signup with an already-used token returns 400."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+
+    token_str = _create_valid_token(db)
+    response1 = client.post(
+        "/api/v1/users/signup",
+        json={
+            "email": f"first-{secrets.token_hex(4)}@example.com",
+            "password": "testpass123",
+            "full_name": "First User",
+            "invite_token": token_str,
+        },
+    )
+    assert response1.status_code == 200
+
+    response2 = client.post(
+        "/api/v1/users/signup",
+        json={
+            "email": f"second-{secrets.token_hex(4)}@example.com",
+            "password": "testpass123",
+            "full_name": "Second User",
+            "invite_token": token_str,
+        },
+    )
+    assert response2.status_code == 400
+    assert "Invalid or expired" in response2.json()["detail"]
+
+
+def test_signup_with_invalid_token_fails(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Signup with a nonexistent token returns 400."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+
+    response = client.post(
+        "/api/v1/users/signup",
+        json={
+            "email": f"bad-{secrets.token_hex(4)}@example.com",
+            "password": "testpass123",
+            "full_name": "Bad Token User",
+            "invite_token": "nonexistent_token_value",
+        },
+    )
+    assert response.status_code == 400
+    assert "Invalid or expired" in response.json()["detail"]
+
+
+def test_validate_token_valid(client: TestClient, db: Session) -> None:
+    """GET /validate-token returns valid=true for a fresh token."""
+    token_str = _create_valid_token(db)
+    response = client.get(f"/api/v1/users/validate-token?token={token_str}")
+    assert response.status_code == 200
+    assert response.json()["valid"] is True
+
+
+def test_validate_token_expired(client: TestClient, db: Session) -> None:
+    """GET /validate-token returns valid=false for an expired token."""
+    token_str = _create_expired_token(db)
+    response = client.get(f"/api/v1/users/validate-token?token={token_str}")
+    assert response.status_code == 200
+    assert response.json()["valid"] is False
+
+
+def test_validate_token_nonexistent(client: TestClient) -> None:
+    """GET /validate-token returns valid=false for an unknown token."""
+    response = client.get("/api/v1/users/validate-token?token=doesnotexist")
+    assert response.status_code == 200
+    assert response.json()["valid"] is False
+
+
+def test_webhook_rejects_missing_secret_header(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """POST to /api/v1/telegram/webhook without X-Telegram-Bot-Api-Secret-Token returns 403."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+    monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 12345)
+
+    response = client.post(
+        "/api/v1/telegram/webhook",
+        json={"update_id": 1},
+    )
+    assert response.status_code == 403
