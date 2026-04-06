@@ -26,7 +26,9 @@ test.describe("Exercises", () => {
     expect(hasInput).toBeTruthy()
   })
 
-  test("submitting an answer triggers feedback or grading", async ({ page }) => {
+  test("submitting an answer triggers feedback or grading", async ({
+    page,
+  }) => {
     const exerciseArea = page.locator("[data-testid='exercise-area']")
     await expect(exerciseArea).toBeVisible({ timeout: 10000 })
 
@@ -51,7 +53,7 @@ test.describe("Exercises", () => {
     await expect(
       page
         .getByTestId("grading-spinner")
-        .or(page.locator("[data-testid='exercise-feedback']"))
+        .or(page.locator("[data-testid='exercise-feedback']")),
     ).toBeVisible({ timeout: 35000 })
   })
 })

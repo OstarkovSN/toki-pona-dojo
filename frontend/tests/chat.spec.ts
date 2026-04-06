@@ -17,9 +17,7 @@ test.describe("Chat Panel (Desktop)", () => {
     await chatInput.fill("toki pona li pona!")
     await chatInput.press("Enter")
 
-    const userMessage = page
-      .locator("[data-testid='chat-message-user']")
-      .last()
+    const userMessage = page.locator("[data-testid='chat-message-user']").last()
     await expect(userMessage).toContainText("toki pona", { timeout: 5000 })
   })
 
@@ -42,7 +40,7 @@ test.describe("Chat Panel (Desktop)", () => {
     await chatInput.press("Enter")
 
     await expect(
-      page.locator("[data-testid='chat-message-bot']").last()
+      page.locator("[data-testid='chat-message-bot']").last(),
     ).toBeVisible({ timeout: 30000 })
 
     await chatInput.fill("pona!")

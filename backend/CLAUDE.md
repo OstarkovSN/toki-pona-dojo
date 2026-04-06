@@ -326,6 +326,10 @@ mocker.patch("app.utils.send_email", ...)
 
 ### Phase 10: Backend Test Infrastructure
 
+- **`verify_password` returns `tuple[bool, str | None]`** — `pwdlib.PasswordHash.verify_and_update()` returns a tuple, not a bool; tests must unpack the tuple or access `[0]` for the boolean value.
+- **`tests/core/` directory exists with `__init__.py`** — no setup needed to add new test files to `tests/core/`; the directory is pre-initialized.
+- **`patch.object(settings, "TG_BOT_USERNAME", None)` works correctly** — routes read `settings.TG_BOT_USERNAME` at request time, not import time, so patching takes effect mid-test.
+- **`send_email()` has no try/except** — exceptions from the `emails` library propagate through TestClient as re-raised exceptions (not HTTP 500 responses); test code calling the endpoint must wrap in `try/except`.
 - **`tests/tests/` mirror runs stale copies** — when `docker cp backend/tests backend:/app/backend/tests` is used, a nested `tests/tests/` mirror appears. Fixed files must be copied to BOTH `tests/<path>` and `tests/tests/<path>` explicitly; whole-directory re-copy doesn't reliably overwrite individual files.
 - **Actual API paths for lessons and progress:**
   - `GET /api/v1/lessons/units` — full skill tree, returns 10 units
@@ -340,3 +344,7 @@ mocker.patch("app.utils.send_email", ...)
 - **Langfuse not installed in the test container** — `patch("langfuse.Langfuse", ...)` fails with `ModuleNotFoundError`. Fix: stub `sys.modules["langfuse"]` with `MagicMock()` at module load time if `langfuse` is not installed. Needs to be done before the patch context manager runs.
 - **`test_data_integrity.py` path breaks in `tests/tests/` mirror** — `Path(__file__).parent.parent.parent / "app" / "data"` resolves correctly from `tests/data/` but resolves to `tests/app/data` from `tests/tests/data/`. Fix: use a helper that walks up parents looking for a directory where `app/data` exists.
 - **conftest `db` fixture is `session`-scoped** — a single DB session is shared across all tests. Tests that mutate shared resources (superuser's UserProgress, AccessRequests) must clean up explicitly to avoid cross-test interference.
+- **`_EXERCISE_BUILDERS` keys are: match, multichoice, word_bank, fill_particle, free_compose, concept_build, story** — `flashcard` and `sitelen_pona` are NOT in the builders dict; task spec listed invalid types.
+- **Patching `get_exercises_by_words` alone is insufficient** — `match` and `multichoice` builders use `words`/`all_words` params (not `filtered`), so they still produce exercises unless the unit's word list is also empty; use unit 10 (which has all exercise types) to get empty results when filtering.
+- **`reset_rate_limit_storage` fixture must use `autouse=True` returning `None`** — standard pytest fixture with no teardown; no `yield` required, just reset storage with `limiter._storage.reset()`.
+- **`normal_user_token_headers` fixture is at module scope in `tests/conftest.py`** — safe to import/use as a parameter in `test_deps.py` tests without additional setup.
