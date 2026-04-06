@@ -1,40 +1,40 @@
-import type { SRSEntry } from "./srs";
-import { reviewWord as srsReviewWord, defaultSRSEntry, scoreToQuality } from "./srs";
+import type { SRSEntry } from "./srs"
+import { defaultSRSEntry, reviewWord as srsReviewWord } from "./srs"
 
 // --- Types ---
 
 export interface ProgressData {
-  completedUnits: number[];
-  completedLessons: string[];  // "unitId:lessonId" format
-  currentUnit: number;
-  totalCorrect: number;
-  totalAnswered: number;
-  knownWords: string[];
-  recentErrors: ErrorEntry[];
+  completedUnits: number[]
+  completedLessons: string[] // "unitId:lessonId" format
+  currentUnit: number
+  totalCorrect: number
+  totalAnswered: number
+  knownWords: string[]
+  recentErrors: ErrorEntry[]
 }
 
 export interface ErrorEntry {
-  word: string;
-  type: string;
-  context: string;
-  timestamp: string;  // ISO datetime
+  word: string
+  type: string
+  context: string
+  timestamp: string // ISO datetime
 }
 
 export interface SRSData {
-  [word: string]: SRSEntry;
+  [word: string]: SRSEntry
 }
 
 export interface StreakData {
-  currentStreak: number;
-  lastActivityDate: string;  // ISO date YYYY-MM-DD
+  currentStreak: number
+  lastActivityDate: string // ISO date YYYY-MM-DD
 }
 
 // --- Constants ---
 
-const PROGRESS_KEY = "tp-progress";
-const SRS_KEY = "tp-srs";
-const STREAK_KEY = "tp-streak";
-const MAX_RECENT_ERRORS = 20;
+const PROGRESS_KEY = "tp-progress"
+const SRS_KEY = "tp-srs"
+const STREAK_KEY = "tp-streak"
+const MAX_RECENT_ERRORS = 20
 
 // --- Default values ---
 
@@ -47,69 +47,69 @@ function defaultProgress(): ProgressData {
     totalAnswered: 0,
     knownWords: [],
     recentErrors: [],
-  };
+  }
 }
 
 function defaultStreak(): StreakData {
   return {
     currentStreak: 0,
     lastActivityDate: "",
-  };
+  }
 }
 
 // --- Helpers ---
 
 function readJSON<T>(key: string, fallback: () => T): T {
   try {
-    const raw = localStorage.getItem(key);
-    if (raw === null) return fallback();
-    return JSON.parse(raw) as T;
+    const raw = localStorage.getItem(key)
+    if (raw === null) return fallback()
+    return JSON.parse(raw) as T
   } catch {
-    return fallback();
+    return fallback()
   }
 }
 
 function writeJSON<T>(key: string, data: T): void {
-  localStorage.setItem(key, JSON.stringify(data));
+  localStorage.setItem(key, JSON.stringify(data))
 }
 
 /** Get today's date as YYYY-MM-DD in the user's local timezone. */
 function todayLocal(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
 }
 
 /** Get yesterday's date as YYYY-MM-DD in the user's local timezone. */
 function yesterdayLocal(): string {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const d = new Date()
+  d.setDate(d.getDate() - 1)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
 }
 
 // --- Public API ---
 
 /** Read current progress from localStorage. */
 export function getProgress(): ProgressData {
-  return readJSON(PROGRESS_KEY, defaultProgress);
+  return readJSON(PROGRESS_KEY, defaultProgress)
 }
 
 /** Merge a partial update into the stored progress. */
 export function updateProgress(update: Partial<ProgressData>): ProgressData {
-  const current = getProgress();
-  const merged = { ...current, ...update };
+  const current = getProgress()
+  const merged = { ...current, ...update }
 
   // Cap recent errors
   if (merged.recentErrors.length > MAX_RECENT_ERRORS) {
-    merged.recentErrors = merged.recentErrors.slice(0, MAX_RECENT_ERRORS);
+    merged.recentErrors = merged.recentErrors.slice(0, MAX_RECENT_ERRORS)
   }
 
-  writeJSON(PROGRESS_KEY, merged);
-  return merged;
+  writeJSON(PROGRESS_KEY, merged)
+  return merged
 }
 
 /** Read SRS data from localStorage. */
 export function getSRS(): SRSData {
-  return readJSON(SRS_KEY, () => ({} as SRSData));
+  return readJSON(SRS_KEY, () => ({}) as SRSData)
 }
 
 /**
@@ -118,12 +118,12 @@ export function getSRS(): SRSData {
  * @param quality - SM-2 quality (0-5)
  */
 export function updateWordSRS(word: string, quality: number): SRSEntry {
-  const srs = getSRS();
-  const entry = srs[word] ?? defaultSRSEntry();
-  const updated = srsReviewWord(entry, quality);
-  srs[word] = updated;
-  writeJSON(SRS_KEY, srs);
-  return updated;
+  const srs = getSRS()
+  const entry = srs[word] ?? defaultSRSEntry()
+  const updated = srsReviewWord(entry, quality)
+  srs[word] = updated
+  writeJSON(SRS_KEY, srs)
+  return updated
 }
 
 /**
@@ -131,16 +131,16 @@ export function updateWordSRS(word: string, quality: number): SRSEntry {
  * Does NOT overwrite existing entries.
  */
 export function ensureWordInSRS(word: string): void {
-  const srs = getSRS();
+  const srs = getSRS()
   if (!(word in srs)) {
-    srs[word] = defaultSRSEntry();
-    writeJSON(SRS_KEY, srs);
+    srs[word] = defaultSRSEntry()
+    writeJSON(SRS_KEY, srs)
   }
 }
 
 /** Read streak data from localStorage. */
 export function getStreak(): StreakData {
-  return readJSON(STREAK_KEY, defaultStreak);
+  return readJSON(STREAK_KEY, defaultStreak)
 }
 
 /**
@@ -150,35 +150,35 @@ export function getStreak(): StreakData {
  * - If last activity was >1 day ago (or never): reset streak to 1
  */
 export function recordActivity(): StreakData {
-  const streak = getStreak();
-  const today = todayLocal();
-  const yesterday = yesterdayLocal();
+  const streak = getStreak()
+  const today = todayLocal()
+  const yesterday = yesterdayLocal()
 
   if (streak.lastActivityDate === today) {
     // Already recorded today, no change
-    return streak;
+    return streak
   }
 
-  let newStreak: number;
+  let newStreak: number
   if (streak.lastActivityDate === yesterday) {
     // Consecutive day
-    newStreak = streak.currentStreak + 1;
+    newStreak = streak.currentStreak + 1
   } else {
     // Gap or first activity
-    newStreak = 1;
+    newStreak = 1
   }
 
   const updated: StreakData = {
     currentStreak: newStreak,
     lastActivityDate: today,
-  };
-  writeJSON(STREAK_KEY, updated);
-  return updated;
+  }
+  writeJSON(STREAK_KEY, updated)
+  return updated
 }
 
 /** Clear all progress data (for testing or account reset). */
 export function clearAllProgress(): void {
-  localStorage.removeItem(PROGRESS_KEY);
-  localStorage.removeItem(SRS_KEY);
-  localStorage.removeItem(STREAK_KEY);
+  localStorage.removeItem(PROGRESS_KEY)
+  localStorage.removeItem(SRS_KEY)
+  localStorage.removeItem(STREAK_KEY)
 }
