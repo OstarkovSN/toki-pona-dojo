@@ -68,7 +68,13 @@ export function useProgress() {
 
   // Mutation to update server progress
   const updateServerMutation = useMutation({
-    mutationFn: (data: Partial<ProgressData> & { srsData?: Record<string, unknown>; streakDays?: number; lastActivity?: string | null }) =>
+    mutationFn: (
+      data: Partial<ProgressData> & {
+        srsData?: Record<string, unknown>
+        streakDays?: number
+        lastActivity?: string | null
+      },
+    ) =>
       ProgressService.updateMyProgress({
         requestBody: {
           completed_units: data.completedUnits,
