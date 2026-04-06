@@ -57,6 +57,136 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
+export const ChatMessageSchema = {
+    properties: {
+        role: {
+            type: 'string',
+            pattern: '^(user|assistant)$',
+            title: 'Role'
+        },
+        content: {
+            type: 'string',
+            maxLength: 5000,
+            minLength: 1,
+            title: 'Content'
+        }
+    },
+    type: 'object',
+    required: ['role', 'content'],
+    title: 'ChatMessage'
+} as const;
+
+export const ChatRequestSchema = {
+    properties: {
+        messages: {
+            items: {
+                '$ref': '#/components/schemas/ChatMessage'
+            },
+            type: 'array',
+            maxItems: 50,
+            minItems: 1,
+            title: 'Messages'
+        },
+        mode: {
+            type: 'string',
+            pattern: '^(free_chat|grammar|translation)$',
+            title: 'Mode',
+            default: 'free_chat'
+        },
+        known_words: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Known Words'
+        },
+        current_unit: {
+            type: 'integer',
+            maximum: 10,
+            minimum: 1,
+            title: 'Current Unit',
+            default: 1
+        },
+        recent_errors: {
+            items: {
+                additionalProperties: true,
+                type: 'object'
+            },
+            type: 'array',
+            title: 'Recent Errors'
+        }
+    },
+    type: 'object',
+    required: ['messages'],
+    title: 'ChatRequest'
+} as const;
+
+export const ExerciseGradeRequestSchema = {
+    properties: {
+        exercise_type: {
+            type: 'string',
+            maxLength: 100,
+            minLength: 1,
+            title: 'Exercise Type'
+        },
+        prompt: {
+            type: 'string',
+            maxLength: 2000,
+            minLength: 1,
+            title: 'Prompt'
+        },
+        user_answer: {
+            type: 'string',
+            maxLength: 2000,
+            minLength: 1,
+            title: 'User Answer'
+        },
+        known_words: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Known Words'
+        }
+    },
+    type: 'object',
+    required: ['exercise_type', 'prompt', 'user_answer'],
+    title: 'ExerciseGradeRequest'
+} as const;
+
+export const ExerciseGradeResponseSchema = {
+    properties: {
+        correct: {
+            type: 'boolean',
+            title: 'Correct'
+        },
+        score: {
+            type: 'number',
+            maximum: 1,
+            minimum: 0,
+            title: 'Score'
+        },
+        feedback: {
+            type: 'string',
+            title: 'Feedback'
+        },
+        suggested_answer: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Suggested Answer'
+        }
+    },
+    type: 'object',
+    required: ['correct', 'score', 'feedback'],
+    title: 'ExerciseGradeResponse'
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -126,6 +256,297 @@ export const PrivateUserCreateSchema = {
     title: 'PrivateUserCreate'
 } as const;
 
+export const ProgressPublicSchema = {
+    properties: {
+        completed_units: {
+            items: {
+                type: 'integer'
+            },
+            type: 'array',
+            title: 'Completed Units',
+            default: []
+        },
+        completed_lessons: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Completed Lessons',
+            default: []
+        },
+        current_unit: {
+            type: 'integer',
+            title: 'Current Unit',
+            default: 1
+        },
+        srs_data: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Srs Data',
+            default: {}
+        },
+        total_correct: {
+            type: 'integer',
+            title: 'Total Correct',
+            default: 0
+        },
+        total_answered: {
+            type: 'integer',
+            title: 'Total Answered',
+            default: 0
+        },
+        streak_days: {
+            type: 'integer',
+            title: 'Streak Days',
+            default: 0
+        },
+        last_activity: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Last Activity'
+        },
+        known_words: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Known Words',
+            default: []
+        },
+        recent_errors: {
+            items: {
+                additionalProperties: true,
+                type: 'object'
+            },
+            type: 'array',
+            title: 'Recent Errors',
+            default: []
+        }
+    },
+    type: 'object',
+    title: 'ProgressPublic',
+    description: 'Response schema for progress endpoints.'
+} as const;
+
+export const ProgressSyncSchema = {
+    properties: {
+        completed_units: {
+            items: {
+                type: 'integer'
+            },
+            type: 'array',
+            title: 'Completed Units',
+            default: []
+        },
+        completed_lessons: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Completed Lessons',
+            default: []
+        },
+        current_unit: {
+            type: 'integer',
+            title: 'Current Unit',
+            default: 1
+        },
+        srs_data: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Srs Data',
+            default: {}
+        },
+        total_correct: {
+            type: 'integer',
+            title: 'Total Correct',
+            default: 0
+        },
+        total_answered: {
+            type: 'integer',
+            title: 'Total Answered',
+            default: 0
+        },
+        streak_days: {
+            type: 'integer',
+            title: 'Streak Days',
+            default: 0
+        },
+        last_activity: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Last Activity'
+        },
+        known_words: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Known Words',
+            default: []
+        },
+        recent_errors: {
+            items: {
+                additionalProperties: true,
+                type: 'object'
+            },
+            type: 'array',
+            title: 'Recent Errors',
+            default: []
+        }
+    },
+    type: 'object',
+    title: 'ProgressSync',
+    description: 'Payload for POST /progress/sync — localStorage data to merge.'
+} as const;
+
+export const ProgressUpdateSchema = {
+    properties: {
+        completed_units: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'integer'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Completed Units'
+        },
+        completed_lessons: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Completed Lessons'
+        },
+        current_unit: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Current Unit'
+        },
+        srs_data: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Srs Data'
+        },
+        total_correct: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Total Correct'
+        },
+        total_answered: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Total Answered'
+        },
+        streak_days: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Streak Days'
+        },
+        last_activity: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Last Activity'
+        },
+        known_words: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Known Words'
+        },
+        recent_errors: {
+            anyOf: [
+                {
+                    items: {
+                        additionalProperties: true,
+                        type: 'object'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recent Errors'
+        }
+    },
+    type: 'object',
+    title: 'ProgressUpdate',
+    description: 'Partial update payload for PUT /progress/me.'
+} as const;
+
 export const TokenSchema = {
     properties: {
         access_token: {
@@ -141,6 +562,48 @@ export const TokenSchema = {
     type: 'object',
     required: ['access_token'],
     title: 'Token'
+} as const;
+
+export const UnitSummarySchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        topic: {
+            type: 'string',
+            title: 'Topic'
+        },
+        words: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Words'
+        },
+        exercise_types: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Exercise Types'
+        },
+        requires: {
+            items: {
+                type: 'integer'
+            },
+            type: 'array',
+            title: 'Requires'
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'topic', 'words', 'exercise_types', 'requires'],
+    title: 'UnitSummary',
+    description: 'Unit metadata returned by the units list endpoint.'
 } as const;
 
 export const UpdatePasswordSchema = {

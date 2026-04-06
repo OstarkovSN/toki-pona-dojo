@@ -9,6 +9,35 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
+export type ChatMessage = {
+    role: string;
+    content: string;
+};
+
+export type ChatRequest = {
+    messages: Array<ChatMessage>;
+    mode?: string;
+    known_words?: Array<(string)>;
+    current_unit?: number;
+    recent_errors?: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+export type ExerciseGradeRequest = {
+    exercise_type: string;
+    prompt: string;
+    user_answer: string;
+    known_words?: Array<(string)>;
+};
+
+export type ExerciseGradeResponse = {
+    correct: boolean;
+    score: number;
+    feedback: string;
+    suggested_answer?: (string | null);
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -29,9 +58,81 @@ export type PrivateUserCreate = {
     is_verified?: boolean;
 };
 
+/**
+ * Response schema for progress endpoints.
+ */
+export type ProgressPublic = {
+    completed_units?: Array<(number)>;
+    completed_lessons?: Array<(string)>;
+    current_unit?: number;
+    srs_data?: {
+        [key: string]: unknown;
+    };
+    total_correct?: number;
+    total_answered?: number;
+    streak_days?: number;
+    last_activity?: (string | null);
+    known_words?: Array<(string)>;
+    recent_errors?: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+/**
+ * Payload for POST /progress/sync — localStorage data to merge.
+ */
+export type ProgressSync = {
+    completed_units?: Array<(number)>;
+    completed_lessons?: Array<(string)>;
+    current_unit?: number;
+    srs_data?: {
+        [key: string]: unknown;
+    };
+    total_correct?: number;
+    total_answered?: number;
+    streak_days?: number;
+    last_activity?: (string | null);
+    known_words?: Array<(string)>;
+    recent_errors?: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+/**
+ * Partial update payload for PUT /progress/me.
+ */
+export type ProgressUpdate = {
+    completed_units?: (Array<(number)> | null);
+    completed_lessons?: (Array<(string)> | null);
+    current_unit?: (number | null);
+    srs_data?: ({
+    [key: string]: unknown;
+} | null);
+    total_correct?: (number | null);
+    total_answered?: (number | null);
+    streak_days?: (number | null);
+    last_activity?: (string | null);
+    known_words?: (Array<(string)> | null);
+    recent_errors?: (Array<{
+    [key: string]: unknown;
+}> | null);
+};
+
 export type Token = {
     access_token: string;
     token_type?: string;
+};
+
+/**
+ * Unit metadata returned by the units list endpoint.
+ */
+export type UnitSummary = {
+    id: number;
+    name: string;
+    topic: string;
+    words: Array<(string)>;
+    exercise_types: Array<(string)>;
+    requires: Array<(number)>;
 };
 
 export type UpdatePassword = {
@@ -90,6 +191,59 @@ export type ValidationError = {
     };
 };
 
+export type ChatChatStreamData = {
+    requestBody: ChatRequest;
+};
+
+export type ChatChatStreamResponse = (unknown);
+
+export type ChatGradeExerciseData = {
+    requestBody: ExerciseGradeRequest;
+};
+
+export type ChatGradeExerciseResponse = (ExerciseGradeResponse);
+
+export type DictionaryListWordsData = {
+    pos?: (string | null);
+    q?: (string | null);
+    wordSet?: (string | null);
+};
+
+export type DictionaryListWordsResponse = (Array<{
+    [key: string]: unknown;
+}>);
+
+export type DictionaryGetWordDetailData = {
+    word: string;
+};
+
+export type DictionaryGetWordDetailResponse = ({
+    [key: string]: unknown;
+});
+
+export type DictionaryListGrammarResponse = ({
+    [key: string]: unknown;
+});
+
+export type DictionaryGetGrammarSectionDetailData = {
+    sectionId: string;
+};
+
+export type DictionaryGetGrammarSectionDetailResponse = ({
+    [key: string]: unknown;
+});
+
+export type LessonsListUnitsResponse = (Array<UnitSummary>);
+
+export type LessonsGetLessonExercisesData = {
+    lessonId: number;
+    unitId: number;
+};
+
+export type LessonsGetLessonExercisesResponse = ({
+    [key: string]: unknown;
+});
+
 export type LoginLoginAccessTokenData = {
     formData: Body_login_login_access_token;
 };
@@ -121,6 +275,20 @@ export type PrivateCreateUserData = {
 };
 
 export type PrivateCreateUserResponse = (UserPublic);
+
+export type ProgressGetMyProgressResponse = (ProgressPublic);
+
+export type ProgressUpdateMyProgressData = {
+    requestBody: ProgressUpdate;
+};
+
+export type ProgressUpdateMyProgressResponse = (ProgressPublic);
+
+export type ProgressSyncProgressData = {
+    requestBody: ProgressSync;
+};
+
+export type ProgressSyncProgressResponse = (ProgressPublic);
 
 export type UsersReadUsersData = {
     limit?: number;
