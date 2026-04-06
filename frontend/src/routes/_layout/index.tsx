@@ -24,7 +24,7 @@ function HomePage() {
         </p>
       </div>
 
-      <div className="flex gap-6">
+      <div className="flex flex-wrap gap-2 md:gap-6">
         <div className="flex flex-col items-center rounded-lg border border-zen-border bg-zen-bg2 px-6 py-3">
           <span className="font-tp text-xl text-zen-teal">
             {progress.knownWords.length}

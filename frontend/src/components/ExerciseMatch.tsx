@@ -117,7 +117,7 @@ export function ExerciseMatch({ exercise, onComplete }: ExerciseProps) {
   return (
     <div>
       <p className="mb-4 font-serif text-lg">{exercise.prompt}</p>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
         <div className="flex flex-col gap-2">
           {leftItems.map((item, i) => (
             <button
