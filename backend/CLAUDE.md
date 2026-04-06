@@ -312,3 +312,14 @@ mocker.patch("app.utils.send_email", ...)
 
 - **`_merge_progress` in Python must guard non-dict entries** — `recent_errors` and `srs_data` come from unvalidated localStorage; iterate with `isinstance(err, dict)` check + `logger.warning` skip to prevent `AttributeError` crashes.
 - **Sync route should wrap `_merge_progress` in try/except** — `_merge_progress` can raise on malformed data; the route handler needs try/except with `session.rollback()` and `logger.exception()` to produce structured 500 errors instead of bare unlogged exceptions.
+
+### Phase 10: Telegram Access Gateway
+
+- **Ruff formatter drops newly added imports** — when editing an existing import line (e.g. adding `col` to `from sqlmodel import Session, select`), the formatter hook reverts it; always use `Write` to rewrite the entire file when the import must survive a hook run.
+- **Conditional router registration breaks monkeypatching** — registering `telegram.router` only when `settings.TG_BOT_TOKEN` is truthy at module load time means monkeypatching `settings` in tests has no effect; always register the router unconditionally and let the handler check `is_telegram_enabled()` at request time.
+- **`invite_token.used_by` FK requires `session.flush()` before assignment** — setting `invite_token.used_by = db_obj.id` without flushing first raises `ForeignKeyViolation` because the user row isn't in the DB yet; call `session.flush()` after `session.add(db_obj)` to satisfy the FK within the same transaction.
+- **Invite-token-gated signup tests need monkeypatched `TG_BOT_TOKEN`** — tests for expired/invalid/used tokens must `monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")` or the gate is inactive and signups succeed unconditionally.
+- **Conftest teardown must delete `InviteToken` before `User`** — `invite_token.used_by` FK to `user.id` causes `ForeignKeyViolation` during session teardown if `User` rows are deleted before `InviteToken` rows; order: `delete(InviteToken)` → `delete(AccessRequest)` → `delete(User)`.
+- **`TG_SUPERUSER_ID` placeholder string breaks `Settings` validation** — `.env.example` placeholder `your-telegram-user-id-here` is a string but field is `int | None`; tests running against a container with stale `.env` will fail at `Settings()` instantiation; override with `-e TG_SUPERUSER_ID="" -e TG_BOT_TOKEN=""` when running tests.
+- **`AccessRequest.created_at.desc()` fails mypy** — mypy sees `created_at` as `datetime`, not an SA column; use `col(AccessRequest.created_at).desc()` (requires `from sqlmodel import col`).
+- **`-> dict` return type fails mypy strict mode** — all route handlers returning plain dicts must use `-> dict[str, Any]` or `-> dict[str, bool]`; bare `dict` triggers `[type-arg]` error.
