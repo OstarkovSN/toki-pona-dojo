@@ -33,8 +33,7 @@ test.describe("Error States", () => {
   }) => {
     await page.setViewportSize({ width: 1280, height: 720 })
 
-    await page.evaluate(() => {
-      localStorage.setItem("access_token", "test-token")
+    await page.addInitScript(() => {
       localStorage.setItem("tp-chat-open", "true")
     })
     await page.goto("/")
@@ -59,8 +58,7 @@ test.describe("Error States", () => {
   test("rate limit error shown when chat returns 429", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 })
 
-    await page.evaluate(() => {
-      localStorage.setItem("access_token", "test-token")
+    await page.addInitScript(() => {
       localStorage.setItem("tp-chat-open", "true")
     })
     await page.goto("/")
