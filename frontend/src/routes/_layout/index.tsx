@@ -24,28 +24,26 @@ function HomePage() {
         </p>
       </div>
 
-      {completedCount > 0 && (
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center rounded-lg border border-zen-border bg-zen-bg2 px-6 py-3">
-            <span className="font-tp text-xl text-zen-teal">
-              {progress.knownWords.length}
-            </span>
-            <span className="text-xs text-zen-text3">words known</span>
-          </div>
-          <div className="flex flex-col items-center rounded-lg border border-zen-border bg-zen-bg2 px-6 py-3">
-            <span className="font-tp text-xl text-zen-teal">
-              {progress.completedLessons.length}
-            </span>
-            <span className="text-xs text-zen-text3">lessons done</span>
-          </div>
-          <div className="flex flex-col items-center rounded-lg border border-zen-border bg-zen-bg2 px-6 py-3">
-            <span className="font-tp text-xl text-zen-teal">
-              {streak.currentStreak}
-            </span>
-            <span className="text-xs text-zen-text3">day streak</span>
-          </div>
+      <div className="flex gap-6">
+        <div className="flex flex-col items-center rounded-lg border border-zen-border bg-zen-bg2 px-6 py-3">
+          <span className="font-tp text-xl text-zen-teal">
+            {progress.knownWords.length}
+          </span>
+          <span className="text-xs text-zen-text3">words known</span>
         </div>
-      )}
+        <div className="flex flex-col items-center rounded-lg border border-zen-border bg-zen-bg2 px-6 py-3">
+          <span className="font-tp text-xl text-zen-teal">
+            {progress.completedLessons.length}
+          </span>
+          <span className="text-xs text-zen-text3">lessons done</span>
+        </div>
+        <div className="flex flex-col items-center rounded-lg border border-zen-border bg-zen-bg2 px-6 py-3">
+          <span className="font-tp text-xl text-zen-teal">
+            {streak.currentStreak}
+          </span>
+          <span className="text-xs text-zen-text3">day streak</span>
+        </div>
+      </div>
 
       <SkillTree
         completedUnits={progress.completedUnits}
