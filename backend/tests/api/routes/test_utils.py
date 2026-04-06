@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.core.config import settings
@@ -56,9 +57,7 @@ def test_test_email_unauthenticated(client: TestClient) -> None:
 def test_test_email_send_failure_propagates_or_returns_error(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    """send_email raising does not silently swallow the error."""
-    from unittest.mock import patch
-
+    """send_email raising propagates through TestClient (not silently swallowed)."""
     stub_email_data = EmailData(html_content="<p>Test</p>", subject="Test email")
     with (
         patch(
@@ -70,14 +69,9 @@ def test_test_email_send_failure_propagates_or_returns_error(
             side_effect=Exception("SMTP connection refused"),
         ),
     ):
-        try:
-            r = client.post(
+        with pytest.raises(Exception, match="SMTP connection refused"):
+            client.post(
                 f"{settings.API_V1_STR}/utils/test-email/",
                 params={"email_to": "test@example.com"},
                 headers=superuser_token_headers,
             )
-            # If no exception raised, must be an error response (not 200 silent failure)
-            assert r.status_code >= 400
-        except Exception:
-            # TestClient re-raised the unhandled server exception — acceptable behavior
-            pass

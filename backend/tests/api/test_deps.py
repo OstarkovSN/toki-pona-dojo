@@ -121,10 +121,10 @@ def test_optional_auth_invalid_token_returns_anonymous(client: TestClient) -> No
 def test_non_superuser_cannot_access_superuser_endpoint(
     client: TestClient, normal_user_token_headers: dict[str, str]
 ) -> None:
-    """gap-30: A regular user accessing a superuser-only endpoint gets 403."""
-    r = client.post(
-        f"{settings.API_V1_STR}/utils/test-email/",
-        params={"email_to": "test@example.com"},
+    """gap-30: get_current_active_superuser raises 403 for regular users across routes."""
+    # Use GET /users/ which is also superuser-only (different from test_utils.py which uses test-email)
+    r = client.get(
+        f"{settings.API_V1_STR}/users/",
         headers=normal_user_token_headers,
     )
     assert r.status_code == 403

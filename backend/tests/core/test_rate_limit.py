@@ -17,14 +17,12 @@ def reset_rate_limit_storage() -> None:
 
 
 def test_limiter_is_configured() -> None:
-    """Rate limiter instance is created and has expected attributes."""
-    assert limiter is not None
-    # The limiter should have a key function
-    assert (
-        hasattr(limiter, "_key_func")
-        or hasattr(limiter, "key_func")
-        or callable(limiter)
-    )
+    """Rate limiter is a Limiter instance configured with get_remote_address key function."""
+    from slowapi import Limiter
+    from slowapi.util import get_remote_address
+
+    assert isinstance(limiter, Limiter)
+    assert limiter._key_func is get_remote_address
 
 
 def test_rate_limit_chat_endpoint_returns_200(client: TestClient) -> None:

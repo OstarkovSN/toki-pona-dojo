@@ -24,32 +24,22 @@ def test_get_password_hash_produces_argon2_hash() -> None:
 def test_verify_password_correct_password_returns_true() -> None:
     """verify_password returns True for the correct plain password."""
     hashed = get_password_hash("correcthorse")
-    result = verify_password("correcthorse", hashed)
-    # verify_password returns tuple[bool, str | None] (pwdlib pattern)
-    if isinstance(result, tuple):
-        assert result[0] is True
-    else:
-        assert result is True
+    ok, _ = verify_password("correcthorse", hashed)
+    assert ok is True
 
 
 def test_verify_password_wrong_password_returns_false() -> None:
     """verify_password returns False for the wrong password."""
     hashed = get_password_hash("correcthorse")
-    result = verify_password("wrongpassword", hashed)
-    if isinstance(result, tuple):
-        assert result[0] is False
-    else:
-        assert result is False
+    ok, _ = verify_password("wrongpassword", hashed)
+    assert ok is False
 
 
 def test_verify_password_different_passwords_dont_match() -> None:
     """Two different passwords produce different hashes that don't cross-verify."""
     hash2 = get_password_hash("password_b")
-    result = verify_password("password_a", hash2)
-    if isinstance(result, tuple):
-        assert result[0] is False
-    else:
-        assert result is False
+    ok, _ = verify_password("password_a", hash2)
+    assert ok is False
 
 
 def test_create_access_token_is_decodable() -> None:

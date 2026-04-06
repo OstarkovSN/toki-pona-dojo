@@ -174,6 +174,9 @@ def test_lesson_word_bank_skips_malformed_entries(client: TestClient) -> None:
         "reverse_build": [],
         "word_building": [],
         "stories": [],
+        "flashcards": [],
+        "sentence_quiz": {"tp2en": [], "en2tp": []},
+        "sitelen_pona": [],
     }
 
     with patch(

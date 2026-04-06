@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test"
 
 test.describe("Dark Mode", () => {
+  test.use({ storageState: { cookies: [], origins: [] } })
   test("theme toggle button is visible", async ({ page }) => {
     await page.goto("/")
     await expect(page.getByTestId("theme-button")).toBeVisible()
