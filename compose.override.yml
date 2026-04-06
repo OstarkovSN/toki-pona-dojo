@@ -47,6 +47,10 @@ services:
       # CrowdSec ForwardAuth middleware
       - traefik.http.middlewares.crowdsec.forwardauth.address=http://crowdsec-bouncer:8080/api/v1/forwardAuth
       - traefik.http.middlewares.crowdsec.forwardauth.trustForwardHeader=true
+      # Traefik rate limit middleware (defense-in-depth, catches floods before app layer)
+      - traefik.http.middlewares.rate-limit.ratelimit.average=100
+      - traefik.http.middlewares.rate-limit.ratelimit.burst=50
+      - traefik.http.middlewares.rate-limit.ratelimit.period=1s
     networks:
       - traefik-public
       - default

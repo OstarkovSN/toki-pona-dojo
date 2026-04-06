@@ -35,12 +35,12 @@ services:
       - traefik.constraint-label=traefik-public
       - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.rule=Host(`adminer.${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.entrypoints=http
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.middlewares=crowdsec,https-redirect
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.middlewares=crowdsec,rate-limit,https-redirect
       - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.rule=Host(`adminer.${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.entrypoints=https
       - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls.certresolver=le
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.middlewares=crowdsec
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.middlewares=crowdsec,rate-limit
       - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
 
   prestart:
@@ -135,10 +135,10 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-https.entrypoints=https
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-https.tls=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-https.tls.certresolver=le
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-https.middlewares=crowdsec
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-https.middlewares=crowdsec,rate-limit
 
       # Enable redirection for HTTP and HTTPS
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.middlewares=crowdsec,https-redirect
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.middlewares=crowdsec,rate-limit,https-redirect
 
   frontend:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
@@ -166,10 +166,10 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.entrypoints=https
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls.certresolver=le
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.middlewares=crowdsec
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.middlewares=crowdsec,rate-limit
 
       # Enable redirection for HTTP and HTTPS
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=crowdsec,https-redirect
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=crowdsec,rate-limit,https-redirect
 
   # =========================================================================
   # LangFuse v3 --- LLM observability
