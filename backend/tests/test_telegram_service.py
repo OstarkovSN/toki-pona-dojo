@@ -80,7 +80,7 @@ def test_invite_token_expiry(db: Session) -> None:
     db.commit()
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_handle_start_new_user_creates_request_and_notifies_superuser(
     db: Session, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -124,7 +124,7 @@ async def test_handle_start_new_user_creates_request_and_notifies_superuser(
     db.commit()
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_handle_start_pending_user_gets_pending_message(
     db: Session, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -163,7 +163,7 @@ async def test_handle_start_pending_user_gets_pending_message(
     db.commit()
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_handle_callback_approve_creates_token_and_notifies_user(
     db: Session, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -223,7 +223,7 @@ async def test_handle_callback_approve_creates_token_and_notifies_user(
     db.commit()
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_handle_callback_reject_updates_status_and_notifies_user(
     db: Session, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -23,8 +23,9 @@ api_router.include_router(lessons.router)
 api_router.include_router(chat.router)
 api_router.include_router(progress.router)
 api_router.include_router(config.router)
-# Telegram webhook route is always registered; the handler returns 404 when bot
-# is not configured (is_telegram_enabled() check inside the handler).
+# Telegram router always registered; handler returns 404 when bot is not configured.
+# Unconditional registration is required for testability (route must exist at
+# import time; monkeypatching settings after import can't retroactively add routes).
 api_router.include_router(telegram.router)
 
 if settings.ENVIRONMENT == "local":
