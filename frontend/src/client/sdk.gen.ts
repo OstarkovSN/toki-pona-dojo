@@ -355,3 +355,89 @@ export class UtilsService {
         });
     }
 }
+
+export class ProgressService {
+  public static getMyProgress(): CancelablePromise<{
+    completed_units: number[];
+    completed_lessons: string[];
+    current_unit: number;
+    srs_data: Record<string, unknown>;
+    total_correct: number;
+    total_answered: number;
+    streak_days: number;
+    last_activity: string | null;
+    known_words: string[];
+    recent_errors: Array<Record<string, unknown>>;
+  }> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/progress/me",
+    });
+  }
+
+  public static updateMyProgress(data: {
+    requestBody: {
+      completed_units?: number[] | null;
+      completed_lessons?: string[] | null;
+      current_unit?: number | null;
+      srs_data?: Record<string, unknown> | null;
+      total_correct?: number | null;
+      total_answered?: number | null;
+      streak_days?: number | null;
+      last_activity?: string | null;
+      known_words?: string[] | null;
+      recent_errors?: Array<Record<string, unknown>> | null;
+    };
+  }): CancelablePromise<{
+    completed_units: number[];
+    completed_lessons: string[];
+    current_unit: number;
+    srs_data: Record<string, unknown>;
+    total_correct: number;
+    total_answered: number;
+    streak_days: number;
+    last_activity: string | null;
+    known_words: string[];
+    recent_errors: Array<Record<string, unknown>>;
+  }> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/v1/progress/me",
+      body: data.requestBody,
+      mediaType: "application/json",
+    });
+  }
+
+  public static syncProgress(data: {
+    requestBody: {
+      completed_units?: number[];
+      completed_lessons?: string[];
+      current_unit?: number;
+      srs_data?: Record<string, unknown>;
+      total_correct?: number;
+      total_answered?: number;
+      streak_days?: number;
+      last_activity?: string | null;
+      known_words?: string[];
+      recent_errors?: Array<Record<string, unknown>>;
+    };
+  }): CancelablePromise<{
+    completed_units: number[];
+    completed_lessons: string[];
+    current_unit: number;
+    srs_data: Record<string, unknown>;
+    total_correct: number;
+    total_answered: number;
+    streak_days: number;
+    last_activity: string | null;
+    known_words: string[];
+    recent_errors: Array<Record<string, unknown>>;
+  }> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/progress/sync",
+      body: data.requestBody,
+      mediaType: "application/json",
+    });
+  }
+}

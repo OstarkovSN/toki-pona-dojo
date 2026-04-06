@@ -45,8 +45,8 @@ export interface DueWord {
 // --- Hook ---
 
 export function useSRS() {
-  // Subscribe to localStorage changes for re-renders.
-  const _version = useSyncExternalStore(subscribeSRS, getSRSSnapshot)
+  // Subscribe to localStorage changes for re-renders
+  useSyncExternalStore(subscribeSRS, getSRSSnapshot)
 
   const srsData: SRSData = getSRS()
 
