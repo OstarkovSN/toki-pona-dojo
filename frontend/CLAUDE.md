@@ -152,7 +152,14 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 
 ## Phase 10 Gotchas
 
+- **`ChatMessage` renders a 3-dot pulse animation inline when `!content && isStreaming`** — a dedicated `ChatTypingIndicator` component replaced the early-render path but the inline dots remain for mid-stream cases (content exists but more is coming). No need to manage two separate animations.
 - **`ChatPanel` must render outside `SidebarInset` on mobile** — `ChatPanel` handles its own mobile responsiveness (floating button + bottom Sheet via `useIsMobile`); placing it inside `SidebarInset` causes the Sheet to clip behind the sidebar overlay due to z-index stacking. Render it as a peer to `SidebarInset`, not a child.
+- **`useProgress` exposes `isLoading` from TanStack Query server fetch** — home page gates `SkillTree` behind `SkillTreeSkeleton` using this flag alongside local localStorage state; allows lazy-loading the skill tree.
+- **Dictionary page embeds skeleton inside layout preserving sticky search** — `DictionarySkeleton` is rendered inline after filters (line 162 in `index.tsx`), not as an early return; keeps sticky search bar, POS filters, and alphabet buttons visible during loading.
+- **Grammar modifiers page uses fallback data for graceful degradation** — `FALLBACK_SECTIONS`, `FALLBACK_COMPARISONS`, `FALLBACK_QUIZ` constants mean content renders immediately even when API fails; the `isLoading && <GrammarSkeleton />` guard only fires during the brief fetch, not on error.
+- **`ExerciseConceptBuild` and `ExerciseFreeCompose` share `GradingSpinner`** — replaced identical inline grading spinners with a single shared component in `frontend/src/components/Common/GradingSpinner.tsx`.
+- **`dictionary/$word.tsx` has a bespoke inline skeleton** — left as-is since the word detail layout doesn't match `DictionarySkeleton`'s grid shape; not extracted to avoid over-engineering.
+- **`grammar/particles.tsx` uses only static hardcoded data** — no async loading, no skeleton needed; purely frontend-rendered content.
 - **`tsconfig.build.json` excludes unit tests in `src/**/__tests__/**`** — the exclude list already includes these to prevent test-only imports (e.g. `vitest`) from appearing in production builds; this was configured during setup.
 - **SkillTree uses dual render for desktop vs mobile** — desktop renders the tree layout; mobile hides it and renders a flat list instead (both via `md:` breakpoint toggle). Parameterizing the existing tree was less clean than maintaining two separate render paths.
 - **Dictionary search bar sticky offset depends on header height** — use `top-14` on mobile (h-14 header) and `top-16` on desktop (h-16 header); mismatch causes content to scroll under the bar.
