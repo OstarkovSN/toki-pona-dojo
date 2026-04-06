@@ -321,10 +321,12 @@ def test_register_user(client: TestClient, db: Session) -> None:
     password = random_lower_string()
     full_name = random_lower_string()
     data = {"email": username, "password": password, "full_name": full_name}
-    r = client.post(
-        f"{settings.API_V1_STR}/users/signup",
-        json=data,
-    )
+    # Disable invite gate so signup works without a Telegram invite token
+    with patch.object(settings, "TG_BOT_TOKEN", ""):
+        r = client.post(
+            f"{settings.API_V1_STR}/users/signup",
+            json=data,
+        )
     assert r.status_code == 200
     created_user = r.json()
     assert created_user["email"] == username
@@ -347,10 +349,12 @@ def test_register_user_already_exists_error(client: TestClient) -> None:
         "password": password,
         "full_name": full_name,
     }
-    r = client.post(
-        f"{settings.API_V1_STR}/users/signup",
-        json=data,
-    )
+    # Disable invite gate so the duplicate-email check (not the token check) triggers
+    with patch.object(settings, "TG_BOT_TOKEN", ""):
+        r = client.post(
+            f"{settings.API_V1_STR}/users/signup",
+            json=data,
+        )
     assert r.status_code == 400
     assert r.json()["detail"] == "The user with this email already exists in the system"
 

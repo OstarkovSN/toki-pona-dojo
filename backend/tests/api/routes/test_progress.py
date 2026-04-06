@@ -1,6 +1,8 @@
 from fastapi.testclient import TestClient
+from sqlmodel import Session, select
 
 from app.core.config import settings
+from app.models import User, UserProgress
 
 
 def test_get_progress_creates_default(
@@ -116,9 +118,25 @@ def test_update_progress_srs_data(
 
 
 def test_sync_progress_empty_server(
-    client: TestClient, superuser_token_headers: dict[str, str]
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    """POST /progress/sync with empty server record should adopt local data."""
+    """POST /progress/sync with empty server record should adopt local data.
+
+    Clears the superuser's progress before running to avoid interference from
+    other sync tests that may have run earlier (including from the tests/ mirror).
+    """
+    # Delete superuser's existing progress so the server starts fresh
+    superuser = db.exec(
+        select(User).where(User.email == settings.FIRST_SUPERUSER)
+    ).first()
+    if superuser:
+        existing = db.exec(
+            select(UserProgress).where(UserProgress.user_id == superuser.id)
+        ).first()
+        if existing:
+            db.delete(existing)
+            db.commit()
+
     local_data = {
         "completed_units": [1, 2],
         "completed_lessons": ["1:1", "1:2", "2:1"],

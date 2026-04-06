@@ -5,13 +5,28 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
+from app.core.rate_limit import limiter
 from app.models import AccessRequest, InviteToken
 
 
-def _create_valid_token(db: Session) -> str:
-    """Helper: create an access request + valid invite token, return token string."""
+@pytest.fixture(autouse=True)
+def reset_rate_limiter() -> None:
+    """Reset the in-memory rate limiter before each test to avoid cross-test interference."""
+    limiter._storage.reset()  # type: ignore[union-attr]
+
+
+def _create_valid_token(db: Session) -> tuple[str, AccessRequest, InviteToken]:
+    """Helper: create an access request + valid invite token.
+
+    Returns (token_string, access_request, invite_token).
+    Callers are responsible for cleaning up the returned objects.
+    Uses a unique tg_user_id per call to avoid collisions with other tests.
+    """
+    import secrets as _secrets
+
     ar = AccessRequest(
-        telegram_user_id=42,
+        # Use a random user id to avoid conflicts with telegram service tests
+        telegram_user_id=900000 + int(_secrets.token_hex(2), 16),
         telegram_first_name="Invitee",
         status="approved",
     )
@@ -23,13 +38,19 @@ def _create_valid_token(db: Session) -> str:
     db.add(tok)
     db.commit()
     db.refresh(tok)
-    return tok.token
+    return tok.token, ar, tok
 
 
-def _create_expired_token(db: Session) -> str:
-    """Helper: create an expired invite token."""
+def _create_expired_token(db: Session) -> tuple[str, AccessRequest, InviteToken]:
+    """Helper: create an expired invite token.
+
+    Returns (token_string, access_request, invite_token).
+    Callers are responsible for cleaning up the returned objects.
+    """
+    import secrets as _secrets
+
     ar = AccessRequest(
-        telegram_user_id=43,
+        telegram_user_id=800000 + int(_secrets.token_hex(2), 16),
         telegram_first_name="Expired",
         status="approved",
     )
@@ -44,12 +65,12 @@ def _create_expired_token(db: Session) -> str:
     db.add(tok)
     db.commit()
     db.refresh(tok)
-    return tok.token
+    return tok.token, ar, tok
 
 
 def test_signup_with_valid_token(client: TestClient, db: Session) -> None:
     """Signup succeeds with a valid, unused, non-expired token."""
-    token_str = _create_valid_token(db)
+    token_str, ar, tok = _create_valid_token(db)
     response = client.post(
         "/api/v1/users/signup",
         json={
@@ -63,6 +84,7 @@ def test_signup_with_valid_token(client: TestClient, db: Session) -> None:
     data = response.json()
     assert "id" in data
     assert data["email"].startswith("invite-")
+    # AR is cleaned up by conftest teardown (InviteToken → AccessRequest order)
 
 
 def test_signup_without_token_fails_when_bot_configured(
@@ -93,7 +115,7 @@ def test_signup_with_expired_token_fails(
 
     monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
 
-    token_str = _create_expired_token(db)
+    token_str, ar, tok = _create_expired_token(db)
     response = client.post(
         "/api/v1/users/signup",
         json={
@@ -105,6 +127,9 @@ def test_signup_with_expired_token_fails(
     )
     assert response.status_code == 400
     assert "Invalid or expired" in response.json()["detail"]
+    db.delete(tok)
+    db.delete(ar)
+    db.commit()
 
 
 def test_signup_with_used_token_fails(
@@ -115,7 +140,7 @@ def test_signup_with_used_token_fails(
 
     monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
 
-    token_str = _create_valid_token(db)
+    token_str, ar, tok = _create_valid_token(db)
     response1 = client.post(
         "/api/v1/users/signup",
         json={
@@ -138,6 +163,7 @@ def test_signup_with_used_token_fails(
     )
     assert response2.status_code == 400
     assert "Invalid or expired" in response2.json()["detail"]
+    # AR and tok cleaned up by conftest teardown
 
 
 def test_signup_with_invalid_token_fails(
@@ -163,18 +189,24 @@ def test_signup_with_invalid_token_fails(
 
 def test_validate_token_valid(client: TestClient, db: Session) -> None:
     """GET /validate-token returns valid=true for a fresh token."""
-    token_str = _create_valid_token(db)
+    token_str, ar, tok = _create_valid_token(db)
     response = client.get(f"/api/v1/users/validate-token?token={token_str}")
     assert response.status_code == 200
     assert response.json()["valid"] is True
+    db.delete(tok)
+    db.delete(ar)
+    db.commit()
 
 
 def test_validate_token_expired(client: TestClient, db: Session) -> None:
     """GET /validate-token returns valid=false for an expired token."""
-    token_str = _create_expired_token(db)
+    token_str, ar, tok = _create_expired_token(db)
     response = client.get(f"/api/v1/users/validate-token?token={token_str}")
     assert response.status_code == 200
     assert response.json()["valid"] is False
+    db.delete(tok)
+    db.delete(ar)
+    db.commit()
 
 
 def test_validate_token_nonexistent(client: TestClient) -> None:

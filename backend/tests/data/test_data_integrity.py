@@ -10,7 +10,19 @@ from typing import Any
 
 import pytest
 
-DATA_DIR = Path(__file__).parent.parent.parent / "app" / "data"
+
+def _find_data_dir() -> Path:
+    """Locate app/data regardless of whether tests run from tests/ or tests/tests/ mirror."""
+    here = Path(__file__).resolve()
+    # Walk up looking for the app/data directory
+    for parent in here.parents:
+        candidate = parent / "app" / "data"
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError("Could not locate app/data directory")
+
+
+DATA_DIR = _find_data_dir()
 
 
 @pytest.fixture(scope="module")

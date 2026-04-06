@@ -1,6 +1,7 @@
 """Tests for LangFuse tracing module --- graceful degradation is the key property."""
 
 import os
+import sys
 from unittest.mock import MagicMock, patch
 
 from app.services.tracing import (
@@ -9,6 +10,12 @@ from app.services.tracing import (
     get_langfuse_config,
     get_langfuse_handler,
 )
+
+# Langfuse may not be installed in this environment; stub it out so patch() can target it.
+if "langfuse" not in sys.modules:
+    _langfuse_stub = MagicMock()
+    sys.modules["langfuse"] = _langfuse_stub
+    sys.modules["langfuse.callback"] = _langfuse_stub.callback
 
 
 class TestConfigureLangfuseEnv:
