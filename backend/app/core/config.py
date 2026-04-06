@@ -103,8 +103,14 @@ class Settings(BaseSettings):
     CHAT_FREE_DAILY_LIMIT: int = 20
     CHAT_FREE_MAX_TOKENS: int = 500
 
-    # Telegram bot (optional, used in Phase 5)
+    # Telegram bot settings
     TG_BOT_TOKEN: str | None = None
+    TG_SUPERUSER_ID: int | None = None
+    TG_BOT_USERNAME: str | None = None
+    # Webhook secret for validating incoming Telegram updates.
+    # If unset, one is generated at startup — but this only works in
+    # single-worker mode. For multi-worker deployments, set explicitly.
+    TG_WEBHOOK_SECRET: str | None = None
 
     # LangFuse observability (wired in Phase 4)
     LANGFUSE_PUBLIC_KEY: str = ""
