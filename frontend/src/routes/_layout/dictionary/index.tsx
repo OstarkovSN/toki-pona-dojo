@@ -83,15 +83,17 @@ function DictionaryPage() {
         <p className="text-sm text-zen-text3">all words</p>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zen-text3" />
-        <Input
-          placeholder="Search words or definitions..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 bg-zen-bg2 border-zen-border"
-          data-testid="dictionary-search"
-        />
+      <div className="sticky top-14 md:top-16 z-10 -mx-4 md:mx-0 bg-background px-4 md:px-0 py-2 md:py-0">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zen-text3" />
+          <Input
+            placeholder="Search words or definitions..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10 bg-zen-bg2 border-zen-border text-base md:text-sm"
+            data-testid="dictionary-search"
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -176,7 +178,7 @@ function DictionaryPage() {
               }}
             >
               <h2 className="font-tp mb-3 text-lg text-zen-text3">{letter}</h2>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
                 {grouped[letter].map((word) => (
                   <WordCard key={word.word} data={word} />
                 ))}

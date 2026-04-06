@@ -46,7 +46,7 @@ export function ExerciseMultiChoice({ exercise, onComplete }: ExerciseProps) {
               type="button"
               variant={variant}
               className={cn(
-                "w-full justify-start text-left py-4 h-auto",
+                "w-full justify-start text-left py-4 h-auto min-h-12 md:min-h-10 text-base md:text-sm",
                 extraClasses,
               )}
               disabled={answered && !isSelected && !isCorrectOption}

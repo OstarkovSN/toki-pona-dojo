@@ -31,8 +31,8 @@ const ROLE_LABELS: Record<WordRole, string> = {
 
 export function GrammarChain({ words, meaning }: GrammarChainProps) {
   return (
-    <div className="my-4 rounded-lg border border-zen-border bg-zen-bg2 p-4">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="my-4 rounded-lg border border-zen-border bg-zen-bg2 p-4 overflow-x-auto">
+      <div className="flex flex-wrap items-center gap-2 min-w-0">
         {words.map((w, i) => (
           <div key={i} className="flex flex-col items-center gap-1">
             <span

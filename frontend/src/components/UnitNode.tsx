@@ -24,7 +24,7 @@ export function UnitNode({
   const nodeContent = (
     <div
       className={cn(
-        "group relative flex w-56 flex-col items-center rounded-xl border-2 px-4 py-5 text-center transition-all duration-200",
+        "group relative flex w-full md:w-56 flex-col items-center rounded-xl border-2 px-4 py-5 text-center transition-all duration-200",
         status === "locked" &&
           "border-zen-border bg-zen-bg2 opacity-60 cursor-not-allowed",
         status === "available" &&

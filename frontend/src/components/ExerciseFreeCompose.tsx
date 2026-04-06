@@ -63,7 +63,7 @@ export function ExerciseFreeCompose({ exercise, onComplete }: ExerciseProps) {
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
         placeholder="Type your answer in toki pona..."
-        className="mb-4 font-mono"
+        className="mb-4 font-mono text-base md:text-sm"
         disabled={submitted || gradeMutation.isPending}
         rows={3}
       />

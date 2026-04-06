@@ -365,8 +365,8 @@ function GrammarModifiersPage() {
       {comparisons.map((comp, ci) => (
         <section key={ci} className="space-y-3">
           <h2 className="font-tp text-xl">{comp.title}</h2>
-          <div className="rounded-lg border border-zen-border overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="rounded-lg border border-zen-border overflow-x-auto">
+            <table className="w-full text-sm min-w-[400px]">
               <thead>
                 <tr className="bg-zen-bg2">
                   <th className="font-label px-4 py-2 text-left text-zen-text3">
