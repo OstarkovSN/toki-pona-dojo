@@ -323,3 +323,20 @@ mocker.patch("app.utils.send_email", ...)
 - **`TG_SUPERUSER_ID` placeholder string breaks `Settings` validation** — `.env.example` placeholder `your-telegram-user-id-here` is a string but field is `int | None`; tests running against a container with stale `.env` will fail at `Settings()` instantiation; override with `-e TG_SUPERUSER_ID="" -e TG_BOT_TOKEN=""` when running tests.
 - **`AccessRequest.created_at.desc()` fails mypy** — mypy sees `created_at` as `datetime`, not an SA column; use `col(AccessRequest.created_at).desc()` (requires `from sqlmodel import col`).
 - **`-> dict` return type fails mypy strict mode** — all route handlers returning plain dicts must use `-> dict[str, Any]` or `-> dict[str, bool]`; bare `dict` triggers `[type-arg]` error.
+
+### Phase 10: Backend Test Infrastructure
+
+- **`tests/tests/` mirror runs stale copies** — when `docker cp backend/tests backend:/app/backend/tests` is used, a nested `tests/tests/` mirror appears. Fixed files must be copied to BOTH `tests/<path>` and `tests/tests/<path>` explicitly; whole-directory re-copy doesn't reliably overwrite individual files.
+- **Actual API paths for lessons and progress:**
+  - `GET /api/v1/lessons/units` — full skill tree, returns 10 units
+  - `GET /api/v1/lessons/units/{unit_id}/lessons/{lesson_id}` — lesson exercises (lesson_id is not validated, just echoed back)
+  - `GET/PUT /api/v1/progress/me` — get/update authenticated user's progress
+  - `POST /api/v1/progress/sync` — merge localStorage progress (max/union strategy)
+- **`lesson_id` path param is not validated** — the lesson endpoint accepts any integer; only `unit_id` is checked against the data. Tests should use `lesson_id=1` as a safe placeholder.
+- **Signup returns 400 when `TG_BOT_TOKEN` is set** — invite gate is active; `test_register_user` must `patch.object(settings, "TG_BOT_TOKEN", "")` to bypass the gate. Same for `test_register_user_already_exists_error`.
+- **`_create_valid_token()` in `test_invite_flow.py` left AR with `telegram_user_id=42` as "approved"** — `handle_start` for the same user 42 later found the "approved" record and skipped creating a new pending one, causing `test_handle_start_new_user` to fail. Fix: use randomized user IDs in `_create_valid_token` and `_create_expired_token`, and explicitly clean up created records.
+- **Rate limiter (5/minute) for `/validate-token` exhausted by mirrored tests** — both `tests/` and `tests/tests/` call validate-token multiple times in sequence, exceeding the per-IP limit. Fix: add `autouse=True` fixture that calls `limiter._storage.reset()` before each test in `test_invite_flow.py`. The storage is `limits.storage.memory.MemoryStorage` which has a `reset()` method.
+- **`test_sync_progress_empty_server` uses superuser progress which accumulates across test runs** — the mirror's `test_sync_progress_merge_union` sets superuser `completed_units=[1,2,3]` before the mirror's `test_sync_progress_empty_server` runs sync with `[1,2]`, getting `[1,2,3]` back (union). Fix: explicitly delete the superuser's `UserProgress` row before the "empty server" test, using `db` session fixture.
+- **Langfuse not installed in the test container** — `patch("langfuse.Langfuse", ...)` fails with `ModuleNotFoundError`. Fix: stub `sys.modules["langfuse"]` with `MagicMock()` at module load time if `langfuse` is not installed. Needs to be done before the patch context manager runs.
+- **`test_data_integrity.py` path breaks in `tests/tests/` mirror** — `Path(__file__).parent.parent.parent / "app" / "data"` resolves correctly from `tests/data/` but resolves to `tests/app/data` from `tests/tests/data/`. Fix: use a helper that walks up parents looking for a directory where `app/data` exists.
+- **conftest `db` fixture is `session`-scoped** — a single DB session is shared across all tests. Tests that mutate shared resources (superuser's UserProgress, AccessRequests) must clean up explicitly to avoid cross-test interference.

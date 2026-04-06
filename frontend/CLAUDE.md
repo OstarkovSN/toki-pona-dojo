@@ -173,3 +173,16 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **`ExerciseFreeCompose` `onError` already calls `onComplete` with `correct: false` to advance the exercise** — the `ErrorBanner` in the error slot (`submitted && gradeMutation.isError`) is a secondary display after progression, not a blocking error screen.
 - **`ErrorBanner` in `ChatPanel` requires `useNavigate` from `@tanstack/react-router` (not `react-router-dom`)** — import path is `@tanstack/react-router`.
 - **Dictionary `$word.tsx` error state intentionally kept as custom "ala / word not found" UI** — using `ErrorBanner type="api-unreachable"` there would be misleading since the error is often a 404 (word doesn't exist), not a connectivity failure.
+
+### Phase 10: E2E Testing Patterns
+
+- **Most spec files already existed** — before adding new spec files, check `frontend/tests/` for existing: `skill-tree.spec.ts`, `lesson-exercises.spec.ts`, `dictionary.spec.ts`, `chat-panel.spec.ts`, `navigation.spec.ts`, `grammar.spec.ts`, `progress.spec.ts`, `user-settings.spec.ts`, `login.spec.ts`, `invite-flow.spec.ts`, `auth.setup.ts`.
+- **`ErrorBanner` uses dynamic testid** — `ErrorBanner` already uses `data-testid={`error-banner-${type}`}`, so `error-banner-llm-unavailable`, `error-banner-rate-limit`, `error-banner-api-unreachable` are generated dynamically from the `type` prop. No changes needed.
+- **`UnitNode` testid uses unitNumber (1–10), not array index** — new testids are `skill-tree-node-1` through `skill-tree-node-10`, NOT `skill-tree-node-0` through `skill-tree-node-9`. Also add `data-state={status}` on the inner div.
+- **`ChatMessage` testids by role** — added `data-testid="chat-message-user"` and `data-testid="chat-message-bot"` (via conditional `isUser`).
+- **WordCard testid includes the word itself** — `data-testid={`word-card-${data.word}`}` on the Link element for easy filtering in tests.
+- **ChatPanel mobile uses floating button and bottom Sheet** — mobile floating button uses `data-testid="mobile-chat-button"`, Sheet uses `data-testid="mobile-chat-sheet"`, textarea uses `data-testid="chat-input"`.
+- **Dictionary empty state testid** — `data-testid="dictionary-no-results"` on the "ala" empty state div.
+- **Grammar page does not need skeleton tests** — the grammar/modifiers page renders `FALLBACK_SECTIONS` synchronously. Even with a slowed API route, the skeleton may not appear because fallback data renders immediately. Loading-state tests for grammar should only assert page content renders, not that the skeleton appears.
+- **ChatContext uses `"tp-chat-open"` localStorage key** — to force mobile floating button visible in tests, use `localStorage.setItem("tp-chat-open", "false")` in `addInitScript`.
+- **Biome auto-formats test files on `bun run lint`** — after writing new test files, run lint to auto-fix import ordering and rename unused variables with `_` prefix (e.g., `_skeleton`). Always run lint after test creation.
