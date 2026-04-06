@@ -125,6 +125,13 @@ async def handle_start(session: Session, message: dict[str, Any]) -> None:
     last_name: str | None = from_user.get("last_name")
     username: str | None = from_user.get("username")
 
+    if not chat_id or not tg_user_id:
+        logger.warning(
+            "Telegram /start message missing chat.id or from.id: %s",
+            {k: message.get(k) for k in ("chat", "from")},
+        )
+        return
+
     statement = (
         select(AccessRequest)
         .where(AccessRequest.telegram_user_id == tg_user_id)
@@ -205,7 +212,7 @@ async def handle_start(session: Session, message: dict[str, Any]) -> None:
 
     display = _format_user_display(first_name, last_name, username)
 
-    await send_message(
+    notified_superuser = await send_message(
         settings.TG_SUPERUSER_ID,  # type: ignore[arg-type]
         f"{display} wants to access the app",
         reply_markup={
@@ -223,6 +230,12 @@ async def handle_start(session: Session, message: dict[str, Any]) -> None:
             ]
         },
     )
+    if not notified_superuser:
+        logger.warning(
+            "New access request %s from user %s but failed to notify superuser via Telegram",
+            access_request.id,
+            tg_user_id,
+        )
 
     await send_message(
         chat_id,
@@ -286,11 +299,17 @@ async def handle_callback_query(
         session.refresh(invite_token)
 
         signup_url = f"{settings.FRONTEND_HOST}/signup?token={invite_token.token}"
-        await send_message(
+        notified = await send_message(
             access_request.telegram_user_id,
             f"You're approved! Use this token to create your account: "
             f"{invite_token.token}\n\nGo to {signup_url}",
         )
+        if not notified:
+            logger.warning(
+                "Approved user %s (request %s) but failed to deliver invite token via Telegram",
+                access_request.telegram_user_id,
+                request_id,
+            )
         await edit_message_text(chat_id, message_id, f"Approved: {display}")
 
     elif action == "reject":
@@ -304,6 +323,11 @@ async def handle_callback_query(
             "Sorry, your request was not approved.",
         )
         await edit_message_text(chat_id, message_id, f"Rejected: {display}")
+
+    else:
+        logger.warning(
+            "Unknown callback action %r for request_id=%s", action, request_id
+        )
 
     await answer_callback_query(callback_id)
 

@@ -21,9 +21,16 @@ async def telegram_webhook(request: Request, session: SessionDep) -> dict[str, A
     if secret != get_webhook_secret():
         raise HTTPException(status_code=403, detail="Invalid secret token")
 
-    update = await request.json()
+    try:
+        update = await request.json()
+    except Exception:
+        logger.warning("Telegram webhook received unparseable body")
+        return {"ok": True}
     try:
         await handle_update(session, update)
     except Exception:
-        logger.exception("Error processing Telegram update")
+        update_keys = list(update.keys()) if isinstance(update, dict) else "non-dict"
+        logger.exception(
+            "Error processing Telegram update. Top-level keys: %s", update_keys
+        )
     return {"ok": True}

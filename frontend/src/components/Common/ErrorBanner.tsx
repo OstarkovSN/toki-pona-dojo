@@ -63,6 +63,10 @@ export function ErrorBanner({
   suggestedAnswer,
 }: ErrorBannerProps) {
   const config = ERROR_CONFIG[type]
+  if (!config) {
+    console.error("[ErrorBanner] Unknown error type:", type)
+    return null
+  }
   const Icon = config.icon
 
   return (

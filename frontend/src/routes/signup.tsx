@@ -69,7 +69,7 @@ function SignUp() {
   const { signUpMutation } = useAuth()
   const { token } = useSearch({ from: "/signup" })
   const [tokenState, setTokenState] = useState<
-    "loading" | "valid" | "invalid" | "no-token"
+    "loading" | "valid" | "invalid" | "no-token" | "network-error"
   >(token ? "loading" : "no-token")
   const [botUsername, setBotUsername] = useState<string | null>(null)
 
@@ -95,8 +95,8 @@ function SignUp() {
           setBotUsername(data.bot_username)
         }
       })
-      .catch(() => {
-        // Ignore — bot username is optional for display
+      .catch((err) => {
+        console.warn("[signup] Could not fetch public config for bot username:", err)
       })
   }, [])
 
@@ -104,12 +104,20 @@ function SignUp() {
   useEffect(() => {
     if (!token) return
     fetch(`/api/v1/users/validate-token?token=${encodeURIComponent(token)}`)
-      .then((res) => res.json())
-      .then((data: { valid: boolean }) => {
-        setTokenState(data.valid ? "valid" : "invalid")
+      .then((res) => {
+        if (!res.ok) {
+          console.error("[signup] Token validation returned HTTP", res.status)
+          setTokenState("invalid")
+          return null
+        }
+        return res.json()
       })
-      .catch(() => {
-        setTokenState("invalid")
+      .then((data) => {
+        if (data) setTokenState((data as { valid: boolean }).valid ? "valid" : "invalid")
+      })
+      .catch((err) => {
+        console.error("[signup] Token validation request failed:", err)
+        setTokenState("network-error")
       })
   }, [token])
 
@@ -198,6 +206,46 @@ function SignUp() {
               Log in
             </RouterLink>
           </div>
+        </div>
+      </AuthLayout>
+    )
+  }
+
+  // Network error during token validation
+  if (tokenState === "network-error") {
+    return (
+      <AuthLayout>
+        <div className="flex flex-col items-center gap-4 text-center">
+          <h1 className="text-2xl font-bold">Connection error</h1>
+          <p className="text-muted-foreground">
+            Could not verify your invite token — check your connection and try again.
+          </p>
+          <button
+            type="button"
+            className="underline underline-offset-4 text-sm"
+            onClick={() => {
+              setTokenState("loading")
+              fetch(`/api/v1/users/validate-token?token=${encodeURIComponent(token ?? "")}`)
+                .then((res) => {
+                  if (!res.ok) {
+                    console.error("[signup] Token validation returned HTTP", res.status)
+                    setTokenState("invalid")
+                    return null
+                  }
+                  return res.json()
+                })
+                .then((data) => {
+                  if (data)
+                    setTokenState((data as { valid: boolean }).valid ? "valid" : "invalid")
+                })
+                .catch((err) => {
+                  console.error("[signup] Token validation request failed:", err)
+                  setTokenState("network-error")
+                })
+            }}
+          >
+            Retry
+          </button>
         </div>
       </AuthLayout>
     )

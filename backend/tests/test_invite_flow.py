@@ -230,3 +230,186 @@ def test_webhook_rejects_missing_secret_header(
         json={"update_id": 1},
     )
     assert response.status_code == 403
+
+
+def test_webhook_returns_404_when_telegram_not_configured(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """POST to /api/v1/telegram/webhook returns 404 when TG_BOT_TOKEN is empty."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "")
+    monkeypatch.setattr(settings, "TG_SUPERUSER_ID", None)
+
+    response = client.post(
+        "/api/v1/telegram/webhook",
+        json={"update_id": 1},
+    )
+    assert response.status_code == 404
+
+
+def test_webhook_returns_200_with_valid_secret(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """POST to /api/v1/telegram/webhook returns 200 ok when secret matches."""
+    from app.core.config import settings
+    from app.services.telegram import get_webhook_secret
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+    monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 12345)
+    monkeypatch.setattr(settings, "TG_WEBHOOK_SECRET", "my_secret")
+
+    response = client.post(
+        "/api/v1/telegram/webhook",
+        json={"update_id": 1},
+        headers={"X-Telegram-Bot-Api-Secret-Token": get_webhook_secret()},
+    )
+    assert response.status_code == 200
+    assert response.json() == {"ok": True}
+
+
+def test_webhook_ignores_non_superuser_callback(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Callback query from non-superuser chat_id silently does nothing (still returns 200)."""
+    from app.core.config import settings
+    from app.services.telegram import get_webhook_secret
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "test_token")
+    monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 99999)
+    monkeypatch.setattr(settings, "TG_WEBHOOK_SECRET", "my_secret")
+
+    # caller_id (12345) != TG_SUPERUSER_ID (99999) — should be silently ignored
+    response = client.post(
+        "/api/v1/telegram/webhook",
+        json={
+            "update_id": 2,
+            "callback_query": {
+                "id": "cb_ignored",
+                "data": "approve:1",
+                "from": {"id": 12345},
+                "message": {"chat": {"id": 12345}, "message_id": 1},
+            },
+        },
+        headers={"X-Telegram-Bot-Api-Secret-Token": get_webhook_secret()},
+    )
+    assert response.status_code == 200
+
+
+@pytest.mark.anyio
+async def test_handle_start_approved_user_with_active_token_resends_signup_url(
+    db: Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """handle_start for an approved user with an active token resends the signup URL."""
+    from app.core.config import settings
+    from app.services import telegram as tg_service
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "fake_token")
+    monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 999)
+    monkeypatch.setattr(settings, "FRONTEND_HOST", "http://localhost")
+
+    import secrets as _secrets
+
+    tg_uid = 700000 + int(_secrets.token_hex(2), 16)
+    ar = AccessRequest(
+        telegram_user_id=tg_uid,
+        telegram_first_name="ActiveToken",
+        status="approved",
+    )
+    db.add(ar)
+    db.commit()
+    db.refresh(ar)
+
+    tok = InviteToken(access_request_id=ar.id)
+    db.add(tok)
+    db.commit()
+    db.refresh(tok)
+
+    send_calls: list[dict] = []
+
+    async def mock_send(
+        chat_id: int, text: str, reply_markup: dict | None = None
+    ) -> bool:
+        send_calls.append({"chat_id": chat_id, "text": text})
+        return True
+
+    monkeypatch.setattr(tg_service, "send_message", mock_send)
+
+    message = {
+        "chat": {"id": tg_uid},
+        "from": {"id": tg_uid, "first_name": "ActiveToken"},
+    }
+    await tg_service.handle_start(db, message)
+
+    assert len(send_calls) == 1
+    assert tok.token in send_calls[0]["text"]
+    assert (
+        "approved" in send_calls[0]["text"].lower()
+        or "token" in send_calls[0]["text"].lower()
+    )
+
+    db.delete(tok)
+    db.delete(ar)
+    db.commit()
+
+
+@pytest.mark.anyio
+async def test_handle_start_approved_user_with_used_token_tells_user_they_have_account(
+    db: Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """handle_start for an approved user who already used their token tells them they have an account."""
+    from datetime import datetime, timezone
+
+    from app.core.config import settings
+    from app.services import telegram as tg_service
+
+    monkeypatch.setattr(settings, "TG_BOT_TOKEN", "fake_token")
+    monkeypatch.setattr(settings, "TG_SUPERUSER_ID", 999)
+    monkeypatch.setattr(settings, "FRONTEND_HOST", "http://localhost")
+
+    import secrets as _secrets
+
+    tg_uid = 600000 + int(_secrets.token_hex(2), 16)
+    ar = AccessRequest(
+        telegram_user_id=tg_uid,
+        telegram_first_name="UsedToken",
+        status="approved",
+    )
+    db.add(ar)
+    db.commit()
+    db.refresh(ar)
+
+    # Mark the token as used
+    tok = InviteToken(
+        access_request_id=ar.id,
+        used_at=datetime.now(timezone.utc),
+    )
+    db.add(tok)
+    db.commit()
+    db.refresh(tok)
+
+    send_calls: list[dict] = []
+
+    async def mock_send(
+        chat_id: int, text: str, reply_markup: dict | None = None
+    ) -> bool:
+        send_calls.append({"chat_id": chat_id, "text": text})
+        return True
+
+    monkeypatch.setattr(tg_service, "send_message", mock_send)
+
+    message = {
+        "chat": {"id": tg_uid},
+        "from": {"id": tg_uid, "first_name": "UsedToken"},
+    }
+    await tg_service.handle_start(db, message)
+
+    assert len(send_calls) == 1
+    assert (
+        "account" in send_calls[0]["text"].lower()
+        or "log in" in send_calls[0]["text"].lower()
+    )
+
+    db.delete(tok)
+    db.delete(ar)
+    db.commit()
