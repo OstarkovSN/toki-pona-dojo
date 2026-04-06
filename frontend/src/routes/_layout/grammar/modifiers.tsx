@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft } from "lucide-react"
 import { useState } from "react"
-import { type ChainWord, GrammarChain } from "@/components/GrammarChain"
-import { GrammarSkeleton } from "@/components/Common/GrammarSkeleton"
 import { ErrorBanner } from "@/components/Common/ErrorBanner"
+import { GrammarSkeleton } from "@/components/Common/GrammarSkeleton"
+import { type ChainWord, GrammarChain } from "@/components/GrammarChain"
 import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout/grammar/modifiers")({
@@ -337,9 +337,7 @@ function GrammarModifiersPage() {
 
       {isLoading && <GrammarSkeleton />}
 
-      {error && !isLoading && (
-        <ErrorBanner type="api-unreachable" />
-      )}
+      {error && !isLoading && <ErrorBanner type="api-unreachable" />}
 
       {sections.map((section) => (
         <section key={section.id} className="space-y-3">

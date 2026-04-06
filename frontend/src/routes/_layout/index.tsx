@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { SkillTree } from "@/components/SkillTree"
 import { SkillTreeSkeleton } from "@/components/Common/SkillTreeSkeleton"
+import { SkillTree } from "@/components/SkillTree"
 import { useProgress } from "@/hooks/useProgress"
 
 export const Route = createFileRoute("/_layout/")({

@@ -35,9 +35,7 @@ test.describe("Invite Flow", () => {
   test("login page shows request access hint", async ({ page }) => {
     await page.goto("/login")
     await expect(page.getByTestId("request-access-hint")).toBeVisible()
-    await expect(
-      page.getByText("Request access via Telegram"),
-    ).toBeVisible()
+    await expect(page.getByText("Request access via Telegram")).toBeVisible()
   })
 
   test("valid invite token allows full signup flow", async ({

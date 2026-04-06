@@ -154,9 +154,7 @@ function Login() {
             >
               Need an invite?{" "}
               <a
-                href={
-                  botUsername ? `https://t.me/${botUsername}` : "#"
-                }
+                href={botUsername ? `https://t.me/${botUsername}` : "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline underline-offset-4"

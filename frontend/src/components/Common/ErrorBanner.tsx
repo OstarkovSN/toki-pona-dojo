@@ -1,4 +1,4 @@
-import { AlertTriangle, RefreshCw, WifiOff, Clock, Key } from "lucide-react"
+import { AlertTriangle, Clock, Key, RefreshCw, WifiOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 type ErrorType =
