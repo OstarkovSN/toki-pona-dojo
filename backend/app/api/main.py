@@ -6,6 +6,7 @@ from app.api.routes import (
     lessons,
     login,
     private,
+    progress,
     users,
     utils,
 )
