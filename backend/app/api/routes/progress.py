@@ -108,6 +108,9 @@ def _merge_progress(server: UserProgress, local: ProgressSync) -> None:
     existing_keys = set()
     combined_errors: list[dict] = []
     for err in (server.recent_errors or []) + (local.recent_errors or []):
+        if not isinstance(err, dict):
+            logger.warning("Skipping non-dict entry in recent_errors: %r", err)
+            continue
         key = (err.get("word", ""), err.get("timestamp", ""))
         if key not in existing_keys:
             existing_keys.add(key)
@@ -128,10 +131,15 @@ def sync_progress(
     Uses max/union strategy so the operation is idempotent.
     """
     progress = _get_or_create_progress(session, current_user.id)
-    _merge_progress(progress, local_data)
-    progress.updated_at = datetime.now(timezone.utc)
-    session.add(progress)
-    session.commit()
-    session.refresh(progress)
+    try:
+        _merge_progress(progress, local_data)
+        progress.updated_at = datetime.now(timezone.utc)
+        session.add(progress)
+        session.commit()
+        session.refresh(progress)
+    except Exception:
+        session.rollback()
+        logger.exception("Failed to sync progress for user %s", current_user.id)
+        raise HTTPException(status_code=500, detail="Failed to merge progress data.")
     logger.info("Synced progress for user %s", current_user.id)
     return progress

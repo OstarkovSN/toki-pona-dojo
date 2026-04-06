@@ -68,7 +68,7 @@ export function useProgress() {
 
   // Mutation to update server progress
   const updateServerMutation = useMutation({
-    mutationFn: (data: Partial<ProgressData>) =>
+    mutationFn: (data: Partial<ProgressData> & { srsData?: Record<string, unknown>; streakDays?: number; lastActivity?: string | null }) =>
       ProgressService.updateMyProgress({
         requestBody: {
           completed_units: data.completedUnits,
@@ -80,10 +80,16 @@ export function useProgress() {
           recent_errors: data.recentErrors as
             | Array<Record<string, unknown>>
             | undefined,
+          srs_data: data.srsData,
+          streak_days: data.streakDays,
+          last_activity: data.lastActivity,
         },
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["progress"] })
+    },
+    onError: (err) => {
+      console.error("[useProgress] Failed to sync progress to server:", err)
     },
   })
 
@@ -114,6 +120,9 @@ export function useProgress() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["progress"] })
+    },
+    onError: (err) => {
+      console.error("[useProgress] Failed to merge progress with server:", err)
     },
   })
 
@@ -157,7 +166,7 @@ export function useProgress() {
       }
 
       // Record activity for streak
-      recordActivity()
+      const updatedStreak = recordActivity()
 
       const updated = updateProgress({
         totalCorrect: newTotalCorrect,
@@ -168,13 +177,19 @@ export function useProgress() {
 
       notifyProgressChanged()
 
-      // Sync to server if authenticated
+      // Sync to server if authenticated (includes SRS and streak so server stays current)
       if (authenticated) {
+        const currentSRS = getSRS()
         updateServerMutation.mutate({
           totalCorrect: updated.totalCorrect,
           totalAnswered: updated.totalAnswered,
           knownWords: updated.knownWords,
           recentErrors: updated.recentErrors,
+          srsData: currentSRS as Record<string, unknown>,
+          streakDays: updatedStreak.currentStreak,
+          lastActivity: updatedStreak.lastActivityDate
+            ? new Date(updatedStreak.lastActivityDate).toISOString()
+            : null,
         })
       }
     },

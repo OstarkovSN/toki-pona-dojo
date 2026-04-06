@@ -60,17 +60,22 @@ function defaultStreak(): StreakData {
 // --- Helpers ---
 
 function readJSON<T>(key: string, fallback: () => T): T {
+  const raw = localStorage.getItem(key)
+  if (raw === null) return fallback()
   try {
-    const raw = localStorage.getItem(key)
-    if (raw === null) return fallback()
     return JSON.parse(raw) as T
-  } catch {
+  } catch (err) {
+    console.error(`[progress-store] Corrupted data for key "${key}", resetting:`, err)
     return fallback()
   }
 }
 
 function writeJSON<T>(key: string, data: T): void {
-  localStorage.setItem(key, JSON.stringify(data))
+  try {
+    localStorage.setItem(key, JSON.stringify(data))
+  } catch (err) {
+    console.error(`[progress-store] Failed to write key "${key}":`, err)
+  }
 }
 
 /** Get today's date as YYYY-MM-DD in the user's local timezone. */
