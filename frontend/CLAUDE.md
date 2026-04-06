@@ -138,3 +138,14 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **PostToolUse Biome formatter runs after every Write** — re-read before Edit on same region to avoid stale `old_string` matching.
 - **`useEffect` on `pairs` (array) dependency causes shuffle re-run if pairs recreated each render** — safe here because exercise object is stable, but callers should memoize if pairs computed.
 - **`flashWrong` state as guard prevents rapid-fire clicks** — `if (flashWrong) return` during 500ms wrong-answer animation window.
+
+## Phase 8 Gotchas
+
+- **`frontend/src/lib/` is blocked by `.gitignore`** — always use `git add -f` for files in this directory (e.g., `srs.ts`, `progress-store.ts`, `__tests__/`). This was also noted in Phase 6 but applies here too.
+- **`writeJSON` in progress-store must wrap `localStorage.setItem` in try/catch** — `QuotaExceededError` on mobile browsers will throw otherwise. Use `console.error` to log failures.
+- **`readJSON` should move `localStorage.getItem` outside try/catch** — only `JSON.parse` should be inside try/catch, so `SecurityError` from getItem propagates rather than being silently swallowed.
+- **TanStack Query mutations need `onError` handlers** — mutations without `onError` silently discard all network/server errors. The global `MutationCache.onError` in `main.tsx` only handles 401/403 redirects; all other errors (500, network timeout) require per-mutation handlers.
+- **Per-exercise server sync should include SRS data** — omitting `srs_data` from the per-exercise `PUT /progress/me` call means SRS scheduling data is never pushed to the server unless an explicit full sync is triggered. Include `srs_data`, `streak_days`, and `last_activity` in the `updateServerMutation` payload.
+- **`useSyncExternalStore` version variable must be used in `useMemo` dependency array** — TypeScript TS6133 fires if the version is named `_version` (unused variable); rename to `version` and include it as a dependency in all `useMemo` calls that depend on the external store.
+- **Two `ExerciseResult` interfaces with incompatible `correct` types** — `useProgress.ts` defines `correct: number` while `types/exercises.ts` defines `correct: boolean`; the lesson page bridges them with `result.correct ? 1 : 0`. Consider renaming one to `ProgressExerciseResult` to avoid confusion.
+- **`ralph-loop.local.md` must be gitignored** — `.claude/ralph-loop.local.md` is session-local automation state; add to `.gitignore` and `git rm --cached` it if accidentally committed.

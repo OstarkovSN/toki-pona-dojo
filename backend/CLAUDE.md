@@ -307,3 +307,8 @@ mocker.patch("app.utils.send_email", ...)
 - **Exercise builders need KeyError guards** — builders that access dict fields by key on raw JSON entries must use `try/except (KeyError, TypeError)` with `logging.warning` and `continue`; malformed entries must never produce unlogged 500s.
 - **Module-level index builds need guards** — bare `{w["key"]: w for w in collection}` dict comprehensions at module level crash app startup on bad data; use a guarded loop that logs and skips entries missing required keys.
 - **Unique constraint migration pattern** — when adding `unique=True` to an existing indexed column, generate a new migration that drops the non-unique index and recreates it with `unique=True`; do not edit the original migration.
+
+### Phase 8: Progress Persistence
+
+- **`_merge_progress` in Python must guard non-dict entries** — `recent_errors` and `srs_data` come from unvalidated localStorage; iterate with `isinstance(err, dict)` check + `logger.warning` skip to prevent `AttributeError` crashes.
+- **Sync route should wrap `_merge_progress` in try/except** — `_merge_progress` can raise on malformed data; the route handler needs try/except with `session.rollback()` and `logger.exception()` to produce structured 500 errors instead of bare unlogged exceptions.
