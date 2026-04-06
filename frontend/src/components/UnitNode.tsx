@@ -23,6 +23,8 @@ export function UnitNode({
 
   const nodeContent = (
     <div
+      data-testid={`skill-tree-node-${unitNumber}`}
+      data-state={status}
       className={cn(
         "group relative flex w-full md:w-56 flex-col items-center rounded-xl border-2 px-4 py-5 text-center transition-all duration-200",
         status === "locked" &&

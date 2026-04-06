@@ -25,6 +25,7 @@ export function WordCard({ data }: WordCardProps) {
     <Link
       to="/dictionary/$word"
       params={{ word: data.word }}
+      data-testid={`word-card-${data.word}`}
       className="block rounded-lg border border-zen-border bg-zen-bg p-4 transition-all hover:border-zen-border2 hover:shadow-sm"
     >
       <div className="flex items-start justify-between gap-3">

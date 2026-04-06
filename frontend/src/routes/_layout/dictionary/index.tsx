@@ -192,7 +192,10 @@ function DictionaryPage() {
           ))}
 
       {!isLoading && !error && filtered.length === 0 && (
-        <div className="py-12 text-center text-zen-text3">
+        <div
+          className="py-12 text-center text-zen-text3"
+          data-testid="dictionary-no-results"
+        >
           <p className="font-tp text-lg">ala</p>
           <p className="mt-1 text-sm">no words match your search</p>
         </div>

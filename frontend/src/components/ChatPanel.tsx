@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router"
 import { MessageSquare, Send, Trash2, X } from "lucide-react"
 import {
   type FormEvent,
@@ -7,7 +8,6 @@ import {
   useRef,
   useState,
 } from "react"
-import { useNavigate } from "@tanstack/react-router"
 import { ChatMessage } from "@/components/ChatMessage"
 import { type ChatMode, ChatModeSelector } from "@/components/ChatModeSelector"
 import { ErrorBanner } from "@/components/Common/ErrorBanner"
@@ -194,6 +194,7 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
           <textarea
             ref={textareaRef}
             value={input}
+            data-testid="chat-input"
             onChange={(e) => {
               setInput(e.target.value)
               adjustTextarea()
@@ -240,6 +241,7 @@ export function ChatPanel() {
           <button
             type="button"
             onClick={toggleChat}
+            data-testid="mobile-chat-button"
             className={cn(
               "fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center",
               "rounded-full bg-primary text-primary-foreground shadow-lg",
@@ -254,6 +256,7 @@ export function ChatPanel() {
         <Sheet open={isChatOpen} onOpenChange={setChatOpen}>
           <SheetContent
             side="bottom"
+            data-testid="mobile-chat-sheet"
             className="h-[80vh] rounded-t-2xl p-0 [&>button:last-child]:hidden"
           >
             <SheetHeader className="sr-only">

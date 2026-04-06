@@ -92,6 +92,7 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
   return (
     <div
       className={cn("flex w-full", isUser ? "justify-end" : "justify-start")}
+      data-testid={isUser ? "chat-message-user" : "chat-message-bot"}
     >
       <div
         className={cn(
