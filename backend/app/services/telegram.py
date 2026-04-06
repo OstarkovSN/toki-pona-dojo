@@ -119,7 +119,7 @@ def _format_user_display(
 async def handle_start(session: Session, message: dict[str, Any]) -> None:
     """Handle /start command: create access request or resend existing state."""
     from_user = message.get("from", {})
-    chat_id: int = message["chat"]["id"]
+    chat_id: int = message.get("chat", {}).get("id", 0)
     tg_user_id: int = from_user.get("id", 0)
     first_name: str = from_user.get("first_name", "Unknown")
     last_name: str | None = from_user.get("last_name")
@@ -178,6 +178,19 @@ async def handle_start(session: Session, message: dict[str, Any]) -> None:
                     f"You already have an account! Log in at {settings.FRONTEND_HOST}",
                 )
                 return
+
+            # All tokens expired but none used — re-issue a token
+            new_token = InviteToken(access_request_id=existing.id)
+            session.add(new_token)
+            session.commit()
+            session.refresh(new_token)
+            signup_url = f"{settings.FRONTEND_HOST}/signup?token={new_token.token}"
+            await send_message(
+                chat_id,
+                f"Your previous invite token expired. Here's a new one: "
+                f"{new_token.token}\n\nGo to {signup_url}",
+            )
+            return
 
     access_request = AccessRequest(
         telegram_user_id=tg_user_id,

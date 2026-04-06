@@ -22,5 +22,8 @@ async def telegram_webhook(request: Request, session: SessionDep) -> dict[str, A
         raise HTTPException(status_code=403, detail="Invalid secret token")
 
     update = await request.json()
-    await handle_update(session, update)
+    try:
+        await handle_update(session, update)
+    except Exception:
+        logger.exception("Error processing Telegram update")
     return {"ok": True}
