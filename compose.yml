@@ -358,8 +358,44 @@ services:
       LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: "true"
       LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: "media/"
 
+  # =========================================================================
+  # CrowdSec --- DDoS protection and IP blocking
+  # =========================================================================
+
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    restart: unless-stopped
+    environment:
+      COLLECTIONS: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/whitelist-good-actors"
+      GID: "1000"
+    volumes:
+      - crowdsec-config:/etc/crowdsec
+      - crowdsec-data:/var/lib/crowdsec/data
+      - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - traefik-logs:/var/log/traefik:ro
+    networks:
+      - traefik-public
+    expose:
+      - "8080"
+
+  crowdsec-bouncer:
+    image: fbonalair/traefik-crowdsec-bouncer:latest
+    restart: unless-stopped
+    environment:
+      CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_KEY}
+      CROWDSEC_AGENT_HOST: crowdsec:8080
+    networks:
+      - traefik-public
+    expose:
+      - "8080"
+    depends_on:
+      - crowdsec
+
 volumes:
   app-db-data:
+  crowdsec-config:
+  crowdsec-data:
+  traefik-logs:
   langfuse-db-data:
   langfuse-zookeeper-data:
   langfuse-zookeeper-datalog:
