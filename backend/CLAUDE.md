@@ -348,3 +348,4 @@ mocker.patch("app.utils.send_email", ...)
 - **Patching `get_exercises_by_words` alone is insufficient** — `match` and `multichoice` builders use `words`/`all_words` params (not `filtered`), so they still produce exercises unless the unit's word list is also empty; use unit 10 (which has all exercise types) to get empty results when filtering.
 - **`reset_rate_limit_storage` fixture must use `autouse=True` returning `None`** — standard pytest fixture with no teardown; no `yield` required, just reset storage with `limiter._storage.reset()`.
 - **`normal_user_token_headers` fixture is at module scope in `tests/conftest.py`** — safe to import/use as a parameter in `test_deps.py` tests without additional setup.
+- **`GET /api/v1/users/` is superuser-only** — confirmed via route dependency injection; safe to use as an alternate superuser-gating test target to avoid duplicating test-email endpoint coverage.

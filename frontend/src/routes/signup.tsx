@@ -96,7 +96,10 @@ function SignUp() {
         }
       })
       .catch((err) => {
-        console.warn("[signup] Could not fetch public config for bot username:", err)
+        console.warn(
+          "[signup] Could not fetch public config for bot username:",
+          err,
+        )
       })
   }, [])
 
@@ -113,7 +116,10 @@ function SignUp() {
         return res.json()
       })
       .then((data) => {
-        if (data) setTokenState((data as { valid: boolean }).valid ? "valid" : "invalid")
+        if (data)
+          setTokenState(
+            (data as { valid: boolean }).valid ? "valid" : "invalid",
+          )
       })
       .catch((err) => {
         console.error("[signup] Token validation request failed:", err)
@@ -218,17 +224,23 @@ function SignUp() {
         <div className="flex flex-col items-center gap-4 text-center">
           <h1 className="text-2xl font-bold">Connection error</h1>
           <p className="text-muted-foreground">
-            Could not verify your invite token — check your connection and try again.
+            Could not verify your invite token — check your connection and try
+            again.
           </p>
           <button
             type="button"
             className="underline underline-offset-4 text-sm"
             onClick={() => {
               setTokenState("loading")
-              fetch(`/api/v1/users/validate-token?token=${encodeURIComponent(token ?? "")}`)
+              fetch(
+                `/api/v1/users/validate-token?token=${encodeURIComponent(token ?? "")}`,
+              )
                 .then((res) => {
                   if (!res.ok) {
-                    console.error("[signup] Token validation returned HTTP", res.status)
+                    console.error(
+                      "[signup] Token validation returned HTTP",
+                      res.status,
+                    )
                     setTokenState("invalid")
                     return null
                   }
@@ -236,10 +248,15 @@ function SignUp() {
                 })
                 .then((data) => {
                   if (data)
-                    setTokenState((data as { valid: boolean }).valid ? "valid" : "invalid")
+                    setTokenState(
+                      (data as { valid: boolean }).valid ? "valid" : "invalid",
+                    )
                 })
                 .catch((err) => {
-                  console.error("[signup] Token validation request failed:", err)
+                  console.error(
+                    "[signup] Token validation request failed:",
+                    err,
+                  )
                   setTokenState("network-error")
                 })
             }}
