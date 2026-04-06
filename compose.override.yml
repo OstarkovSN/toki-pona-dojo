@@ -9,6 +9,7 @@ services:
     image: traefik:3.6
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - traefik-logs:/var/log/traefik
     ports:
       - "80:80"
       - "8090:8080"
@@ -24,8 +25,10 @@ services:
       - --entrypoints.http.address=:80
       # Create an entrypoint "https" listening on port 443
       - --entrypoints.https.address=:443
-      # Enable the access log, with HTTP requests
-      - --accesslog
+      # Enable the access log, write to file for CrowdSec
+      - --accesslog=true
+      - --accesslog.filepath=/var/log/traefik/access.log
+      - --accesslog.bufferingsize=100
       # Enable the Traefik log, for configurations and errors
       - --log
       # Enable debug logging for local development
@@ -41,6 +44,13 @@ services:
       # Dummy https-redirect middleware that doesn't really redirect, only to
       # allow running it locally
       - traefik.http.middlewares.https-redirect.contenttype.autodetect=false
+      # CrowdSec ForwardAuth middleware
+      - traefik.http.middlewares.crowdsec.forwardauth.address=http://crowdsec-bouncer:8080/api/v1/forwardAuth
+      - traefik.http.middlewares.crowdsec.forwardauth.trustForwardHeader=true
+      # Traefik rate limit middleware (defense-in-depth, catches floods before app layer)
+      - traefik.http.middlewares.rate-limit.ratelimit.average=100
+      - traefik.http.middlewares.rate-limit.ratelimit.burst=50
+      - traefik.http.middlewares.rate-limit.ratelimit.period=1s
     networks:
       - traefik-public
       - default
@@ -143,6 +153,13 @@ services:
     restart: "no"
   langfuse-cache:
     restart: "no"
+  crowdsec:
+    restart: "no"
+  crowdsec-bouncer:
+    restart: "no"
+
+volumes:
+  traefik-logs:
 
 networks:
   traefik-public:
