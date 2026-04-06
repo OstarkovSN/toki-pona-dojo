@@ -153,6 +153,10 @@ services:
     restart: "no"
   langfuse-cache:
     restart: "no"
+  crowdsec:
+    restart: "no"
+  crowdsec-bouncer:
+    restart: "no"
 
 volumes:
   traefik-logs:
