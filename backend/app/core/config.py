@@ -9,6 +9,7 @@ from pydantic import (
     HttpUrl,
     PostgresDsn,
     computed_field,
+    field_validator,
     model_validator,
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -103,8 +104,26 @@ class Settings(BaseSettings):
     CHAT_FREE_DAILY_LIMIT: int = 20
     CHAT_FREE_MAX_TOKENS: int = 500
 
-    # Telegram bot (optional, used in Phase 5)
+    # Telegram bot settings
     TG_BOT_TOKEN: str | None = None
+    TG_SUPERUSER_ID: int | None = None
+    TG_BOT_USERNAME: str | None = None
+
+    @field_validator("TG_SUPERUSER_ID", mode="before")
+    @classmethod
+    def coerce_tg_superuser_id(cls, v: object) -> int | None:
+        """Accept int or numeric string; treat non-numeric placeholders as None."""
+        if v is None or v == "":
+            return None
+        try:
+            return int(v)  # type: ignore[arg-type]
+        except (ValueError, TypeError):
+            return None
+
+    # Webhook secret for validating incoming Telegram updates.
+    # If unset, one is generated at startup — but this only works in
+    # single-worker mode. For multi-worker deployments, set explicitly.
+    TG_WEBHOOK_SECRET: str | None = None
 
     # LangFuse observability (wired in Phase 4)
     LANGFUSE_PUBLIC_KEY: str = ""

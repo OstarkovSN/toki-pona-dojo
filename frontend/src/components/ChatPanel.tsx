@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router"
 import { MessageSquare, Send, Trash2, X } from "lucide-react"
 import {
   type FormEvent,
@@ -9,6 +10,7 @@ import {
 } from "react"
 import { ChatMessage } from "@/components/ChatMessage"
 import { type ChatMode, ChatModeSelector } from "@/components/ChatModeSelector"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -29,6 +31,7 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
   const [input, setInput] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const navigate = useNavigate()
 
   const { messages, sendMessage, isStreaming, error, clearHistory, isBYOM } =
     useChat({
@@ -41,7 +44,7 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [])
+  }, [messages])
 
   // Auto-resize textarea
   const adjustTextarea = useCallback(() => {
@@ -159,8 +162,29 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
 
       {/* Error display */}
       {error && (
-        <div className="mx-3 mb-2 rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
-          {error}
+        <div className="mx-3 mb-2">
+          {error.toLowerCase().includes("rate limit") ? (
+            <ErrorBanner
+              type="rate-limit"
+              onNavigateToSettings={() => navigate({ to: "/settings" })}
+            />
+          ) : isBYOM &&
+            (error.toLowerCase().includes("provider") ||
+              error.toLowerCase().includes("cors") ||
+              error.toLowerCase().includes("connection")) ? (
+            <ErrorBanner
+              type="byom-failure"
+              onRetry={clearHistory}
+              onNavigateToSettings={() => navigate({ to: "/settings" })}
+            />
+          ) : error.toLowerCase().includes("503") ||
+            error.toLowerCase().includes("unavailable") ? (
+            <ErrorBanner type="llm-unavailable" />
+          ) : (
+            <div className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              {error}
+            </div>
+          )}
         </div>
       )}
 
@@ -170,6 +194,7 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
           <textarea
             ref={textareaRef}
             value={input}
+            data-testid="chat-input"
             onChange={(e) => {
               setInput(e.target.value)
               adjustTextarea()
@@ -216,6 +241,7 @@ export function ChatPanel() {
           <button
             type="button"
             onClick={toggleChat}
+            data-testid="mobile-chat-button"
             className={cn(
               "fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center",
               "rounded-full bg-primary text-primary-foreground shadow-lg",
@@ -230,6 +256,7 @@ export function ChatPanel() {
         <Sheet open={isChatOpen} onOpenChange={setChatOpen}>
           <SheetContent
             side="bottom"
+            data-testid="mobile-chat-sheet"
             className="h-[80vh] rounded-t-2xl p-0 [&>button:last-child]:hidden"
           >
             <SheetHeader className="sr-only">

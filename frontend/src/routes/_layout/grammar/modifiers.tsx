@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft } from "lucide-react"
 import { useState } from "react"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
+import { GrammarSkeleton } from "@/components/Common/GrammarSkeleton"
 import { type ChainWord, GrammarChain } from "@/components/GrammarChain"
-import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout/grammar/modifiers")({
@@ -316,10 +317,6 @@ function GrammarModifiersPage() {
     retry: false,
   })
 
-  if (error) {
-    console.error("[grammar/modifiers] fetch failed:", error)
-  }
-
   const sections = data?.sections ?? FALLBACK_SECTIONS
   const comparisons = data?.comparisons ?? FALLBACK_COMPARISONS
   const quiz = data?.quiz ?? FALLBACK_QUIZ
@@ -338,13 +335,9 @@ function GrammarModifiersPage() {
         <p className="text-sm text-zen-text3">modifier rules</p>
       </div>
 
-      {isLoading && (
-        <div className="space-y-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-lg" />
-          ))}
-        </div>
-      )}
+      {isLoading && <GrammarSkeleton />}
+
+      {error && !isLoading && <ErrorBanner type="api-unreachable" />}
 
       {sections.map((section) => (
         <section key={section.id} className="space-y-3">
@@ -365,8 +358,8 @@ function GrammarModifiersPage() {
       {comparisons.map((comp, ci) => (
         <section key={ci} className="space-y-3">
           <h2 className="font-tp text-xl">{comp.title}</h2>
-          <div className="rounded-lg border border-zen-border overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="rounded-lg border border-zen-border overflow-x-auto">
+            <table className="w-full text-sm min-w-[400px]">
               <thead>
                 <tr className="bg-zen-bg2">
                   <th className="font-label px-4 py-2 text-left text-zen-text3">

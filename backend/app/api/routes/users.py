@@ -1,8 +1,9 @@
 import logging
 import uuid
+from datetime import datetime, timezone
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel import col, func, select
 
 from app import crud
@@ -12,8 +13,10 @@ from app.api.deps import (
     get_current_active_superuser,
 )
 from app.core.config import settings
+from app.core.rate_limit import limiter
 from app.core.security import get_password_hash, verify_password
 from app.models import (
+    InviteToken,
     Message,
     UpdatePassword,
     User,
@@ -152,16 +155,79 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
 def register_user(session: SessionDep, user_in: UserRegister) -> Any:
     """
     Create new user without the need to be logged in.
+    When TG_BOT_TOKEN is set, a valid invite_token is required.
     """
+    # Check if invite gate is active
+    if settings.TG_BOT_TOKEN:
+        if not user_in.invite_token:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid or expired invite token.",
+            )
+        # Look up the token
+        statement = select(InviteToken).where(InviteToken.token == user_in.invite_token)
+        invite_token = session.exec(statement).first()
+        if (
+            not invite_token
+            or invite_token.used_at is not None
+            or invite_token.expires_at < datetime.now(timezone.utc)
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid or expired invite token.",
+            )
+    else:
+        invite_token = None
+
     user = crud.get_user_by_email(session=session, email=user_in.email)
     if user:
         raise HTTPException(
             status_code=400,
             detail="The user with this email already exists in the system",
         )
+
     user_create = UserCreate.model_validate(user_in)
-    user = crud.create_user(session=session, user_create=user_create)
-    return user
+
+    # Build the user object without committing, so we can commit
+    # user creation + token consumption in a single transaction.
+    db_obj = User.model_validate(
+        user_create,
+        update={"hashed_password": get_password_hash(user_create.password)},
+    )
+    session.add(db_obj)
+
+    # Consume the invite token in the same transaction.
+    # Flush first so the user row is inserted and its PK satisfies the FK.
+    if invite_token is not None:
+        session.flush()
+        invite_token.used_at = datetime.now(timezone.utc)
+        invite_token.used_by = db_obj.id
+        session.add(invite_token)
+
+    session.commit()
+    session.refresh(db_obj)
+    return db_obj
+
+
+@router.get("/validate-token")
+@limiter.limit("5/minute")
+def validate_token(
+    request: Request, session: SessionDep, token: str
+) -> dict[str, bool]:
+    """
+    Check if an invite token is valid (exists, unused, not expired).
+    Used by the frontend to show/hide the signup form.
+    Rate limited to 5 req/min per IP to prevent token enumeration.
+    """
+    statement = select(InviteToken).where(InviteToken.token == token)
+    invite_token = session.exec(statement).first()
+    if (
+        not invite_token
+        or invite_token.used_at is not None
+        or invite_token.expires_at < datetime.now(timezone.utc)
+    ):
+        return {"valid": False}
+    return {"valid": True}
 
 
 @router.get("/{user_id}", response_model=UserPublic)

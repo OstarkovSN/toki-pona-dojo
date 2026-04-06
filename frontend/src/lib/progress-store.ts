@@ -65,7 +65,10 @@ function readJSON<T>(key: string, fallback: () => T): T {
   try {
     return JSON.parse(raw) as T
   } catch (err) {
-    console.error(`[progress-store] Corrupted data for key "${key}", resetting:`, err)
+    console.error(
+      `[progress-store] Corrupted data for key "${key}", resetting:`,
+      err,
+    )
     return fallback()
   }
 }

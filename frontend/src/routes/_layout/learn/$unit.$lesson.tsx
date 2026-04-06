@@ -1,5 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
+import { LessonSkeleton } from "@/components/Common/LessonSkeleton"
 import { ExerciseConceptBuild } from "@/components/ExerciseConceptBuild"
 import { ExerciseFillParticle } from "@/components/ExerciseFillParticle"
 import { ExerciseFreeCompose } from "@/components/ExerciseFreeCompose"
@@ -10,7 +12,6 @@ import { ExerciseWordBank } from "@/components/ExerciseWordBank"
 import { FeedbackToast } from "@/components/FeedbackToast"
 import { LessonComplete } from "@/components/LessonComplete"
 import { ProgressBar } from "@/components/ProgressBar"
-import { Skeleton } from "@/components/ui/skeleton"
 import { useLessons } from "@/hooks/useLessons"
 import { useProgress } from "@/hooks/useProgress"
 import type { Exercise, ExerciseResult } from "@/types/exercises"
@@ -58,6 +59,7 @@ function LessonPage() {
   const { unit, lesson: lessonParam } = Route.useParams()
   const unitId = Number(unit)
   const lessonId = Number(lessonParam)
+  const navigate = useNavigate()
 
   const {
     lesson,
@@ -111,22 +113,16 @@ function LessonPage() {
   }, [nextExercise])
 
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-1.5 w-full" />
-        <Skeleton className="h-4 w-48" />
-        <Skeleton className="h-64 w-full" />
-      </div>
-    )
+    return <LessonSkeleton />
   }
 
   if (isError) {
     return (
-      <div className="py-12 text-center">
-        <p className="font-mono text-lg text-coral">Failed to load lesson.</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Check your connection and try again.
-        </p>
+      <div className="py-6">
+        <ErrorBanner
+          type="api-unreachable"
+          onRetry={() => navigate({ to: "/" })}
+        />
       </div>
     )
   }

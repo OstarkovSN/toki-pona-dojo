@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { SkillTreeSkeleton } from "@/components/Common/SkillTreeSkeleton"
 import { SkillTree } from "@/components/SkillTree"
 import { useProgress } from "@/hooks/useProgress"
 
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/_layout/")({
 })
 
 function HomePage() {
-  const { progress, streak } = useProgress()
+  const { progress, streak, isLoading } = useProgress()
   const completedCount = progress.completedUnits.length
 
   return (
@@ -24,7 +25,7 @@ function HomePage() {
         </p>
       </div>
 
-      <div className="flex gap-6">
+      <div className="flex flex-wrap gap-2 md:gap-6">
         <div className="flex flex-col items-center rounded-lg border border-zen-border bg-zen-bg2 px-6 py-3">
           <span className="font-tp text-xl text-zen-teal">
             {progress.knownWords.length}
@@ -45,10 +46,14 @@ function HomePage() {
         </div>
       </div>
 
-      <SkillTree
-        completedUnits={progress.completedUnits}
-        currentUnit={progress.currentUnit}
-      />
+      {isLoading ? (
+        <SkillTreeSkeleton />
+      ) : (
+        <SkillTree
+          completedUnits={progress.completedUnits}
+          currentUnit={progress.currentUnit}
+        />
+      )}
     </div>
   )
 }

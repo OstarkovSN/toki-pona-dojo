@@ -1,3 +1,4 @@
+import { ChatTypingIndicator } from "@/components/Common/ChatTypingIndicator"
 import { cn } from "@/lib/utils"
 
 interface ChatMessageProps {
@@ -83,9 +84,15 @@ function renderContent(content: string) {
 export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
   const isUser = role === "user"
 
+  // Show the dedicated typing indicator when the assistant message is still empty
+  if (!isUser && !content && isStreaming) {
+    return <ChatTypingIndicator />
+  }
+
   return (
     <div
       className={cn("flex w-full", isUser ? "justify-end" : "justify-start")}
+      data-testid={isUser ? "chat-message-user" : "chat-message-bot"}
     >
       <div
         className={cn(

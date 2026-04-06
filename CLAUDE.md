@@ -162,3 +162,11 @@ New services must use non-standard ports. LangFuse: 3100 (UI), 9190 (MinIO). Cro
 - **`langfuse-minio` uses port `9190:9000`** (host:container); `langfuse-server` uses `localhost:9190` (host-accessible), `langfuse-worker` uses internal Docker hostname `http://langfuse-minio:9000`.
 - **LangFuse restart overrides in `compose.override.yml`** must be inserted before the `networks:` section, not after the last service block.
 - **`LANGFUSE_INIT_USER_*` env vars** (email, password, name, organization) are required for first-launch admin setup and were missing from `.env.example` before Phase 4.
+
+## Phase 10 Gotchas
+
+- **Docker Compose stack requires real PostgreSQL** — Backend tests cannot run standalone; tests need a real database container. On dev machines with port conflicts, best approach is to run `docker compose watch` in a non-worktree directory and test against the running services, or use `docker compose exec backend bash scripts/tests-start.sh` inside the container.
+- **Port conflicts block integrated testing in worktrees** — If PostgreSQL (5432) or other standard ports are already in use on the dev machine, the full Docker Compose stack cannot start in the worktree. Data validation (JSON files only) works without services; Playwright E2E tests cannot run without backend and frontend services available.
+- **Data validation script doesn't require database** — `validate_data.py` only reads JSON files; it's safe to run independently to verify vocabulary, flashcards, and grammar structure without a running stack.
+- **Playwright test collection requires environment variables** — Even for public tests with `storageState` overrides, the test configuration file is imported during test discovery. `FIRST_SUPERUSER` and `FIRST_SUPERUSER_PASSWORD` env vars must be set even when running `npx playwright test --list` or test collection will fail.
+- **Manual QA checklist as fallback** — On machines with Docker Compose constraints, use `docs/manual-verification-checklist.md` as a script for human verification in a browser instead of automated test runs.

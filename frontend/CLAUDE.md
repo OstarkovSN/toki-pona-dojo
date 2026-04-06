@@ -149,3 +149,40 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **`useSyncExternalStore` version variable must be used in `useMemo` dependency array** — TypeScript TS6133 fires if the version is named `_version` (unused variable); rename to `version` and include it as a dependency in all `useMemo` calls that depend on the external store.
 - **Two `ExerciseResult` interfaces with incompatible `correct` types** — `useProgress.ts` defines `correct: number` while `types/exercises.ts` defines `correct: boolean`; the lesson page bridges them with `result.correct ? 1 : 0`. Consider renaming one to `ProgressExerciseResult` to avoid confusion.
 - **`ralph-loop.local.md` must be gitignored** — `.claude/ralph-loop.local.md` is session-local automation state; add to `.gitignore` and `git rm --cached` it if accidentally committed.
+
+## Phase 10 Gotchas
+
+- **`ChatMessage` renders a 3-dot pulse animation inline when `!content && isStreaming`** — a dedicated `ChatTypingIndicator` component replaced the early-render path but the inline dots remain for mid-stream cases (content exists but more is coming). No need to manage two separate animations.
+- **`ChatPanel` must render outside `SidebarInset` on mobile** — `ChatPanel` handles its own mobile responsiveness (floating button + bottom Sheet via `useIsMobile`); placing it inside `SidebarInset` causes the Sheet to clip behind the sidebar overlay due to z-index stacking. Render it as a peer to `SidebarInset`, not a child.
+- **`useProgress` exposes `isLoading` from TanStack Query server fetch** — home page gates `SkillTree` behind `SkillTreeSkeleton` using this flag alongside local localStorage state; allows lazy-loading the skill tree.
+- **Dictionary page embeds skeleton inside layout preserving sticky search** — `DictionarySkeleton` is rendered inline after filters (line 162 in `index.tsx`), not as an early return; keeps sticky search bar, POS filters, and alphabet buttons visible during loading.
+- **Grammar modifiers page uses fallback data for graceful degradation** — `FALLBACK_SECTIONS`, `FALLBACK_COMPARISONS`, `FALLBACK_QUIZ` constants mean content renders immediately even when API fails; the `isLoading && <GrammarSkeleton />` guard only fires during the brief fetch, not on error.
+- **`ExerciseConceptBuild` and `ExerciseFreeCompose` share `GradingSpinner`** — replaced identical inline grading spinners with a single shared component in `frontend/src/components/Common/GradingSpinner.tsx`.
+- **`dictionary/$word.tsx` has a bespoke inline skeleton** — left as-is since the word detail layout doesn't match `DictionarySkeleton`'s grid shape; not extracted to avoid over-engineering.
+- **`grammar/particles.tsx` uses only static hardcoded data** — no async loading, no skeleton needed; purely frontend-rendered content.
+- **`tsconfig.build.json` excludes unit tests in `src/**/__tests__/**`** — the exclude list already includes these to prevent test-only imports (e.g. `vitest`) from appearing in production builds; this was configured during setup.
+- **SkillTree uses dual render for desktop vs mobile** — desktop renders the tree layout; mobile hides it and renders a flat list instead (both via `md:` breakpoint toggle). Parameterizing the existing tree was less clean than maintaining two separate render paths.
+- **Dictionary search bar sticky offset depends on header height** — use `top-14` on mobile (h-14 header) and `top-16` on desktop (h-16 header); mismatch causes content to scroll under the bar.
+- **`UnitNode` width responsive class is `w-full md:w-56`** — the inner div (not the Link wrapper) uses this class to collapse to full width on mobile and fixed width on desktop.
+- **CSS variable dark mode in TailwindCSS v4 does not need `dark:` prefixes on `zen-*` tokens** — all custom tokens resolve through CSS variables defined in `:root` / `.dark {}` in `index.css`, so the variables themselves switch automatically; `dark:zen-X` is a no-op and should be removed.
+- **Dark mode coverage includes all exercise feedback, chat bubbles, grammar chains, skill tree states, and dictionary badges** — all use CSS-variable-driven tokens that auto-switch; no hardcoded Tailwind palette colors (e.g. `bg-green-100`, `bg-gray-400`) were used in content components.
+- **Admin UI status indicators with hardcoded colors are acceptable** — `bg-green-500` / `bg-gray-400` in `Admin/columns.tsx` status dot is fine for non-customer-facing admin UI; no adaptation to dark mode needed.
+- **`useChat` error is a plain `string | null`, not an Error object** — error type detection must use string `.toLowerCase().includes()` checks, not `instanceof` or `.status` property access.
+- **`callServerProxy` already throws a string containing "Rate limit" for 429 responses** — detection via `error.toLowerCase().includes("rate limit")` is reliable.
+- **`useLessons` hook does not expose `refetch`** — the lesson page error state cannot offer a retry; using `navigate({ to: "/" })` as the retry action sends user back to home.
+- **`ExerciseFreeCompose` `onError` already calls `onComplete` with `correct: false` to advance the exercise** — the `ErrorBanner` in the error slot (`submitted && gradeMutation.isError`) is a secondary display after progression, not a blocking error screen.
+- **`ErrorBanner` in `ChatPanel` requires `useNavigate` from `@tanstack/react-router` (not `react-router-dom`)** — import path is `@tanstack/react-router`.
+- **Dictionary `$word.tsx` error state intentionally kept as custom "ala / word not found" UI** — using `ErrorBanner type="api-unreachable"` there would be misleading since the error is often a 404 (word doesn't exist), not a connectivity failure.
+
+### Phase 10: E2E Testing Patterns
+
+- **Most spec files already existed** — before adding new spec files, check `frontend/tests/` for existing: `skill-tree.spec.ts`, `lesson-exercises.spec.ts`, `dictionary.spec.ts`, `chat-panel.spec.ts`, `navigation.spec.ts`, `grammar.spec.ts`, `progress.spec.ts`, `user-settings.spec.ts`, `login.spec.ts`, `invite-flow.spec.ts`, `auth.setup.ts`.
+- **`ErrorBanner` uses dynamic testid** — `ErrorBanner` already uses `data-testid={`error-banner-${type}`}`, so `error-banner-llm-unavailable`, `error-banner-rate-limit`, `error-banner-api-unreachable` are generated dynamically from the `type` prop. No changes needed.
+- **`UnitNode` testid uses unitNumber (1–10), not array index** — new testids are `skill-tree-node-1` through `skill-tree-node-10`, NOT `skill-tree-node-0` through `skill-tree-node-9`. Also add `data-state={status}` on the inner div.
+- **`ChatMessage` testids by role** — added `data-testid="chat-message-user"` and `data-testid="chat-message-bot"` (via conditional `isUser`).
+- **WordCard testid includes the word itself** — `data-testid={`word-card-${data.word}`}` on the Link element for easy filtering in tests.
+- **ChatPanel mobile uses floating button and bottom Sheet** — mobile floating button uses `data-testid="mobile-chat-button"`, Sheet uses `data-testid="mobile-chat-sheet"`, textarea uses `data-testid="chat-input"`.
+- **Dictionary empty state testid** — `data-testid="dictionary-no-results"` on the "ala" empty state div.
+- **Grammar page does not need skeleton tests** — the grammar/modifiers page renders `FALLBACK_SECTIONS` synchronously. Even with a slowed API route, the skeleton may not appear because fallback data renders immediately. Loading-state tests for grammar should only assert page content renders, not that the skeleton appears.
+- **ChatContext uses `"tp-chat-open"` localStorage key** — to force mobile floating button visible in tests, use `localStorage.setItem("tp-chat-open", "false")` in `addInitScript`.
+- **Biome auto-formats test files on `bun run lint`** — after writing new test files, run lint to auto-fix import ordering and rename unused variables with `_` prefix (e.g., `_skeleton`). Always run lint after test creation.

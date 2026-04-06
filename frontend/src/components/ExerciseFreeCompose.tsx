@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
+import { GradingSpinner } from "@/components/Common/GradingSpinner"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { gradeExercise } from "@/lib/api/lessons"
@@ -63,7 +65,7 @@ export function ExerciseFreeCompose({ exercise, onComplete }: ExerciseProps) {
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
         placeholder="Type your answer in toki pona..."
-        className="mb-4 font-mono"
+        className="mb-4 font-mono text-base md:text-sm"
         disabled={submitted || gradeMutation.isPending}
         rows={3}
       />
@@ -77,12 +79,7 @@ export function ExerciseFreeCompose({ exercise, onComplete }: ExerciseProps) {
           check
         </Button>
       )}
-      {gradeMutation.isPending && (
-        <div className="flex items-center justify-center py-4 gap-2 text-muted-foreground">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          <span className="text-sm">grading...</span>
-        </div>
-      )}
+      {gradeMutation.isPending && <GradingSpinner />}
       {submitted && gradeMutation.data && (
         <div className="mt-4 space-y-2">
           <div className="text-lg">{renderScore(gradeMutation.data.score)}</div>
@@ -100,9 +97,16 @@ export function ExerciseFreeCompose({ exercise, onComplete }: ExerciseProps) {
         </div>
       )}
       {submitted && gradeMutation.isError && (
-        <p className="mt-4 text-sm text-coral">
-          Could not reach the grading service. Please try again later.
-        </p>
+        <div className="mt-4">
+          <ErrorBanner
+            type="api-unreachable"
+            suggestedAnswer={exercise.suggestedAnswer}
+            onRetry={() => {
+              gradeMutation.reset()
+              setSubmitted(false)
+            }}
+          />
+        </div>
       )}
     </div>
   )

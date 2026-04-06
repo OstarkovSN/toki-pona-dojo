@@ -72,54 +72,77 @@ export function SkillTree({
     [UNITS[9]], // Unit 10
   ]
 
+  // Flatten to single list for mobile vertical layout
+  const allUnits = UNITS.map((unit) => ({
+    ...unit,
+    status: getUnitStatus(unit, completedUnits, currentUnit),
+  }))
+
   return (
-    <div className="flex flex-col items-center gap-2">
-      {rows.map((row, rowIndex) => (
-        <div key={rowIndex}>
-          {/* Connector line from previous row */}
-          {rowIndex > 0 && (
-            <div className="flex justify-center py-1">
-              <div className="h-6 w-px bg-zen-border2" />
-            </div>
-          )}
+    <>
+      {/* Mobile: vertical stack */}
+      <div className="flex flex-col gap-3 w-full md:hidden">
+        {allUnits.map((unit) => (
+          <UnitNode
+            key={unit.unitNumber}
+            unitNumber={unit.unitNumber}
+            name={unit.name}
+            topic={unit.topic}
+            status={unit.status}
+            prerequisites={unit.prerequisites}
+          />
+        ))}
+      </div>
 
-          {/* Branch split indicator (before parallel rows) */}
-          {row.length > 1 && (
-            <div className="flex items-center justify-center gap-24 pb-1">
-              <div className="h-px w-12 bg-zen-border2" />
-              <div className="h-px w-12 bg-zen-border2" />
-            </div>
-          )}
+      {/* Desktop: original branching tree layout */}
+      <div className="hidden md:flex flex-col items-center gap-2">
+        {rows.map((row, rowIndex) => (
+          <div key={rowIndex}>
+            {/* Connector line from previous row */}
+            {rowIndex > 0 && (
+              <div className="flex justify-center py-1">
+                <div className="h-6 w-px bg-zen-border2" />
+              </div>
+            )}
 
-          {/* Unit nodes */}
-          <div
-            className={
-              row.length > 1
-                ? "flex items-start justify-center gap-8"
-                : "flex justify-center"
-            }
-          >
-            {row.map((unit) => (
-              <UnitNode
-                key={unit.unitNumber}
-                unitNumber={unit.unitNumber}
-                name={unit.name}
-                topic={unit.topic}
-                status={getUnitStatus(unit, completedUnits, currentUnit)}
-                prerequisites={unit.prerequisites}
-              />
-            ))}
+            {/* Branch split indicator (before parallel rows) */}
+            {row.length > 1 && (
+              <div className="flex items-center justify-center gap-24 pb-1">
+                <div className="h-px w-12 bg-zen-border2" />
+                <div className="h-px w-12 bg-zen-border2" />
+              </div>
+            )}
+
+            {/* Unit nodes */}
+            <div
+              className={
+                row.length > 1
+                  ? "flex items-start justify-center gap-8"
+                  : "flex justify-center"
+              }
+            >
+              {row.map((unit) => (
+                <UnitNode
+                  key={unit.unitNumber}
+                  unitNumber={unit.unitNumber}
+                  name={unit.name}
+                  topic={unit.topic}
+                  status={getUnitStatus(unit, completedUnits, currentUnit)}
+                  prerequisites={unit.prerequisites}
+                />
+              ))}
+            </div>
+
+            {/* Branch merge indicator (after parallel rows) */}
+            {row.length > 1 && (
+              <div className="flex items-center justify-center gap-24 pt-1">
+                <div className="h-px w-12 bg-zen-border2" />
+                <div className="h-px w-12 bg-zen-border2" />
+              </div>
+            )}
           </div>
-
-          {/* Branch merge indicator (after parallel rows) */}
-          {row.length > 1 && (
-            <div className="flex items-center justify-center gap-24 pt-1">
-              <div className="h-px w-12 bg-zen-border2" />
-              <div className="h-px w-12 bg-zen-border2" />
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   )
 }

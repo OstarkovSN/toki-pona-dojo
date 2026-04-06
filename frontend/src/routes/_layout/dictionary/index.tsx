@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { Search } from "lucide-react"
 import { useMemo, useRef, useState } from "react"
+import { DictionarySkeleton } from "@/components/Common/DictionarySkeleton"
+import { ErrorBanner } from "@/components/Common/ErrorBanner"
 import { Input } from "@/components/ui/input"
-import { Skeleton } from "@/components/ui/skeleton"
 import { WordCard, type WordData } from "@/components/WordCard"
 import { cn } from "@/lib/utils"
 
@@ -33,7 +34,12 @@ function DictionaryPage() {
   const [setFilter, setSetFilter] = useState<string>("all")
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
-  const { data: words = [], isLoading } = useQuery<WordData[]>({
+  const {
+    data: words = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<WordData[]>({
     queryKey: ["dictionary", "words"],
     queryFn: async () => {
       const res = await fetch("/api/v1/dictionary/words")
@@ -83,15 +89,17 @@ function DictionaryPage() {
         <p className="text-sm text-zen-text3">all words</p>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zen-text3" />
-        <Input
-          placeholder="Search words or definitions..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 bg-zen-bg2 border-zen-border"
-          data-testid="dictionary-search"
-        />
+      <div className="sticky top-14 md:top-16 z-10 -mx-4 md:mx-0 bg-background px-4 md:px-0 py-2 md:py-0">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zen-text3" />
+          <Input
+            placeholder="Search words or definitions..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10 bg-zen-bg2 border-zen-border text-base md:text-sm"
+            data-testid="dictionary-search"
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -157,15 +165,14 @@ function DictionaryPage() {
         {filtered.length} of {words.length} words
       </p>
 
-      {isLoading && (
-        <div className="space-y-3">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-20 w-full rounded-lg" />
-          ))}
-        </div>
+      {isLoading && <DictionarySkeleton />}
+
+      {error && !isLoading && (
+        <ErrorBanner type="api-unreachable" onRetry={() => refetch()} />
       )}
 
       {!isLoading &&
+        !error &&
         Object.keys(grouped)
           .sort()
           .map((letter) => (
@@ -176,7 +183,7 @@ function DictionaryPage() {
               }}
             >
               <h2 className="font-tp mb-3 text-lg text-zen-text3">{letter}</h2>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
                 {grouped[letter].map((word) => (
                   <WordCard key={word.word} data={word} />
                 ))}
@@ -184,8 +191,11 @@ function DictionaryPage() {
             </div>
           ))}
 
-      {!isLoading && filtered.length === 0 && (
-        <div className="py-12 text-center text-zen-text3">
+      {!isLoading && !error && filtered.length === 0 && (
+        <div
+          className="py-12 text-center text-zen-text3"
+          data-testid="dictionary-no-results"
+        >
           <p className="font-tp text-lg">ala</p>
           <p className="mt-1 text-sm">no words match your search</p>
         </div>

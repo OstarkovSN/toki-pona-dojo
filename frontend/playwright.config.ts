@@ -52,6 +52,15 @@ export default defineConfig({
       },
     },
 
+    {
+      name: 'mobile-chrome',
+      use: {
+        ...devices['Pixel 5'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
+    },
+
     // {
     //   name: 'firefox',
     //   use: {
