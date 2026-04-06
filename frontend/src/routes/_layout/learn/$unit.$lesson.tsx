@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { ExerciseConceptBuild } from "@/components/ExerciseConceptBuild"
 import { ExerciseFillParticle } from "@/components/ExerciseFillParticle"
 import { ExerciseFreeCompose } from "@/components/ExerciseFreeCompose"
@@ -12,6 +12,7 @@ import { LessonComplete } from "@/components/LessonComplete"
 import { ProgressBar } from "@/components/ProgressBar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLessons } from "@/hooks/useLessons"
+import { useProgress } from "@/hooks/useProgress"
 import type { Exercise, ExerciseResult } from "@/types/exercises"
 
 export const Route = createFileRoute("/_layout/learn/$unit/$lesson")({
@@ -73,16 +74,34 @@ function LessonPage() {
     nextExercise,
   } = useLessons(unitId, lessonId)
 
+  const { updateAfterExercise, updateAfterLesson } = useProgress()
+
   const [lastResult, setLastResult] = useState<ExerciseResult | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
+
+  // Call updateAfterLesson exactly once when the lesson transitions to complete
+  const lessonCompleteFired = useRef(false)
+  useEffect(() => {
+    if (isLessonComplete && !lessonCompleteFired.current) {
+      lessonCompleteFired.current = true
+      updateAfterLesson(unitId, lessonId)
+    }
+  }, [isLessonComplete, unitId, lessonId, updateAfterLesson])
 
   const handleExerciseComplete = useCallback(
     (result: ExerciseResult) => {
       recordResult(result)
       setLastResult(result)
       setShowFeedback(true)
+      // Adapt local ExerciseResult (correct: boolean) to progress format (correct: number)
+      updateAfterExercise({
+        score: result.score,
+        words: result.words,
+        correct: result.correct ? 1 : 0,
+        total: 1,
+      })
     },
-    [recordResult],
+    [recordResult, updateAfterExercise],
   )
 
   const handleNext = useCallback(() => {

@@ -3,7 +3,177 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { ChatChatStreamData, ChatChatStreamResponse, ChatGradeExerciseData, ChatGradeExerciseResponse, DictionaryListWordsData, DictionaryListWordsResponse, DictionaryGetWordDetailData, DictionaryGetWordDetailResponse, DictionaryListGrammarResponse, DictionaryGetGrammarSectionDetailData, DictionaryGetGrammarSectionDetailResponse, LessonsListUnitsResponse, LessonsGetLessonExercisesData, LessonsGetLessonExercisesResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, ProgressGetMyProgressResponse, ProgressUpdateMyProgressData, ProgressUpdateMyProgressResponse, ProgressSyncProgressData, ProgressSyncProgressResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+
+export class ChatService {
+    /**
+     * Chat Stream
+     * Stream a chat response from the LLM.
+     *
+     * Anonymous users: rate-limited to CHAT_FREE_DAILY_LIMIT/day, max_tokens capped.
+     * Authenticated users: exempt from rate limit, higher max_tokens.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static chatStream(data: ChatChatStreamData): CancelablePromise<ChatChatStreamResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/chat/stream',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Grade Exercise
+     * Grade a free-form toki pona exercise using the LLM.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns ExerciseGradeResponse Successful Response
+     * @throws ApiError
+     */
+    public static gradeExercise(data: ChatGradeExerciseData): CancelablePromise<ChatGradeExerciseResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/chat/grade',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class DictionaryService {
+    /**
+     * List Words
+     * Search and filter dictionary words.
+     *
+     * Query params:
+     * q: Search text (matches word name and definitions).
+     * pos: Part of speech filter (e.g. "noun", "verb", "particle").
+     * word_set: Word set filter — "pu" for core words, "ku" for ku words.
+     * @param data The data for the request.
+     * @param data.q
+     * @param data.pos
+     * @param data.wordSet
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static listWords(data: DictionaryListWordsData = {}): CancelablePromise<DictionaryListWordsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/dictionary/words',
+            query: {
+                q: data.q,
+                pos: data.pos,
+                word_set: data.wordSet
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Word Detail
+     * Get details for a single word.
+     * @param data The data for the request.
+     * @param data.word
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static getWordDetail(data: DictionaryGetWordDetailData): CancelablePromise<DictionaryGetWordDetailResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/dictionary/words/{word}',
+            path: {
+                word: data.word
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Grammar
+     * Get all grammar content: sections, comparisons, and quiz.
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static listGrammar(): CancelablePromise<DictionaryListGrammarResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/dictionary/grammar'
+        });
+    }
+    
+    /**
+     * Get Grammar Section Detail
+     * Get a single grammar section by id.
+     * @param data The data for the request.
+     * @param data.sectionId
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static getGrammarSectionDetail(data: DictionaryGetGrammarSectionDetailData): CancelablePromise<DictionaryGetGrammarSectionDetailResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/dictionary/grammar/{section_id}',
+            path: {
+                section_id: data.sectionId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class LessonsService {
+    /**
+     * List Units
+     * Return the full skill tree — all 10 units with metadata.
+     * @returns UnitSummary Successful Response
+     * @throws ApiError
+     */
+    public static listUnits(): CancelablePromise<LessonsListUnitsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/lessons/units'
+        });
+    }
+    
+    /**
+     * Get Lesson Exercises
+     * Return exercises for a specific lesson within a unit.
+     * @param data The data for the request.
+     * @param data.unitId
+     * @param data.lessonId
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static getLessonExercises(data: LessonsGetLessonExercisesData): CancelablePromise<LessonsGetLessonExercisesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/lessons/units/{unit_id}/lessons/{lesson_id}',
+            path: {
+                unit_id: data.unitId,
+                lesson_id: data.lessonId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
 
 export class LoginService {
     /**
@@ -115,6 +285,63 @@ export class PrivateService {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/private/users/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class ProgressService {
+    /**
+     * Get My Progress
+     * Return the authenticated user's progress. Creates a default record if none exists.
+     * @returns ProgressPublic Successful Response
+     * @throws ApiError
+     */
+    public static getMyProgress(): CancelablePromise<ProgressGetMyProgressResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/progress/me'
+        });
+    }
+    
+    /**
+     * Update My Progress
+     * Partial update of the authenticated user's progress.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns ProgressPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateMyProgress(data: ProgressUpdateMyProgressData): CancelablePromise<ProgressUpdateMyProgressResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/progress/me',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Sync Progress
+     * Merge localStorage progress into the server record.
+     *
+     * Uses max/union strategy so the operation is idempotent.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns ProgressPublic Successful Response
+     * @throws ApiError
+     */
+    public static syncProgress(data: ProgressSyncProgressData): CancelablePromise<ProgressSyncProgressResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/progress/sync',
             body: data.requestBody,
             mediaType: 'application/json',
             errors: {

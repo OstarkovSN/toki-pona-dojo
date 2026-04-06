@@ -89,25 +89,72 @@ class NewPassword(SQLModel):
 
 
 class UserProgress(SQLModel, table=True):
+    __tablename__ = "user_progress"
+
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     user_id: uuid.UUID = Field(foreign_key="user.id", index=True, unique=True)
-    completed_units: list[int] = Field(default_factory=list, sa_column=Column(JSON))
-    completed_lessons: list[str] = Field(default_factory=list, sa_column=Column(JSON))
+    completed_units: list[int] = Field(default=[], sa_column=Column(JSON))
+    completed_lessons: list[str] = Field(default=[], sa_column=Column(JSON))
     current_unit: int = Field(default=1)
-    srs_data: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    srs_data: dict[str, Any] = Field(default={}, sa_column=Column(JSON))
     total_correct: int = Field(default=0)
     total_answered: int = Field(default=0)
     streak_days: int = Field(default=0)
+    last_activity: datetime | None = Field(
+        default=None, sa_type=DateTime(timezone=True)
+    )
+    known_words: list[str] = Field(default=[], sa_column=Column(JSON))
+    recent_errors: list[dict[str, Any]] = Field(default=[], sa_column=Column(JSON))
+    created_at: datetime | None = Field(
+        default_factory=get_datetime_utc,
+        sa_type=DateTime(timezone=True),
+    )
+    updated_at: datetime | None = Field(
+        default_factory=get_datetime_utc,
+        sa_type=DateTime(timezone=True),
+    )
+
+
+class ProgressUpdate(SQLModel):
+    """Partial update payload for PUT /progress/me."""
+
+    completed_units: list[int] | None = None
+    completed_lessons: list[str] | None = None
+    current_unit: int | None = None
+    srs_data: dict[str, Any] | None = None
+    total_correct: int | None = None
+    total_answered: int | None = None
+    streak_days: int | None = None
     last_activity: datetime | None = None
-    known_words: list[str] = Field(default_factory=list, sa_column=Column(JSON))
-    recent_errors: list[dict[str, Any]] = Field(
-        default_factory=list, sa_column=Column(JSON)
-    )
-    created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-        sa_type=DateTime(timezone=True),  # type: ignore[call-overload]
-    )
-    updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-        sa_type=DateTime(timezone=True),  # type: ignore[call-overload]
-    )
+    known_words: list[str] | None = None
+    recent_errors: list[dict[str, Any]] | None = None
+
+
+class ProgressPublic(SQLModel):
+    """Response schema for progress endpoints."""
+
+    completed_units: list[int] = []
+    completed_lessons: list[str] = []
+    current_unit: int = 1
+    srs_data: dict[str, Any] = {}
+    total_correct: int = 0
+    total_answered: int = 0
+    streak_days: int = 0
+    last_activity: datetime | None = None
+    known_words: list[str] = []
+    recent_errors: list[dict[str, Any]] = []
+
+
+class ProgressSync(SQLModel):
+    """Payload for POST /progress/sync — localStorage data to merge."""
+
+    completed_units: list[int] = []
+    completed_lessons: list[str] = []
+    current_unit: int = 1
+    srs_data: dict[str, Any] = {}
+    total_correct: int = 0
+    total_answered: int = 0
+    streak_days: int = 0
+    last_activity: datetime | None = None
+    known_words: list[str] = []
+    recent_errors: list[dict[str, Any]] = []

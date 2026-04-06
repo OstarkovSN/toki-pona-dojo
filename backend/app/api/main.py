@@ -1,6 +1,15 @@
 from fastapi import APIRouter
 
-from app.api.routes import chat, dictionary, lessons, login, private, users, utils
+from app.api.routes import (
+    chat,
+    dictionary,
+    lessons,
+    login,
+    private,
+    progress,
+    users,
+    utils,
+)
 from app.core.config import settings
 
 api_router = APIRouter()
@@ -10,6 +19,7 @@ api_router.include_router(utils.router)
 api_router.include_router(dictionary.router)
 api_router.include_router(lessons.router)
 api_router.include_router(chat.router)
+api_router.include_router(progress.router)
 
 
 if settings.ENVIRONMENT == "local":
