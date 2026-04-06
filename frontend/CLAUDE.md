@@ -149,3 +149,11 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **`useSyncExternalStore` version variable must be used in `useMemo` dependency array** — TypeScript TS6133 fires if the version is named `_version` (unused variable); rename to `version` and include it as a dependency in all `useMemo` calls that depend on the external store.
 - **Two `ExerciseResult` interfaces with incompatible `correct` types** — `useProgress.ts` defines `correct: number` while `types/exercises.ts` defines `correct: boolean`; the lesson page bridges them with `result.correct ? 1 : 0`. Consider renaming one to `ProgressExerciseResult` to avoid confusion.
 - **`ralph-loop.local.md` must be gitignored** — `.claude/ralph-loop.local.md` is session-local automation state; add to `.gitignore` and `git rm --cached` it if accidentally committed.
+
+## Phase 10 Gotchas
+
+- **`ChatPanel` must render outside `SidebarInset` on mobile** — `ChatPanel` handles its own mobile responsiveness (floating button + bottom Sheet via `useIsMobile`); placing it inside `SidebarInset` causes the Sheet to clip behind the sidebar overlay due to z-index stacking. Render it as a peer to `SidebarInset`, not a child.
+- **`tsconfig.build.json` excludes unit tests in `src/**/__tests__/**`** — the exclude list already includes these to prevent test-only imports (e.g. `vitest`) from appearing in production builds; this was configured during setup.
+- **SkillTree uses dual render for desktop vs mobile** — desktop renders the tree layout; mobile hides it and renders a flat list instead (both via `md:` breakpoint toggle). Parameterizing the existing tree was less clean than maintaining two separate render paths.
+- **Dictionary search bar sticky offset depends on header height** — use `top-14` on mobile (h-14 header) and `top-16` on desktop (h-16 header); mismatch causes content to scroll under the bar.
+- **`UnitNode` width responsive class is `w-full md:w-56`** — the inner div (not the Link wrapper) uses this class to collapse to full width on mobile and fixed width on desktop.
