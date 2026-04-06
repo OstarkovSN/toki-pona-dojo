@@ -86,4 +86,39 @@ test.describe("Loading States", () => {
     // Just verify the page renders content, not that skeleton appears
     await expect(page.locator("main")).toBeVisible()
   })
+
+  test("grading spinner appears during LLM grading", async ({ page }) => {
+    // Slow down the grade endpoint so we can observe the spinner
+    await page.route("**/api/v1/lessons/grade**", async (route) => {
+      await new Promise<void>((resolve) => setTimeout(resolve, 1500))
+      await route.continue()
+    })
+
+    await page.goto("/learn/1/1")
+
+    // Wait for lesson to load
+    await expect(page.getByTestId("lesson-skeleton")).not.toBeVisible({
+      timeout: 15000,
+    })
+
+    // Look for a free-compose or concept-build exercise input
+    const answerInput = page.locator(
+      "[data-testid='free-compose-input'], [data-testid='concept-build-input']",
+    )
+    const hasInput = await answerInput
+      .isVisible({ timeout: 5000 })
+      .catch(() => false)
+    if (!hasInput) {
+      test.skip()
+      return
+    }
+
+    await answerInput.fill("mi pona")
+    await page.keyboard.press("Enter")
+
+    // Grading spinner should appear while waiting for LLM
+    const gradingSpinner = page.getByTestId("grading-spinner")
+    await expect(gradingSpinner).toBeVisible({ timeout: 5000 })
+    await expect(gradingSpinner).not.toBeVisible({ timeout: 15000 })
+  })
 })

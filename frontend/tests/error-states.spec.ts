@@ -99,4 +99,52 @@ test.describe("Error States", () => {
     const notFound = page.getByTestId("not-found")
     await expect(notFound).toBeVisible({ timeout: 5000 })
   })
+
+  test("chat input not permanently disabled after API timeout", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 720 })
+
+    await page.addInitScript(() => {
+      localStorage.setItem("tp-chat-open", "true")
+    })
+    await page.goto("/")
+
+    // Abort the chat stream to simulate a timeout
+    await page.route("**/api/v1/chat/stream**", (route) => route.abort())
+
+    const chatInput = page.locator("[data-testid='chat-input']")
+    if (!(await chatInput.isVisible({ timeout: 5000 }).catch(() => false))) {
+      test.skip()
+      return
+    }
+
+    await chatInput.fill("toki!")
+    await page.keyboard.press("Enter")
+
+    // Wait briefly for error handling to settle
+    await page.waitForTimeout(2000)
+
+    // Input should not be permanently disabled after the request fails
+    await expect(chatInput).not.toBeDisabled({ timeout: 5000 })
+  })
+
+  test("lesson API 503 shows error state not infinite spinner", async ({
+    page,
+  }) => {
+    await page.route("**/api/v1/lessons/units/1/lessons/1", (route) =>
+      route.fulfill({ status: 503, body: "Service Unavailable" }),
+    )
+
+    await page.goto("/learn/1/1")
+
+    // Should show an error component or error banner — not stay as a spinner
+    const errorState = page
+      .getByTestId("error-component")
+      .or(page.getByTestId("error-banner-api-unreachable"))
+    await expect(errorState).toBeVisible({ timeout: 10000 })
+
+    // The lesson skeleton should NOT still be showing (no infinite spinner)
+    await expect(page.getByTestId("lesson-skeleton")).not.toBeVisible()
+  })
 })
