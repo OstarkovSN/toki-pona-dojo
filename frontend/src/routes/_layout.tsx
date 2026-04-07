@@ -2,11 +2,8 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 import { ChatPanel } from "@/components/ChatPanel"
 import { Footer } from "@/components/Common/Footer"
 import AppSidebar from "@/components/Sidebar/AppSidebar"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+import { TopNav } from "@/components/TopNav"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ChatProvider } from "@/contexts/ChatContext"
 import { isLoggedIn } from "@/hooks/useAuth"
 import { useIsMobile } from "@/hooks/useMobile"
@@ -33,9 +30,7 @@ function Layout() {
           <div className="flex h-full">
             {/* Main content column */}
             <div className="flex flex-1 flex-col min-w-0">
-              <header className="sticky top-0 z-10 flex h-14 md:h-16 shrink-0 items-center gap-2 border-b px-3 md:px-4">
-                <SidebarTrigger className="-ml-1 text-muted-foreground" />
-              </header>
+              <TopNav />
               <main className="flex-1 p-4 md:p-6 lg:p-8">
                 <div className="mx-auto max-w-7xl">
                   <Outlet />
