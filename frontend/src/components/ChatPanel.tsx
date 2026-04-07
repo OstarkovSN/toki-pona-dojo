@@ -44,7 +44,7 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+  }, [])
 
   // Auto-resize textarea
   const adjustTextarea = useCallback(() => {
@@ -119,6 +119,7 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
               className="h-7 w-7"
               onClick={onClose}
               title="Close chat"
+              aria-label="Toggle chat panel"
             >
               <X className="h-3.5 w-3.5" />
             </Button>

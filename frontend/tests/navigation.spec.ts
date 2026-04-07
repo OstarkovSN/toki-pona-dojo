@@ -76,10 +76,10 @@ test("Home page loads without auth redirect", async ({ page }) => {
 
 test("Theme toggle works", async ({ page }) => {
   await page.goto("/")
-  await page.getByTestId("theme-button").click()
+  await page.locator("header").getByTestId("theme-button").click()
   await page.getByTestId("dark-mode").click()
   await expect(page.locator("html")).toHaveClass(/dark/)
-  await page.getByTestId("theme-button").click()
+  await page.locator("header").getByTestId("theme-button").click()
   await page.getByTestId("light-mode").click()
   await expect(page.locator("html")).toHaveClass(/light/)
 })
@@ -88,11 +88,11 @@ test("Chat panel toggles open and closed", async ({ page }) => {
   await page.goto("/")
   // Chat panel should be hidden initially
   await expect(page.getByTestId("chat-panel")).not.toBeVisible()
-  // Click toggle
-  await page.getByLabel("Toggle chat panel").click()
+  // Click toggle — target visible button only (on mobile the sheet overlay may obscure the header)
+  await page.locator("button[aria-label='Toggle chat panel']:visible").click()
   await expect(page.getByTestId("chat-panel")).toBeVisible()
-  // Click toggle again to close
-  await page.getByLabel("Toggle chat panel").click()
+  // Click toggle again to close — on mobile the close button inside the panel is now visible
+  await page.locator("button[aria-label='Toggle chat panel']:visible").click()
   await expect(page.getByTestId("chat-panel")).not.toBeVisible()
 })
 
