@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test"
 
 test.beforeEach(async ({ page }) => {
-  // Inject fake token so isLoggedIn() returns true in [no-auth] project
+  // Inject fake token so isLoggedIn() returns true in [no-auth] project.
   // In [chromium]/[mobile-chrome] the storageState already has real auth,
-  // so this addInitScript is a no-op for those projects (harmless duplicate).
+  // so addInitScript is a no-op (harmless duplicate).
+  // Note: page.route mocks below run for ALL projects — intentional, since
+  // navigation tests don't exercise user-specific data.
   await page.addInitScript(() => {
     localStorage.setItem("access_token", "fake-test-token")
     // Suppress mobile chat panel Sheet overlay that blocks pointer events
