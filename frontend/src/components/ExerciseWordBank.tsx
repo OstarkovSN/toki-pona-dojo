@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { WordChip } from "@/components/WordChip"
 import { cn } from "@/lib/utils"
 import type { ExerciseProps } from "@/types/exercises"
 
@@ -69,14 +70,12 @@ export function ExerciseWordBank({ exercise, onComplete }: ExerciseProps) {
       </div>
       <div className="flex flex-wrap gap-2 mb-4">
         {bankWords.map((word, i) => (
-          <Badge
+          <WordChip
             key={`bank-${i}`}
-            variant="outline"
-            className="cursor-pointer text-sm px-3 py-1.5 hover:bg-primary/10"
-            onClick={() => handleTapBank(word, i)}
-          >
-            {word}
-          </Badge>
+            word={word}
+            className="text-sm px-3 py-1.5 hover:bg-primary/10"
+            onSelect={() => handleTapBank(word, i)}
+          />
         ))}
       </div>
       {!checked && (
