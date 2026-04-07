@@ -170,3 +170,8 @@ New services must use non-standard ports. LangFuse: 3100 (UI), 9190 (MinIO). Cro
 - **Data validation script doesn't require database** — `validate_data.py` only reads JSON files; it's safe to run independently to verify vocabulary, flashcards, and grammar structure without a running stack.
 - **Playwright test collection requires environment variables** — Even for public tests with `storageState` overrides, the test configuration file is imported during test discovery. `FIRST_SUPERUSER` and `FIRST_SUPERUSER_PASSWORD` env vars must be set even when running `npx playwright test --list` or test collection will fail.
 - **Manual QA checklist as fallback** — On machines with Docker Compose constraints, use `docs/manual-verification-checklist.md` as a script for human verification in a browser instead of automated test runs.
+
+## Phase 10.5 Gotchas
+
+- **Port 5173 occupied blocks Playwright connection** — Playwright's `reuseExistingServer: !process.env.CI` config tries to reuse a server on port 5173; when that port is occupied by another application (not the frontend dev server), all tests fail silently and cannot connect to the frontend.
+- **Docker container ID lookup must be fresh each session** — `docker compose ps -q backend` returns the full 64-char ID needed for `docker cp`; running the command again in the same session (or scripting multiple copies) may return a stale ID if the container is replaced mid-operation.
