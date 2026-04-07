@@ -51,3 +51,24 @@ test("Chat panel toggles open and closed", async ({ page }) => {
   await page.getByLabel("Toggle chat panel").click()
   await expect(page.getByTestId("chat-panel")).not.toBeVisible()
 })
+
+test("TopNav dictionary link is visible on grammar page", async ({ page }) => {
+  await page.goto("/grammar")
+  await expect(page.getByRole("link", { name: "dictionary" })).toBeVisible({
+    timeout: 5000,
+  })
+})
+
+test("TopNav dictionary link navigates from grammar page", async ({ page }) => {
+  await page.goto("/grammar")
+  await page.getByRole("link", { name: "dictionary" }).click()
+  await expect(page).toHaveURL(/\/dictionary$/, { timeout: 5000 })
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+})
+
+test("TopNav dictionary link is visible on a lesson page", async ({ page }) => {
+  await page.goto("/learn/1/1")
+  await expect(page.getByRole("link", { name: "dictionary" })).toBeVisible({
+    timeout: 5000,
+  })
+})
