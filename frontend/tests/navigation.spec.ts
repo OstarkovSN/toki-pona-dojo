@@ -96,12 +96,12 @@ test("Chat panel toggles open and closed", async ({ page }) => {
   // Click toggle in header to open
   await page.locator("header").getByLabel("Toggle chat panel").click()
   await expect(page.getByTestId("chat-panel")).toBeVisible()
-  // Click toggle in header again to close (on mobile, press Escape as fallback if header button unreachable)
+  // Click toggle in header again to close (on mobile, use close button inside panel if header button unreachable)
   const headerButton = page.locator("header").getByLabel("Toggle chat panel")
   if (await headerButton.isVisible()) {
     await headerButton.click()
   } else {
-    await page.keyboard.press("Escape")
+    await page.getByTitle("Close chat").click()
   }
   await expect(page.getByTestId("chat-panel")).not.toBeVisible()
 })

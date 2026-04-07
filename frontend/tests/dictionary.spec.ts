@@ -113,8 +113,7 @@ test("Word detail page shows error state for unknown word", async ({
   // Error state renders <p class="font-tp text-2xl ...">ala</p>
   // Wait for the 404 API response before checking DOM
   await page.waitForResponse(
-    (resp) =>
-      resp.url().includes("/dictionary/words/") && resp.status() >= 400,
+    (resp) => resp.url().includes("/dictionary/words/") && resp.status() >= 400,
     { timeout: 10000 },
   )
   await page.waitForSelector("p.font-tp, h1", { timeout: 10000 })
