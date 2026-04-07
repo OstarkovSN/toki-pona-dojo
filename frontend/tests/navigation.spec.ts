@@ -1,6 +1,48 @@
 import { expect, test } from "@playwright/test"
 
-test.use({ storageState: { cookies: [], origins: [] } })
+test.beforeEach(async ({ page }) => {
+  // Inject fake token so isLoggedIn() returns true in [no-auth] project
+  // In [chromium]/[mobile-chrome] the storageState already has real auth,
+  // so this addInitScript is a no-op for those projects (harmless duplicate).
+  await page.addInitScript(() => {
+    localStorage.setItem("access_token", "fake-test-token")
+    // Suppress mobile chat panel Sheet overlay that blocks pointer events
+    localStorage.setItem("tp-chat-open", "false")
+  })
+  // Mock /users/me so useAuth doesn't 401 with the fake token
+  await page.route("**/api/v1/users/me", (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        id: "00000000-0000-0000-0000-000000000001",
+        email: "test@example.com",
+        is_active: true,
+        is_superuser: false,
+        full_name: "Test User",
+      }),
+    })
+  })
+  // Mock /progress/me so useProgress doesn't 401 with the fake token
+  await page.route("**/api/v1/progress/me", (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        completed_units: [],
+        completed_lessons: [],
+        current_unit: 1,
+        srs_data: {},
+        total_correct: 0,
+        total_answered: 0,
+        streak_days: 0,
+        last_activity: null,
+        known_words: [],
+        recent_errors: [],
+      }),
+    })
+  })
+})
 
 test("Top nav renders with correct links", async ({ page }) => {
   await page.goto("/")
