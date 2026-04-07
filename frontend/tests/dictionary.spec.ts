@@ -1,5 +1,50 @@
 import { expect, test } from "@playwright/test"
 
+test.beforeEach(async ({ page }) => {
+  // Inject fake token so isLoggedIn() returns true in [no-auth] project.
+  // In [chromium]/[mobile-chrome] the storageState already has real auth,
+  // so addInitScript is a no-op (harmless duplicate).
+  // Note: page.route mocks below run for ALL projects — intentional, since
+  // dictionary tests don't exercise user-specific data.
+  await page.addInitScript(() => {
+    localStorage.setItem("access_token", "fake-test-token")
+    // Suppress mobile chat panel Sheet overlay that blocks pointer events
+    localStorage.setItem("tp-chat-open", "false")
+  })
+  // Mock /users/me so useAuth doesn't 401 with the fake token
+  await page.route("**/api/v1/users/me", (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        id: "00000000-0000-0000-0000-000000000001",
+        email: "test@example.com",
+        is_active: true,
+        is_superuser: false,
+        full_name: "Test User",
+      }),
+    })
+  })
+  await page.route("**/api/v1/progress/me", (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        completed_units: [],
+        completed_lessons: [],
+        current_unit: 1,
+        srs_data: {},
+        total_correct: 0,
+        total_answered: 0,
+        streak_days: 0,
+        last_activity: null,
+        known_words: [],
+        recent_errors: [],
+      }),
+    })
+  })
+})
+
 test("Dictionary page renders search and filters", async ({ page }) => {
   await page.goto("/dictionary")
   await expect(page.getByTestId("dictionary-search")).toBeVisible()
@@ -66,7 +111,13 @@ test("Word detail page shows error state for unknown word", async ({
   await expect(page).toHaveURL(/\/dictionary\/xyznotaword/)
   // Backend endpoint not implemented — page should show error/empty state, not crash
   // Error state renders <p class="font-tp text-2xl ...">ala</p>
-  await page.waitForSelector("p.font-tp, h1", { timeout: 5000 })
+  // Wait for the 404 API response before checking DOM
+  await page.waitForResponse(
+    (resp) =>
+      resp.url().includes("/dictionary/words/") && resp.status() === 404,
+    { timeout: 10000 },
+  )
+  await page.waitForSelector("p.font-tp, h1", { timeout: 10000 })
   const errorOrContent = page.locator("p.font-tp, h1")
   await expect(errorOrContent.first()).toBeVisible()
 })
@@ -74,9 +125,10 @@ test("Word detail page shows error state for unknown word", async ({
 test("word detail page mobile layout", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 })
   await page.goto("/dictionary/toki")
-  await expect(page.locator("main")).toBeVisible()
+  await expect(page.locator("main").last()).toBeVisible()
   const mainWidth = await page
     .locator("main")
+    .last()
     .evaluate((el) => el.getBoundingClientRect().width)
   expect(mainWidth).toBeLessThanOrEqual(380) // with small tolerance
 })
