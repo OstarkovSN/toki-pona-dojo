@@ -94,6 +94,8 @@ test.describe("Lesson exercises flow", () => {
     // beforeLoad guard doesn't redirect to /login
     await page.addInitScript(() => {
       localStorage.setItem("access_token", "fake-test-token")
+      // Suppress mobile chat panel Sheet overlay that blocks pointer events
+      localStorage.setItem("tp-chat-open", "false")
     })
 
     await page.route("**/api/v1/lessons/units/1/lessons/1", (route) => {
@@ -225,7 +227,9 @@ test.describe("Lesson exercises flow", () => {
     await page.getByRole("button", { name: "person" }).click()
     await expect(page.getByText("ike...")).toBeVisible()
     // Correct answer is shown
-    await expect(page.locator("span.font-mono").filter({ hasText: "house" })).toBeVisible()
+    await expect(
+      page.locator("span.font-mono").filter({ hasText: "house" }),
+    ).toBeVisible()
   })
 
   test("word bank chips link to dictionary", async ({ page }) => {
