@@ -158,13 +158,20 @@ def test_get_words_search_case_insensitive(client: TestClient) -> None:
 
 
 def test_get_word_detail_optional_fields_present(client: TestClient) -> None:
-    """Word detail for 'alasa' includes all required field keys."""
+    """Word detail for 'alasa' includes all optional linku.la field keys."""
     r = client.get(f"{settings.API_V1_STR}/dictionary/words/alasa")
     assert r.status_code == 200
     data = r.json()
-    required_keys = {"word", "ku", "pos", "definitions", "note"}
-    for key in required_keys:
-        assert key in data, f"Missing required key: {key}"
+    optional_keys = {
+        "sitelen_emosi",
+        "sitelen_pona",
+        "usage_category",
+        "book",
+        "see_also",
+        "coined_era",
+    }
+    for key in optional_keys:
+        assert key in data, f"Missing optional key: {key}"
 
 
 def test_get_word_detail_404_message_contains_word(client: TestClient) -> None:
