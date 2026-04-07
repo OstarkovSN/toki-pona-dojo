@@ -30,7 +30,7 @@ export function TopNav() {
   }
 
   return (
-    <header className="sticky top-0 z-50 flex h-14 items-center justify-between border-b border-zen-border bg-zen-bg/95 backdrop-blur-sm px-3 md:px-4">
+    <header className="sticky top-0 z-50 flex shrink-0 h-14 md:h-16 items-center justify-between border-b border-zen-border bg-zen-bg/95 backdrop-blur-sm px-3 md:px-4">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="-ml-1 text-muted-foreground" />
         <nav className="flex items-center gap-6">
