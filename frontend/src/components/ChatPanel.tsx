@@ -119,7 +119,6 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
               className="h-7 w-7"
               onClick={onClose}
               title="Close chat"
-              aria-label="Toggle chat panel"
             >
               <X className="h-3.5 w-3.5" />
             </Button>

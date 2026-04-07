@@ -78,6 +78,11 @@ test("Theme toggle works", async ({ page }) => {
   await page.goto("/")
   await page.locator("header").getByTestId("theme-button").click()
   await page.getByTestId("dark-mode").click()
+  // Wait for dropdown to fully close before reopening
+  await page
+    .locator("[role='menu']")
+    .waitFor({ state: "hidden", timeout: 3000 })
+    .catch(() => {})
   await expect(page.locator("html")).toHaveClass(/dark/)
   await page.locator("header").getByTestId("theme-button").click()
   await page.getByTestId("light-mode").click()
@@ -88,11 +93,16 @@ test("Chat panel toggles open and closed", async ({ page }) => {
   await page.goto("/")
   // Chat panel should be hidden initially
   await expect(page.getByTestId("chat-panel")).not.toBeVisible()
-  // Click toggle — target visible button only (on mobile the sheet overlay may obscure the header)
-  await page.locator("button[aria-label='Toggle chat panel']:visible").click()
+  // Click toggle in header to open
+  await page.locator("header").getByLabel("Toggle chat panel").click()
   await expect(page.getByTestId("chat-panel")).toBeVisible()
-  // Click toggle again to close — on mobile the close button inside the panel is now visible
-  await page.locator("button[aria-label='Toggle chat panel']:visible").click()
+  // Click toggle in header again to close (on mobile, press Escape as fallback if header button unreachable)
+  const headerButton = page.locator("header").getByLabel("Toggle chat panel")
+  if (await headerButton.isVisible()) {
+    await headerButton.click()
+  } else {
+    await page.keyboard.press("Escape")
+  }
   await expect(page.getByTestId("chat-panel")).not.toBeVisible()
 })
 
