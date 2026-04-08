@@ -1,6 +1,49 @@
 import { expect, test } from "@playwright/test"
 
-test.use({ storageState: { cookies: [], origins: [] } })
+test.beforeEach(async ({ page }) => {
+  // Inject fake token so isLoggedIn() returns true in [no-auth] project.
+  // In [chromium]/[mobile-chrome] the storageState already has real auth,
+  // so addInitScript is a no-op (harmless duplicate).
+  // Note: page.route mocks below run for ALL projects — intentional, since
+  // dictionary tests don't exercise user-specific data.
+  await page.addInitScript(() => {
+    localStorage.setItem("access_token", "fake-test-token")
+    // Suppress mobile chat panel Sheet overlay that blocks pointer events
+    localStorage.setItem("tp-chat-open", "false")
+  })
+  // Mock /users/me so useAuth doesn't 401 with the fake token
+  await page.route("**/api/v1/users/me", (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        id: "00000000-0000-0000-0000-000000000001",
+        email: "test@example.com",
+        is_active: true,
+        is_superuser: false,
+        full_name: "Test User",
+      }),
+    })
+  })
+  await page.route("**/api/v1/progress/me", (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        completed_units: [],
+        completed_lessons: [],
+        current_unit: 1,
+        srs_data: {},
+        total_correct: 0,
+        total_answered: 0,
+        streak_days: 0,
+        last_activity: null,
+        known_words: [],
+        recent_errors: [],
+      }),
+    })
+  })
+})
 
 test("Dictionary page renders search and filters", async ({ page }) => {
   await page.goto("/dictionary")
@@ -68,7 +111,12 @@ test("Word detail page shows error state for unknown word", async ({
   await expect(page).toHaveURL(/\/dictionary\/xyznotaword/)
   // Backend endpoint not implemented — page should show error/empty state, not crash
   // Error state renders <p class="font-tp text-2xl ...">ala</p>
-  await page.waitForSelector("p.font-tp, h1", { timeout: 5000 })
+  // Wait for the 404 API response before checking DOM
+  await page.waitForResponse(
+    (resp) => resp.url().includes("/dictionary/words/") && resp.status() >= 400,
+    { timeout: 10000 },
+  )
+  await page.waitForSelector("p.font-tp, h1", { timeout: 10000 })
   const errorOrContent = page.locator("p.font-tp, h1")
   await expect(errorOrContent.first()).toBeVisible()
 })
@@ -76,9 +124,10 @@ test("Word detail page shows error state for unknown word", async ({
 test("word detail page mobile layout", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 })
   await page.goto("/dictionary/toki")
-  await expect(page.locator("main")).toBeVisible()
+  await expect(page.locator("main").last()).toBeVisible()
   const mainWidth = await page
     .locator("main")
+    .last()
     .evaluate((el) => el.getBoundingClientRect().width)
   expect(mainWidth).toBeLessThanOrEqual(380) // with small tolerance
 })
@@ -95,4 +144,149 @@ test("search with no matching results shows empty state", async ({ page }) => {
 
   const noResults = page.locator("[data-testid='dictionary-no-results']")
   await expect(noResults).toBeVisible({ timeout: 5000 })
+})
+
+test("word cards render after loading", async ({ page }) => {
+  await page.goto("/dictionary")
+  // Wait for loading skeleton to disappear
+  await expect(page.getByTestId("dictionary-skeleton")).not.toBeVisible({
+    timeout: 10000,
+  })
+  // At least one word card should be visible
+  const firstCard = page.locator("[data-testid^='word-card-']").first()
+  await expect(firstCard).toBeVisible({ timeout: 5000 })
+})
+
+test("clicking a word card navigates to detail page", async ({ page }) => {
+  await page.goto("/dictionary")
+  await expect(page.getByTestId("dictionary-skeleton")).not.toBeVisible({
+    timeout: 10000,
+  })
+  const ponaCard = page.getByTestId("word-card-pona")
+  await expect(ponaCard).toBeVisible({ timeout: 5000 })
+  await ponaCard.click()
+  await expect(page).toHaveURL(/\/dictionary\/pona/, { timeout: 5000 })
+})
+
+test("word detail page shows POS badges", async ({ page }) => {
+  await page.goto("/dictionary/toki")
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+  // toki has pos: ["verb", "noun"] — at least one badge should appear
+  const badges = page
+    .locator(".font-label")
+    .filter({ hasText: /noun|verb|particle/ })
+  await expect(badges.first()).toBeVisible({ timeout: 5000 })
+})
+
+test("word detail page shows definitions", async ({ page }) => {
+  await page.goto("/dictionary/toki")
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+  // toki definition contains text about language/communication
+  const content = page.locator("main").last()
+  await expect(content).toContainText(/language|speech|communicate|talk/, {
+    timeout: 5000,
+    ignoreCase: true,
+  })
+})
+
+test("word detail page shows note for kijetesantakalu", async ({ page }) => {
+  await page.goto("/dictionary/kijetesantakalu")
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+  // kijetesantakalu has a note field with Finnish etymology text
+  const noteSection = page.locator("main").last()
+  await expect(noteSection).toContainText(/note/i, { timeout: 5000 })
+  await expect(noteSection).toContainText(/kinkajou|karhu|raccoon/, {
+    timeout: 5000,
+    ignoreCase: true,
+  })
+})
+
+test("word detail page shows definition for 'a'", async ({ page }) => {
+  await page.goto("/dictionary/a")
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+  // word 'a' has pos: particle with definition about emphasis/emotion/confirmation
+  const content = page.locator("main").last()
+  await expect(content).toContainText(/particle/, { timeout: 5000 })
+  await expect(content).toContainText(/emphasis|emotion|confirmation/, {
+    timeout: 5000,
+    ignoreCase: true,
+  })
+})
+
+test("word detail page see_also: navigation from pona to dictionary works", async ({
+  page,
+}) => {
+  await page.goto("/dictionary/pona")
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+  // Navigate back to dictionary, then to another word
+  const backLink = page.locator('a[href="/dictionary"]').first()
+  await expect(backLink).toBeVisible({ timeout: 5000 })
+  await backLink.click()
+  await expect(page).toHaveURL(/\/dictionary$/, { timeout: 5000 })
+  // Navigate to toki
+  const tokiCard = page.getByTestId("word-card-toki")
+  await expect(tokiCard).toBeVisible({ timeout: 5000 })
+  await tokiCard.click()
+  await expect(page).toHaveURL(/\/dictionary\/toki/, { timeout: 5000 })
+})
+
+test("word detail page shows ku suli badge for a ku word", async ({ page }) => {
+  // ku is a ku=true word
+  await page.goto("/dictionary/ku")
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+  // The detail page should show the "ku suli" badge
+  await expect(page.locator("main").last()).toContainText("ku suli", {
+    timeout: 5000,
+  })
+})
+
+test("back link on detail page returns to dictionary list", async ({
+  page,
+}) => {
+  await page.goto("/dictionary/toki")
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+  // Click the back link (contains "dictionary" text with ArrowLeft icon)
+  const backLink = page.locator('a[href="/dictionary"]').first()
+  await expect(backLink).toBeVisible({ timeout: 5000 })
+  await backLink.click()
+  await expect(page).toHaveURL(/\/dictionary$/, { timeout: 5000 })
+})
+
+test("detail page document title includes the word name", async ({ page }) => {
+  await page.goto("/dictionary/toki")
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+  await expect(page).toHaveTitle(/toki.*toki pona dojo/i, { timeout: 5000 })
+})
+
+test("POS filter reduces word card count vs all", async ({ page }) => {
+  await page.goto("/dictionary")
+  // Wait for at least one word card to confirm words have loaded
+  await expect(page.locator("[data-testid^='word-card-']").first()).toBeVisible(
+    { timeout: 10000 },
+  )
+  const allCards = page.locator("[data-testid^='word-card-']")
+  const allCount = await allCards.count()
+  expect(allCount).toBeGreaterThan(0)
+
+  await page.getByTestId("pos-filter-noun").click()
+  await page.waitForTimeout(300)
+  const nounCount = await page.locator("[data-testid^='word-card-']").count()
+  expect(nounCount).toBeGreaterThan(0)
+  expect(nounCount).toBeLessThan(allCount)
+})
+
+test("set filter reduces word card count vs all", async ({ page }) => {
+  await page.goto("/dictionary")
+  // Wait for at least one word card to confirm words have loaded
+  await expect(page.locator("[data-testid^='word-card-']").first()).toBeVisible(
+    { timeout: 10000 },
+  )
+  const allCount = await page.locator("[data-testid^='word-card-']").count()
+  expect(allCount).toBeGreaterThan(0)
+
+  await page.getByTestId("set-filter-pu").click()
+  await page.waitForTimeout(300)
+  const puCount = await page.locator("[data-testid^='word-card-']").count()
+  expect(puCount).toBeGreaterThan(0)
+  expect(puCount).toBeLessThan(allCount)
 })

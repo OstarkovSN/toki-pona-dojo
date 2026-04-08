@@ -117,3 +117,85 @@ def test_list_words_empty_q_returns_all(client: TestClient) -> None:
     assert r_all.status_code == 200
     assert r_empty_q.status_code == 200
     assert len(r_empty_q.json()) == len(r_all.json())
+
+
+def test_get_words_count_matches_json(client: TestClient) -> None:
+    """GET /dictionary/words returns all words — count matches words.json."""
+    import json
+    from pathlib import Path
+
+    words_json = json.loads(
+        (Path(__file__).parents[3] / "app/data/words.json").read_text()
+    )
+    r = client.get(f"{settings.API_V1_STR}/dictionary/words")
+    assert r.status_code == 200
+    assert len(r.json()) == len(words_json)
+
+
+def test_get_words_combined_q_and_pos_filter(client: TestClient) -> None:
+    """Combined q + pos filter returns narrower results than either alone."""
+    r_q = client.get(f"{settings.API_V1_STR}/dictionary/words", params={"q": "a"})
+    r_pos = client.get(
+        f"{settings.API_V1_STR}/dictionary/words", params={"pos": "particle"}
+    )
+    r_both = client.get(
+        f"{settings.API_V1_STR}/dictionary/words",
+        params={"q": "a", "pos": "particle"},
+    )
+    assert r_both.status_code == 200
+    both_count = len(r_both.json())
+    assert both_count <= len(r_q.json())
+    assert both_count <= len(r_pos.json())
+    assert both_count > 0  # sanity: should still match something
+
+
+def test_get_words_search_case_insensitive(client: TestClient) -> None:
+    """Search is case-insensitive — 'TELO' matches the word 'telo'."""
+    r = client.get(f"{settings.API_V1_STR}/dictionary/words", params={"q": "TELO"})
+    assert r.status_code == 200
+    words = [str(w["word"]) for w in r.json()]
+    assert "telo" in words
+
+
+def test_get_word_detail_optional_fields_present(client: TestClient) -> None:
+    """Word detail for 'alasa' includes all optional linku.la field keys."""
+    r = client.get(f"{settings.API_V1_STR}/dictionary/words/alasa")
+    assert r.status_code == 200
+    data = r.json()
+    optional_keys = {
+        "sitelen_emosi",
+        "sitelen_pona",
+        "usage_category",
+        "book",
+        "see_also",
+        "coined_era",
+    }
+    for key in optional_keys:
+        assert key in data, f"Missing optional key: {key}"
+
+
+def test_get_word_detail_404_message_contains_word(client: TestClient) -> None:
+    """GET /dictionary/words/nonexistent 404 detail message mentions the word."""
+    r = client.get(f"{settings.API_V1_STR}/dictionary/words/nonexistent")
+    assert r.status_code == 404
+    assert "nonexistent" in r.json()["detail"]
+
+
+def test_no_words_with_pos_equal_to_word(client: TestClient) -> None:
+    """No word entry has pos == ['word'] — a sentinel/fallback that must not appear."""
+    r = client.get(f"{settings.API_V1_STR}/dictionary/words")
+    assert r.status_code == 200
+    for entry in r.json():
+        assert entry["pos"] != ["word"], (
+            f"Word '{entry['word']}' has pos=['word'] which is forbidden"
+        )
+
+
+def test_get_words_search_by_definition_text(client: TestClient) -> None:
+    """Searching by English definition text returns the matching word."""
+    r = client.get(f"{settings.API_V1_STR}/dictionary/words", params={"q": "water"})
+    assert r.status_code == 200
+    data = r.json()
+    assert len(data) > 0
+    words = [str(w["word"]) for w in data]
+    assert "telo" in words

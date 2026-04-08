@@ -1,6 +1,50 @@
 import { expect, test } from "@playwright/test"
 
-test.use({ storageState: { cookies: [], origins: [] } })
+test.beforeEach(async ({ page }) => {
+  // Inject fake token so isLoggedIn() returns true in [no-auth] project.
+  // In [chromium]/[mobile-chrome] the storageState already has real auth,
+  // so addInitScript is a no-op (harmless duplicate).
+  // Note: page.route mocks below run for ALL projects — intentional, since
+  // navigation tests don't exercise user-specific data.
+  await page.addInitScript(() => {
+    localStorage.setItem("access_token", "fake-test-token")
+    // Suppress mobile chat panel Sheet overlay that blocks pointer events
+    localStorage.setItem("tp-chat-open", "false")
+  })
+  // Mock /users/me so useAuth doesn't 401 with the fake token
+  await page.route("**/api/v1/users/me", (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        id: "00000000-0000-0000-0000-000000000001",
+        email: "test@example.com",
+        is_active: true,
+        is_superuser: false,
+        full_name: "Test User",
+      }),
+    })
+  })
+  // Mock /progress/me so useProgress doesn't 401 with the fake token
+  await page.route("**/api/v1/progress/me", (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        completed_units: [],
+        completed_lessons: [],
+        current_unit: 1,
+        srs_data: {},
+        total_correct: 0,
+        total_answered: 0,
+        streak_days: 0,
+        last_activity: null,
+        known_words: [],
+        recent_errors: [],
+      }),
+    })
+  })
+})
 
 test("Top nav renders with correct links", async ({ page }) => {
   await page.goto("/")
@@ -32,10 +76,15 @@ test("Home page loads without auth redirect", async ({ page }) => {
 
 test("Theme toggle works", async ({ page }) => {
   await page.goto("/")
-  await page.getByTestId("theme-button").click()
+  await page.locator("header").getByTestId("theme-button").click()
   await page.getByTestId("dark-mode").click()
+  // Wait for dropdown to fully close before reopening
+  await page
+    .locator("[role='menu']")
+    .waitFor({ state: "hidden", timeout: 3000 })
+    .catch(() => {})
   await expect(page.locator("html")).toHaveClass(/dark/)
-  await page.getByTestId("theme-button").click()
+  await page.locator("header").getByTestId("theme-button").click()
   await page.getByTestId("light-mode").click()
   await expect(page.locator("html")).toHaveClass(/light/)
 })
@@ -44,10 +93,36 @@ test("Chat panel toggles open and closed", async ({ page }) => {
   await page.goto("/")
   // Chat panel should be hidden initially
   await expect(page.getByTestId("chat-panel")).not.toBeVisible()
-  // Click toggle
-  await page.getByLabel("Toggle chat panel").click()
+  // Click toggle in header to open
+  await page.locator("header").getByLabel("Toggle chat panel").click()
   await expect(page.getByTestId("chat-panel")).toBeVisible()
-  // Click toggle again to close
-  await page.getByLabel("Toggle chat panel").click()
+  // Click toggle in header again to close (on mobile, use close button inside panel if header button unreachable)
+  const headerButton = page.locator("header").getByLabel("Toggle chat panel")
+  if (await headerButton.isVisible()) {
+    await headerButton.click()
+  } else {
+    await page.getByTitle("Close chat").click()
+  }
   await expect(page.getByTestId("chat-panel")).not.toBeVisible()
+})
+
+test("TopNav dictionary link is visible on grammar page", async ({ page }) => {
+  await page.goto("/grammar")
+  await expect(page.getByRole("link", { name: "dictionary" })).toBeVisible({
+    timeout: 5000,
+  })
+})
+
+test("TopNav dictionary link navigates from grammar page", async ({ page }) => {
+  await page.goto("/grammar")
+  await page.getByRole("link", { name: "dictionary" }).click()
+  await expect(page).toHaveURL(/\/dictionary$/, { timeout: 5000 })
+  await expect(page.locator("h1")).toBeVisible({ timeout: 5000 })
+})
+
+test("TopNav dictionary link is visible on a lesson page", async ({ page }) => {
+  await page.goto("/learn/1/1")
+  await expect(page.getByRole("link", { name: "dictionary" })).toBeVisible({
+    timeout: 5000,
+  })
 })

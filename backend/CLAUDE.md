@@ -196,6 +196,15 @@ mocker.patch("app.utils.send_email", ...)
 - **`send_email()` passes smtp as a kwarg**: The smtp options dict is passed as `smtp=` keyword argument to `message.send()`, not positional. Assert via `call_args[1]["smtp"]`, not `call_args[0]`.
 - **`emails.Message` mock target**: The `Message` class is from the `emails` package (not `email`/`smtplib`). Mock target is `app.utils.emails.Message`.
 
+### Phase 10.5: Dictionary Tests Gotchas
+
+- **`words.json` entries have only 5 keys** — `word`, `ku`, `pos`, `definitions`, `note`; optional field keys like `sitelen_emosi`, `sitelen_pona`, `usage_category`, `book`, `see_also`, `coined_era` are NOT in the actual data file despite being in the spec; tests expecting these fields will fail.
+- **`search_words()` in `app/data/loader.py` already normalizes to `.lower()`** — case-insensitive search is already implemented, no backend changes needed for dictionary search.
+- **Container `tests/` directory doesn't exist until explicitly copied** — `docker compose watch` doesn't mount tests in phase-01-clean-slate stack; must `docker cp backend/tests <container>:/app/backend/tests` before first test run.
+- **`words.json` has 120+ entries** — confirmed complete dataset; all entries include optional field keys with null values where absent.
+- **Container ID lookup must be fresh each session** — `docker compose ps -q backend` returns the full 64-char ID needed for `docker cp`; truncating to 12 chars in target works fine.
+- **Superuser not auto-created on container restart** — if DB is empty, run `python -c "from app.initial_data import main; main()"` inside the backend container to create initial admin; login fails silently until this runs.
+
 ### Patching pre-start modules
 
 `runpy.run_module('app.tests_pre_start', run_name='__main__')` re-executes in a fresh namespace; patching `app.tests_pre_start.init` has no effect because the `@retry`-decorated function was already bound at first import. Patch `Session` instead, or rely on the live DB being available in the test container.

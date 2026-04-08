@@ -19,4 +19,17 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+        configure: (proxy) => {
+          proxy.on("error", (err) => {
+            console.error("[vite proxy] Backend unreachable:", err.message)
+          })
+        },
+      },
+    },
+  },
 })

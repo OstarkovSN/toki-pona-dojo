@@ -53,8 +53,8 @@ def word_set(words: list[dict[str, Any]]) -> set[str]:
 
 class TestWords:
     def test_minimum_count(self, words: list[dict[str, Any]]) -> None:
-        """Sample data has at least 85 words (full dataset should have 137)."""
-        assert len(words) >= 85
+        """words.json has at least 120 entries (pu alone exceeds this; catches truncation)."""
+        assert len(words) >= 120
 
     def test_no_duplicate_words(self, words: list[dict[str, Any]]) -> None:
         """No duplicate word entries."""
@@ -91,6 +91,29 @@ class TestWords:
                 assert "definition" in defn, (
                     f"{entry['word']}: definition missing 'definition'"
                 )
+
+    def test_no_pos_word_sentinel(self, words: list[dict[str, Any]]) -> None:
+        """No word entry has pos == ['word'] — a fallback sentinel that must not exist."""
+        for entry in words:
+            assert entry.get("pos") != ["word"], (
+                f"Word '{entry.get('word', '?')}' has forbidden pos=['word']"
+            )
+
+    def test_optional_field_keys_present(self, words: list[dict[str, Any]]) -> None:
+        """Every word entry has all optional field keys (values may be null)."""
+        optional_keys = {
+            "sitelen_emosi",
+            "sitelen_pona",
+            "usage_category",
+            "book",
+            "see_also",
+            "coined_era",
+        }
+        for entry in words:
+            missing = optional_keys - set(entry.keys())
+            assert not missing, (
+                f"Word '{entry.get('word', '?')}' missing optional keys: {missing}"
+            )
 
     def test_unit_words_exist(self, word_set: set[str]) -> None:
         """All words referenced by units exist in words.json."""
