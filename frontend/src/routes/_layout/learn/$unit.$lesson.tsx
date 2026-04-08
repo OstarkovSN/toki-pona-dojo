@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { useQuery } from "@tanstack/react-query"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { LessonsService } from "@/client"
 import { ErrorBanner } from "@/components/Common/ErrorBanner"
 import { LessonSkeleton } from "@/components/Common/LessonSkeleton"
 import { ExerciseConceptBuild } from "@/components/ExerciseConceptBuild"
@@ -76,7 +78,25 @@ function LessonPage() {
     nextExercise,
   } = useLessons(unitId, lessonId)
 
-  const { updateAfterExercise, updateAfterLesson } = useProgress()
+  const { progress, updateAfterExercise, updateAfterLesson } = useProgress()
+
+  // Prerequisite guard: redirect home if this unit's requirements aren't met
+  const { data: units } = useQuery({
+    queryKey: ["units"],
+    queryFn: () => LessonsService.listUnits(),
+    staleTime: Infinity,
+  })
+  useEffect(() => {
+    if (!units) return
+    const unitMeta = units.find((u) => u.id === unitId)
+    if (!unitMeta) return
+    const prereqsMet = unitMeta.requires.every((req) =>
+      progress.completedUnits.includes(req),
+    )
+    if (!prereqsMet) {
+      void navigate({ to: "/" })
+    }
+  }, [units, unitId, progress.completedUnits, navigate])
 
   const [lastResult, setLastResult] = useState<ExerciseResult | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)

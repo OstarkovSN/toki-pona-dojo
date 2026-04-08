@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ChatChatStreamData, ChatChatStreamResponse, ChatGradeExerciseData, ChatGradeExerciseResponse, DictionaryListWordsData, DictionaryListWordsResponse, DictionaryGetWordDetailData, DictionaryGetWordDetailResponse, DictionaryListGrammarResponse, DictionaryGetGrammarSectionDetailData, DictionaryGetGrammarSectionDetailResponse, LessonsListUnitsResponse, LessonsGetLessonExercisesData, LessonsGetLessonExercisesResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, ProgressGetMyProgressResponse, ProgressUpdateMyProgressData, ProgressUpdateMyProgressResponse, ProgressSyncProgressData, ProgressSyncProgressResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { ChatChatStreamData, ChatChatStreamResponse, ChatGradeExerciseData, ChatGradeExerciseResponse, ConfigGetPublicConfigResponse, DictionaryListWordsData, DictionaryListWordsResponse, DictionaryGetWordDetailData, DictionaryGetWordDetailResponse, DictionaryListGrammarResponse, DictionaryGetGrammarSectionDetailData, DictionaryGetGrammarSectionDetailResponse, LessonsListUnitsResponse, LessonsGetLessonExercisesData, LessonsGetLessonExercisesResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, ProgressGetMyProgressResponse, ProgressUpdateMyProgressData, ProgressUpdateMyProgressResponse, ProgressSyncProgressData, ProgressSyncProgressResponse, TelegramTelegramWebhookResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersValidateTokenData, UsersValidateTokenResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class ChatService {
     /**
@@ -46,6 +46,23 @@ export class ChatService {
             errors: {
                 422: 'Validation Error'
             }
+        });
+    }
+}
+
+export class ConfigService {
+    /**
+     * Get Public Config
+     * Return public configuration (no auth required).
+     *
+     * Exposes bot_username for frontend Telegram links.
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static getPublicConfig(): CancelablePromise<ConfigGetPublicConfigResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/config/public'
         });
     }
 }
@@ -351,6 +368,21 @@ export class ProgressService {
     }
 }
 
+export class TelegramService {
+    /**
+     * Telegram Webhook
+     * Receive Telegram bot updates. Validates secret_token header.
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static telegramWebhook(): CancelablePromise<TelegramTelegramWebhookResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/telegram/webhook'
+        });
+    }
+}
+
 export class UsersService {
     /**
      * Read Users
@@ -464,6 +496,7 @@ export class UsersService {
     /**
      * Register User
      * Create new user without the need to be logged in.
+     * When TG_BOT_TOKEN is set, a valid invite_token is required.
      * @param data The data for the request.
      * @param data.requestBody
      * @returns UserPublic Successful Response
@@ -475,6 +508,29 @@ export class UsersService {
             url: '/api/v1/users/signup',
             body: data.requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Validate Token
+     * Check if an invite token is valid (exists, unused, not expired).
+     * Used by the frontend to show/hide the signup form.
+     * Rate limited to 5 req/min per IP to prevent token enumeration.
+     * @param data The data for the request.
+     * @param data.token
+     * @returns boolean Successful Response
+     * @throws ApiError
+     */
+    public static validateToken(data: UsersValidateTokenData): CancelablePromise<UsersValidateTokenResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/users/validate-token',
+            query: {
+                token: data.token
+            },
             errors: {
                 422: 'Validation Error'
             }

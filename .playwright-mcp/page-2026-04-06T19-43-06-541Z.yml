@@ -1,0 +1,54 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e177]:
+      - link "toki pona dojo" [ref=e179] [cursor=pointer]:
+        - /url: /
+      - list [ref=e183]:
+        - listitem [ref=e184]:
+          - link "Dashboard" [ref=e185] [cursor=pointer]:
+            - /url: /
+            - img [ref=e186]
+            - generic [ref=e189]: Dashboard
+        - listitem [ref=e190]:
+          - link "Admin" [ref=e191] [cursor=pointer]:
+            - /url: /admin
+            - img [ref=e192]
+            - generic [ref=e197]: Admin
+      - generic [ref=e198]:
+        - listitem [ref=e199]:
+          - button "Appearance Toggle theme" [ref=e200] [cursor=pointer]:
+            - img [ref=e201]
+            - generic [ref=e203]: Appearance
+            - generic [ref=e204]: Toggle theme
+        - list [ref=e205]:
+          - listitem [ref=e206]:
+            - button "U admin@example.com" [ref=e207] [cursor=pointer]:
+              - generic [ref=e208]:
+                - generic [ref=e210]: U
+                - generic [ref=e211]:
+                  - paragraph
+                  - paragraph [ref=e212]: admin@example.com
+              - img [ref=e213]
+    - main [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - button "Collapse Sidebar" [ref=e30] [cursor=pointer]:
+            - img
+            - generic [ref=e31]: Collapse Sidebar
+          - main [ref=e32]:
+            - generic [ref=e98]:
+              - paragraph [ref=e100]: unit 1 · toki! · exercise 2 of 4
+              - generic [ref=e168]:
+                - paragraph [ref=e169]: What does "moku" mean?
+                - generic [ref=e170]:
+                  - button "good, simple, positive, useful" [disabled]
+                  - button "bad, negative, wrong, harmful" [active] [ref=e172] [cursor=pointer]
+                  - button "language, speech, communication" [disabled]
+                  - button "food, drink, meal" [ref=e174] [cursor=pointer]
+              - generic [ref=e220]:
+                - paragraph [ref=e221]: ike...
+                - button "next" [ref=e222] [cursor=pointer]
+          - paragraph [ref=e52]: toki pona dojo - 2026
+        - button "Open chat" [ref=e217] [cursor=pointer]:
+          - img [ref=e218]
+  - region "Notifications alt+T"

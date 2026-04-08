@@ -1,6 +1,6 @@
 {
   "openapi": "3.1.0",
-  "info": { "title": "toki-pona-dojo", "version": "0.1.0" },
+  "info": { "title": "toki pona dojo", "version": "0.1.0" },
   "paths": {
     "/api/v1/login/access-token": {
       "post": {
@@ -338,7 +338,7 @@
       "post": {
         "tags": ["users"],
         "summary": "Register User",
-        "description": "Create new user without the need to be logged in.",
+        "description": "Create new user without the need to be logged in.\nWhen TG_BOT_TOKEN is set, a valid invite_token is required.",
         "operationId": "users-register_user",
         "requestBody": {
           "content": {
@@ -354,6 +354,44 @@
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/UserPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/validate-token": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Validate Token",
+        "description": "Check if an invite token is valid (exists, unused, not expired).\nUsed by the frontend to show/hide the signup form.\nRate limited to 5 req/min per IP to prevent token enumeration.",
+        "operationId": "users-validate_token",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Token" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": { "type": "boolean" },
+                  "title": "Response Users-Validate Token"
+                }
               }
             }
           },
@@ -914,6 +952,50 @@
         "security": [{ "OAuth2PasswordBearer": [] }]
       }
     },
+    "/api/v1/config/public": {
+      "get": {
+        "tags": ["config"],
+        "summary": "Get Public Config",
+        "description": "Return public configuration (no auth required).\n\nExposes bot_username for frontend Telegram links.",
+        "operationId": "config-get_public_config",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Config-Get Public Config"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/telegram/webhook": {
+      "post": {
+        "tags": ["telegram"],
+        "summary": "Telegram Webhook",
+        "description": "Receive Telegram bot updates. Validates secret_token header.",
+        "operationId": "telegram-telegram_webhook",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Telegram-Telegram Webhook"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/private/users/": {
       "post": {
         "tags": ["private"],
@@ -1359,7 +1441,8 @@
             "items": { "type": "integer" },
             "type": "array",
             "title": "Requires"
-          }
+          },
+          "lesson_count": { "type": "integer", "title": "Lesson Count" }
         },
         "type": "object",
         "required": [
@@ -1368,7 +1451,8 @@
           "topic",
           "words",
           "exercise_types",
-          "requires"
+          "requires",
+          "lesson_count"
         ],
         "title": "UnitSummary",
         "description": "Unit metadata returned by the units list endpoint."
@@ -1486,6 +1570,13 @@
               { "type": "null" }
             ],
             "title": "Full Name"
+          },
+          "invite_token": {
+            "anyOf": [
+              { "type": "string", "maxLength": 64 },
+              { "type": "null" }
+            ],
+            "title": "Invite Token"
           }
         },
         "type": "object",

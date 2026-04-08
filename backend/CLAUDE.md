@@ -198,12 +198,12 @@ mocker.patch("app.utils.send_email", ...)
 
 ### Phase 10.5: Dictionary Tests Gotchas
 
-- **`words.json` entries have only 5 keys** — `word`, `ku`, `pos`, `definitions`, `note`; optional field keys like `sitelen_emosi`, `sitelen_pona`, `usage_category`, `book`, `see_also`, `coined_era` are NOT in the actual data file despite being in the spec; tests expecting these fields will fail.
+- **`words.json` has 190 entries with all optional fields present** — each entry includes all 11 keys: `word`, `ku`, `pos`, `definitions`, `note`, `sitelen_emosi`, `sitelen_pona`, `usage_category`, `book`, `see_also`, `coined_era` (not just 5 keys or null-filled fields); test assertions on missing fields will succeed.
 - **`search_words()` in `app/data/loader.py` already normalizes to `.lower()`** — case-insensitive search is already implemented, no backend changes needed for dictionary search.
 - **Container `tests/` directory doesn't exist until explicitly copied** — `docker compose watch` doesn't mount tests in phase-01-clean-slate stack; must `docker cp backend/tests <container>:/app/backend/tests` before first test run.
-- **`words.json` has 120+ entries** — confirmed complete dataset; all entries include optional field keys with null values where absent.
 - **Container ID lookup must be fresh each session** — `docker compose ps -q backend` returns the full 64-char ID needed for `docker cp`; truncating to 12 chars in target works fine.
 - **Superuser not auto-created on container restart** — if DB is empty, run `python -c "from app.initial_data import main; main()"` inside the backend container to create initial admin; login fails silently until this runs.
+- **Test assertions on words.json POS fields must match actual data** — word `a` has `pos: ['particle']` (not `['interjection']`); verify actual word properties before writing assertions; E2E tests relying on hardcoded POS or note text will fail if assumptions don't match the data.
 
 ### Patching pre-start modules
 

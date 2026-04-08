@@ -1,0 +1,152 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - link:
+                - /url: /
+                - text: toki pona dojo
+            - generic:
+              - generic:
+                - generic:
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /
+                        - img
+                        - generic: Dashboard
+                    - listitem:
+                      - link:
+                        - /url: /admin
+                        - img
+                        - generic: Admin
+            - generic:
+              - listitem:
+                - button:
+                  - img
+                  - generic: Appearance
+                  - generic: Toggle theme
+              - list:
+                - listitem:
+                  - button [expanded]:
+                    - generic:
+                      - generic:
+                        - generic: U
+                      - generic:
+                        - paragraph: admin@example.com
+                    - img
+      - main:
+        - generic:
+          - generic:
+            - generic:
+              - button:
+                - img
+                - generic: Collapse Sidebar
+            - main:
+              - generic:
+                - generic:
+                  - generic:
+                    - heading [level=1]: o kama sona
+                    - paragraph: learn toki pona
+                  - generic:
+                    - generic:
+                      - generic: "4"
+                      - generic: words known
+                    - generic:
+                      - generic: "1"
+                      - generic: lessons done
+                    - generic:
+                      - generic: "1"
+                      - generic: day streak
+                  - generic:
+                    - generic:
+                      - generic:
+                        - link:
+                          - /url: /learn/1/1
+                          - generic:
+                            - generic: "1"
+                            - paragraph: toki!
+                            - paragraph: Greetings
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: ijo
+                          - paragraph: Core nouns
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: pali
+                          - paragraph: Actions
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: li · e
+                          - paragraph: Sentence structure
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: nasin nimi
+                          - paragraph: Modifiers
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: pi
+                          - paragraph: Modifier grouping
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: la
+                          - paragraph: Context & time
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: o!
+                          - paragraph: Commands & wishes
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: toki musi
+                          - paragraph: Creative expression
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                          - paragraph: jan sona
+                          - paragraph: Fluency practice
+            - generic:
+              - generic:
+                - paragraph: toki pona dojo - 2026
+          - generic:
+            - button:
+              - img
+    - region "Notifications alt+T"
+  - menu "U admin@example.com" [active] [ref=e195]:
+    - generic [ref=e197]:
+      - generic [ref=e199]: U
+      - generic [ref=e200]:
+        - paragraph
+        - paragraph [ref=e201]: admin@example.com
+    - separator [ref=e202]
+    - link "User Settings" [ref=e203] [cursor=pointer]:
+      - /url: /settings
+      - menuitem "User Settings" [ref=e204]:
+        - img
+        - text: User Settings
+    - menuitem "Log Out" [ref=e205]:
+      - img
+      - text: Log Out

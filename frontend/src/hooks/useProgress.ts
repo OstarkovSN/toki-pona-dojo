@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useCallback, useSyncExternalStore } from "react"
-import { ProgressService } from "@/client"
+import { LessonsService, ProgressService } from "@/client"
 import {
   type ErrorEntry,
   ensureWordInSRS,
@@ -64,6 +64,13 @@ export function useProgress() {
     queryKey: ["progress"],
     queryFn: () => ProgressService.getMyProgress(),
     enabled: authenticated,
+  })
+
+  // Fetch units to get lesson counts per unit
+  const { data: units } = useQuery({
+    queryKey: ["units"],
+    queryFn: () => LessonsService.listUnits(),
+    staleTime: Infinity,
   })
 
   // Mutation to update server progress
@@ -212,8 +219,8 @@ export function useProgress() {
       lessonsSet.add(lessonKey)
       const newCompletedLessons = [...lessonsSet].sort()
 
-      // Placeholder: 3 lessons per unit
-      const totalLessonsInUnit = 3
+      const totalLessonsInUnit =
+        units?.find((u) => u.id === unitId)?.lesson_count ?? 1
       const unitLessons = newCompletedLessons.filter((l) =>
         l.startsWith(`${unitId}:`),
       )
@@ -242,7 +249,7 @@ export function useProgress() {
         })
       }
     },
-    [authenticated, updateServerMutation],
+    [authenticated, units, updateServerMutation],
   )
 
   return {

@@ -1,0 +1,51 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e233]:
+      - link "toki pona dojo" [ref=e235] [cursor=pointer]:
+        - /url: /
+      - list [ref=e239]:
+        - listitem [ref=e240]:
+          - link "Dashboard" [ref=e241] [cursor=pointer]:
+            - /url: /
+            - img [ref=e242]
+            - generic [ref=e245]: Dashboard
+        - listitem [ref=e246]:
+          - link "Admin" [ref=e247] [cursor=pointer]:
+            - /url: /admin
+            - img [ref=e248]
+            - generic [ref=e253]: Admin
+      - generic [ref=e254]:
+        - listitem [ref=e255]:
+          - button "Appearance Toggle theme" [ref=e256] [cursor=pointer]:
+            - img [ref=e257]
+            - generic [ref=e259]: Appearance
+            - generic [ref=e260]: Toggle theme
+        - list [ref=e261]:
+          - listitem [ref=e262]:
+            - button "U admin@example.com" [ref=e263] [cursor=pointer]:
+              - generic [ref=e264]:
+                - generic [ref=e266]: U
+                - generic [ref=e267]:
+                  - paragraph
+                  - paragraph [ref=e268]: admin@example.com
+              - img [ref=e269]
+    - main [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - button "Collapse Sidebar" [ref=e30] [cursor=pointer]:
+            - img
+            - generic [ref=e31]: Collapse Sidebar
+          - main [ref=e32]:
+            - generic [ref=e98]:
+              - paragraph [ref=e100]: unit 1 · toki! · exercise 4 of 4
+              - generic [ref=e280]:
+                - paragraph [ref=e281]: What does "sina" mean?
+                - generic [ref=e282]:
+                  - button "food, drink, meal" [ref=e283] [cursor=pointer]
+                  - button "language, speech, communication" [ref=e284] [cursor=pointer]
+                  - button "bad, negative, wrong, harmful" [ref=e285] [cursor=pointer]
+                  - button "you, your" [ref=e286] [cursor=pointer]
+          - paragraph [ref=e52]: toki pona dojo - 2026
+        - button "Open chat" [ref=e273] [cursor=pointer]:
+          - img [ref=e274]
+  - region "Notifications alt+T"

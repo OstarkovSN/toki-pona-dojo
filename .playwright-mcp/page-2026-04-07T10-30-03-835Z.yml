@@ -1,0 +1,87 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "toki pona dojo" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - list [ref=e12]:
+        - listitem [ref=e13]:
+          - link "Dashboard" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - img [ref=e15]
+            - generic [ref=e18]: Dashboard
+        - listitem [ref=e19]:
+          - link "Admin" [ref=e20] [cursor=pointer]:
+            - /url: /admin
+            - img [ref=e21]
+            - generic [ref=e26]: Admin
+      - generic [ref=e27]:
+        - listitem [ref=e28]:
+          - button "Appearance Toggle theme" [ref=e29] [cursor=pointer]:
+            - img [ref=e30]
+            - generic [ref=e32]: Appearance
+            - generic [ref=e33]: Toggle theme
+        - list [ref=e34]:
+          - listitem [ref=e35]:
+            - button "U admin@example.com" [ref=e36] [cursor=pointer]:
+              - generic [ref=e37]:
+                - generic [ref=e39]: U
+                - generic [ref=e40]:
+                  - paragraph
+                  - paragraph [ref=e41]: admin@example.com
+              - img [ref=e42]
+    - main [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - button "Collapse Sidebar" [ref=e49] [cursor=pointer]:
+            - img
+            - generic [ref=e50]: Collapse Sidebar
+          - main [ref=e51]:
+            - generic [ref=e53]:
+              - link "dictionary" [ref=e54] [cursor=pointer]:
+                - /url: /dictionary
+                - img [ref=e55]
+                - text: dictionary
+              - generic [ref=e57]:
+                - generic [ref=e58]:
+                  - heading "pona" [level=1] [ref=e59]
+                  - generic [ref=e61]: adjective
+                - generic "sitelen emosi for pona" [ref=e62]: 👍
+              - generic [ref=e64]:
+                - heading "adjective" [level=2] [ref=e65]
+                - paragraph [ref=e66]: good, positive, useful; friendly, peaceful; simple
+              - generic [ref=e67]:
+                - paragraph [ref=e68]: etymology
+                - paragraph [ref=e69]: bona ‘good’
+              - generic [ref=e70]:
+                - paragraph [ref=e71]: see also
+                - link "ike" [ref=e73] [cursor=pointer]:
+                  - /url: /dictionary/ike
+              - generic [ref=e74]:
+                - paragraph [ref=e75]: used in units
+                - generic [ref=e77]: "1"
+          - paragraph [ref=e80]: toki pona dojo - 2026
+        - complementary [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - generic [ref=e85]:
+                - generic [ref=e86]: jan sona
+                - generic [ref=e87]: ready
+              - generic [ref=e88]:
+                - button "Clear chat" [disabled]:
+                  - img
+                - button "Close chat" [ref=e89] [cursor=pointer]:
+                  - img
+            - group "Chat mode" [ref=e90]:
+              - generic [ref=e91]: Chat mode
+              - button "free chat" [pressed] [ref=e92] [cursor=pointer]
+              - button "grammar" [ref=e93] [cursor=pointer]
+              - button "translate" [ref=e94] [cursor=pointer]
+            - generic [ref=e97]:
+              - img [ref=e98]
+              - paragraph [ref=e100]: toki! mi jan sona.
+              - paragraph [ref=e101]: Ask me anything about toki pona.
+            - generic [ref=e103]:
+              - textbox "toki..." [ref=e104]
+              - button [disabled]:
+                - img
+  - region "Notifications alt+T"

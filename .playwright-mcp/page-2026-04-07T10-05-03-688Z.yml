@@ -1,0 +1,52 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "toki pona dojo" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - list [ref=e12]:
+        - listitem [ref=e13]:
+          - link "Dashboard" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - img [ref=e15]
+            - generic [ref=e18]: Dashboard
+      - generic [ref=e19]:
+        - listitem [ref=e20]:
+          - button "Appearance Toggle theme" [ref=e21] [cursor=pointer]:
+            - img [ref=e22]
+            - generic [ref=e24]: Appearance
+            - generic [ref=e25]: Toggle theme
+        - list [ref=e26]:
+          - listitem [ref=e27]:
+            - button "JS jan sona jan.sona@toki.pona" [ref=e28] [cursor=pointer]:
+              - generic [ref=e29]:
+                - generic [ref=e31]: JS
+                - generic [ref=e32]:
+                  - paragraph [ref=e33]: jan sona
+                  - paragraph [ref=e34]: jan.sona@toki.pona
+              - img [ref=e35]
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - button "Collapse Sidebar" [ref=e42] [cursor=pointer]:
+            - img
+            - generic [ref=e43]: Collapse Sidebar
+          - main [ref=e44]:
+            - generic [ref=e122]:
+              - heading "lesson complete!" [level=1] [ref=e123]
+              - paragraph [ref=e124]: ijo
+              - generic [ref=e126]:
+                - paragraph [ref=e127]: 4/4
+                - paragraph [ref=e128]: 100% correct
+              - generic [ref=e129]:
+                - paragraph [ref=e130]: words practiced
+                - generic [ref=e131]:
+                  - generic [ref=e132]: jan
+                  - generic [ref=e133]: suno
+                  - generic [ref=e134]: tomo
+                  - generic [ref=e135]: soweli
+                  - generic [ref=e136]: telo
+              - button "continue" [ref=e137] [cursor=pointer]
+          - paragraph [ref=e64]: toki pona dojo - 2026
+        - button "Open chat" [ref=e66] [cursor=pointer]:
+          - img [ref=e67]
+  - region "Notifications alt+T"

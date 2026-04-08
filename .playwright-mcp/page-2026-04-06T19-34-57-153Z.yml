@@ -1,0 +1,69 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "toki pona dojo" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - list [ref=e12]:
+        - listitem [ref=e13]:
+          - link "Dashboard" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - img [ref=e15]
+            - generic [ref=e18]: Dashboard
+        - listitem [ref=e19]:
+          - link "Admin" [ref=e20] [cursor=pointer]:
+            - /url: /admin
+            - img [ref=e21]
+            - generic [ref=e26]: Admin
+      - generic [ref=e27]:
+        - listitem [ref=e28]:
+          - button "Appearance Toggle theme" [ref=e29] [cursor=pointer]:
+            - img [ref=e30]
+            - generic [ref=e32]: Appearance
+            - generic [ref=e33]: Toggle theme
+        - list [ref=e34]:
+          - listitem [ref=e35]:
+            - button "U admin@example.com" [ref=e36] [cursor=pointer]:
+              - generic [ref=e37]:
+                - generic [ref=e39]: U
+                - generic [ref=e40]:
+                  - paragraph
+                  - paragraph [ref=e41]: admin@example.com
+              - img [ref=e42]
+    - main [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - button "Collapse Sidebar" [ref=e49] [cursor=pointer]:
+            - img
+            - generic [ref=e50]: Collapse Sidebar
+          - main [ref=e51]:
+            - generic [ref=e53]:
+              - paragraph [ref=e55]: unit 1 · · exercise 1 of 6
+              - generic:
+                - generic:
+                  - paragraph
+          - paragraph [ref=e58]: toki pona dojo - 2026
+        - complementary [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]:
+                - generic [ref=e64]: jan sona
+                - generic [ref=e65]: ready
+              - generic [ref=e66]:
+                - button "Clear chat" [disabled]:
+                  - img
+                - button "Close chat" [ref=e67] [cursor=pointer]:
+                  - img
+            - group "Chat mode" [ref=e68]:
+              - generic [ref=e69]: Chat mode
+              - button "free chat" [pressed] [ref=e70] [cursor=pointer]
+              - button "grammar" [ref=e71] [cursor=pointer]
+              - button "translate" [ref=e72] [cursor=pointer]
+            - generic [ref=e75]:
+              - img [ref=e76]
+              - paragraph [ref=e78]: toki! mi jan sona.
+              - paragraph [ref=e79]: Ask me anything about toki pona.
+            - generic [ref=e81]:
+              - textbox "toki..." [ref=e82]
+              - button [disabled]:
+                - img
+  - region "Notifications alt+T"

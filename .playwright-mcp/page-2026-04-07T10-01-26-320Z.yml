@@ -1,0 +1,46 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "toki pona dojo" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - list [ref=e12]:
+        - listitem [ref=e13]:
+          - link "Dashboard" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - img [ref=e15]
+            - generic [ref=e18]: Dashboard
+      - generic [ref=e19]:
+        - listitem [ref=e20]:
+          - button "Appearance Toggle theme" [ref=e21] [cursor=pointer]:
+            - img [ref=e22]
+            - generic [ref=e24]: Appearance
+            - generic [ref=e25]: Toggle theme
+        - list [ref=e57]:
+          - listitem [ref=e58]:
+            - button "JS jan sona jan.sona@toki.pona" [ref=e59] [cursor=pointer]:
+              - generic [ref=e60]:
+                - generic [ref=e62]: JS
+                - generic [ref=e63]:
+                  - paragraph [ref=e64]: jan sona
+                  - paragraph [ref=e65]: jan.sona@toki.pona
+              - img [ref=e66]
+    - main [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - button "Collapse Sidebar" [ref=e30] [cursor=pointer]:
+            - img
+            - generic [ref=e31]: Collapse Sidebar
+          - main [ref=e32]:
+            - generic [ref=e69]:
+              - paragraph [ref=e71]: unit 1 · toki! · exercise 3 of 4
+              - generic [ref=e101]:
+                - paragraph [ref=e102]: What does "moku" mean?
+                - generic [ref=e103]:
+                  - button "good, simple, positive, useful" [ref=e104] [cursor=pointer]
+                  - button "food, drink, meal" [ref=e105] [cursor=pointer]
+                  - button "bad, negative, wrong, harmful" [ref=e106] [cursor=pointer]
+                  - button "language, speech, communication" [ref=e107] [cursor=pointer]
+          - paragraph [ref=e52]: toki pona dojo - 2026
+        - button "Open chat" [ref=e54] [cursor=pointer]:
+          - img [ref=e55]
+  - region "Notifications alt+T"

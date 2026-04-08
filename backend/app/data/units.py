@@ -14,6 +14,7 @@ class UnitSummary(BaseModel):
     words: list[str]
     exercise_types: list[str]
     requires: list[int]
+    lesson_count: int
 
 
 UNITS: list[dict[str, Any]] = [
@@ -24,6 +25,7 @@ UNITS: list[dict[str, Any]] = [
         "words": ["mi", "sina", "pona", "ike", "toki", "moku"],
         "exercise_types": ["match", "multichoice"],
         "requires": [],
+        "lesson_count": 1,
     },
     {
         "id": 2,
@@ -32,6 +34,7 @@ UNITS: list[dict[str, Any]] = [
         "words": ["jan", "tomo", "telo", "soweli", "suno", "ma", "nimi"],
         "exercise_types": ["match", "multichoice"],
         "requires": [1],
+        "lesson_count": 1,
     },
     {
         "id": 3,
@@ -40,6 +43,7 @@ UNITS: list[dict[str, Any]] = [
         "words": ["lukin", "lape", "pali", "kama", "jo"],
         "exercise_types": ["match", "multichoice"],
         "requires": [1],
+        "lesson_count": 1,
     },
     {
         "id": 4,
@@ -48,6 +52,7 @@ UNITS: list[dict[str, Any]] = [
         "words": ["li", "e", "ona", "ni", "seme"],
         "exercise_types": ["match", "multichoice", "word_bank", "fill_particle"],
         "requires": [2, 3],
+        "lesson_count": 1,
     },
     {
         "id": 5,
@@ -56,6 +61,7 @@ UNITS: list[dict[str, Any]] = [
         "words": ["mute", "lili", "suli", "wawa", "sin", "ante"],
         "exercise_types": ["match", "multichoice", "word_bank"],
         "requires": [4],
+        "lesson_count": 1,
     },
     {
         "id": 6,
@@ -64,6 +70,7 @@ UNITS: list[dict[str, Any]] = [
         "words": ["pi", "sona", "kalama", "ilo", "nasin"],
         "exercise_types": ["match", "multichoice", "word_bank", "free_compose"],
         "requires": [5],
+        "lesson_count": 1,
     },
     {
         "id": 7,
@@ -72,6 +79,7 @@ UNITS: list[dict[str, Any]] = [
         "words": ["la", "tenpo", "sike", "open", "pini"],
         "exercise_types": ["match", "multichoice", "word_bank", "free_compose"],
         "requires": [5],
+        "lesson_count": 1,
     },
     {
         "id": 8,
@@ -86,6 +94,7 @@ UNITS: list[dict[str, Any]] = [
             "concept_build",
         ],
         "requires": [6, 7],
+        "lesson_count": 1,
     },
     {
         "id": 9,
@@ -101,6 +110,7 @@ UNITS: list[dict[str, Any]] = [
             "story",
         ],
         "requires": [8],
+        "lesson_count": 1,
     },
     {
         "id": 10,
@@ -117,6 +127,7 @@ UNITS: list[dict[str, Any]] = [
             "story",
         ],
         "requires": [9],
+        "lesson_count": 1,
     },
 ]
 

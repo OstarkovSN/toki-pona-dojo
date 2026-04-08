@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -11,6 +12,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
 from app.core.config import settings
+from app.core.db import engine
 from app.core.rate_limit import limiter
 from app.services.tracing import check_langfuse_auth
 
@@ -38,20 +40,31 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     except Exception:
         logger.exception("LangFuse auth check raised unexpectedly during startup")
 
-    # Startup: register Telegram webhook if bot is configured
+    # Startup: start Telegram polling if bot is configured
+    polling_task: asyncio.Task[None] | None = None
     if settings.TG_BOT_TOKEN and settings.TG_SUPERUSER_ID:
-        from app.services.telegram import set_webhook
+        from sqlmodel import Session
 
-        webhook_url = f"{settings.FRONTEND_HOST}{settings.API_V1_STR}/telegram/webhook"
-        await set_webhook(webhook_url)
+        from app.services.telegram import delete_webhook, poll_updates
+
+        await delete_webhook()  # Clear any leftover webhook
+
+        def session_factory() -> Session:
+            return Session(engine)
+
+        polling_task = asyncio.create_task(poll_updates(session_factory))
+        logger.info("Telegram polling task started")
 
     yield
 
-    # Shutdown: remove Telegram webhook
-    if settings.TG_BOT_TOKEN and settings.TG_SUPERUSER_ID:
-        from app.services.telegram import delete_webhook
-
-        await delete_webhook()
+    # Shutdown: cancel polling task
+    if polling_task is not None:
+        polling_task.cancel()
+        try:
+            await polling_task
+        except asyncio.CancelledError:
+            pass
+        logger.info("Telegram polling task stopped")
 
 
 app = FastAPI(

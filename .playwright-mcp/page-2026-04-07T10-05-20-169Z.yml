@@ -1,0 +1,50 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "toki pona dojo" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - list [ref=e12]:
+        - listitem [ref=e13]:
+          - link "Dashboard" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - img [ref=e15]
+            - generic [ref=e18]: Dashboard
+      - generic [ref=e19]:
+        - listitem [ref=e20]:
+          - button "Appearance Toggle theme" [ref=e21] [cursor=pointer]:
+            - img [ref=e22]
+            - generic [ref=e24]: Appearance
+            - generic [ref=e25]: Toggle theme
+        - list [ref=e26]:
+          - listitem [ref=e27]:
+            - button "JS jan sona jan.sona@toki.pona" [ref=e28] [cursor=pointer]:
+              - generic [ref=e29]:
+                - generic [ref=e31]: JS
+                - generic [ref=e32]:
+                  - paragraph [ref=e33]: jan sona
+                  - paragraph [ref=e34]: jan.sona@toki.pona
+              - img [ref=e35]
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - button "Collapse Sidebar" [ref=e42] [cursor=pointer]:
+            - img
+            - generic [ref=e43]: Collapse Sidebar
+          - main [ref=e44]:
+            - generic [ref=e46]:
+              - paragraph [ref=e48]: unit 3 · pali · exercise 1 of 4
+              - generic [ref=e50]:
+                - paragraph [ref=e51]: Match each word with its meaning
+                - generic [ref=e52]:
+                  - generic [ref=e53]:
+                    - 'button "toki pona: kama" [ref=e54] [cursor=pointer]': kama
+                    - 'button "toki pona: jo" [ref=e55] [cursor=pointer]': jo
+                    - 'button "toki pona: lukin" [ref=e56] [cursor=pointer]': lukin
+                  - generic [ref=e57]:
+                    - 'button "english: to come, to arrive" [ref=e58] [cursor=pointer]': to come, to arrive
+                    - 'button "english: to see, to look at, to watch" [ref=e59] [cursor=pointer]': to see, to look at, to watch
+                    - 'button "english: to have, to contain, to carry" [ref=e60] [cursor=pointer]': to have, to contain, to carry
+          - paragraph [ref=e63]: toki pona dojo - 2026
+        - button "Open chat" [ref=e65] [cursor=pointer]:
+          - img [ref=e66]
+  - region "Notifications alt+T"

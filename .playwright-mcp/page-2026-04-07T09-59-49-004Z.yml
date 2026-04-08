@@ -1,0 +1,96 @@
+- generic [ref=e2]:
+  - generic [ref=e237]:
+    - generic [ref=e240]:
+      - link "toki pona dojo" [ref=e242] [cursor=pointer]:
+        - /url: /
+      - list [ref=e246]:
+        - listitem [ref=e247]:
+          - link "Dashboard" [ref=e248] [cursor=pointer]:
+            - /url: /
+            - img [ref=e249]
+            - generic [ref=e252]: Dashboard
+      - generic [ref=e253]:
+        - listitem [ref=e254]:
+          - button "Appearance Toggle theme" [ref=e255] [cursor=pointer]:
+            - img [ref=e256]
+            - generic [ref=e258]: Appearance
+            - generic [ref=e259]: Toggle theme
+        - list [ref=e260]:
+          - listitem [ref=e261]:
+            - button "JS jan sona jan.sona@toki.pona" [ref=e262] [cursor=pointer]:
+              - generic [ref=e263]:
+                - generic [ref=e265]: JS
+                - generic [ref=e266]:
+                  - paragraph [ref=e267]: jan sona
+                  - paragraph [ref=e268]: jan.sona@toki.pona
+              - img [ref=e269]
+    - main [ref=e272]:
+      - generic [ref=e273]:
+        - generic [ref=e274]:
+          - button "Collapse Sidebar" [ref=e276] [cursor=pointer]:
+            - img
+            - generic [ref=e277]: Collapse Sidebar
+          - main [ref=e278]:
+            - generic [ref=e280]:
+              - generic [ref=e281]:
+                - heading "o kama sona" [level=1] [ref=e282]
+                - paragraph [ref=e283]: learn toki pona
+              - generic [ref=e284]:
+                - generic [ref=e285]:
+                  - generic [ref=e286]: "4"
+                  - generic [ref=e287]: words known
+                - generic [ref=e288]:
+                  - generic [ref=e289]: "1"
+                  - generic [ref=e290]: lessons done
+                - generic [ref=e291]:
+                  - generic [ref=e292]: "1"
+                  - generic [ref=e293]: day streak
+              - generic [ref=e294]:
+                - link "1 toki! Greetings" [ref=e297] [cursor=pointer]:
+                  - /url: /learn/1/1
+                  - generic [ref=e298]:
+                    - generic [ref=e299]: "1"
+                    - paragraph [ref=e303]: toki!
+                    - paragraph [ref=e304]: Greetings
+                - generic [ref=e311]:
+                  - generic "Requires unit 1" [ref=e312]:
+                    - img [ref=e314]
+                    - paragraph [ref=e317]: ijo
+                    - paragraph [ref=e318]: Core nouns
+                  - generic "Requires unit 1" [ref=e319]:
+                    - img [ref=e321]
+                    - paragraph [ref=e324]: pali
+                    - paragraph [ref=e325]: Actions
+                - generic "Requires units 2 & 3" [ref=e333]:
+                  - img [ref=e335]
+                  - paragraph [ref=e338]: li · e
+                  - paragraph [ref=e339]: Sentence structure
+                - generic "Requires unit 4" [ref=e344]:
+                  - img [ref=e346]
+                  - paragraph [ref=e349]: nasin nimi
+                  - paragraph [ref=e350]: Modifiers
+                - generic [ref=e357]:
+                  - generic "Requires unit 5" [ref=e358]:
+                    - img [ref=e360]
+                    - paragraph [ref=e363]: pi
+                    - paragraph [ref=e364]: Modifier grouping
+                  - generic "Requires unit 5" [ref=e365]:
+                    - img [ref=e367]
+                    - paragraph [ref=e370]: la
+                    - paragraph [ref=e371]: Context & time
+                - generic "Requires units 6 & 7" [ref=e379]:
+                  - img [ref=e381]
+                  - paragraph [ref=e384]: o!
+                  - paragraph [ref=e385]: Commands & wishes
+                - generic "Requires unit 8" [ref=e390]:
+                  - img [ref=e392]
+                  - paragraph [ref=e395]: toki musi
+                  - paragraph [ref=e396]: Creative expression
+                - generic "Requires unit 9" [ref=e401]:
+                  - img [ref=e403]
+                  - paragraph [ref=e406]: jan sona
+                  - paragraph [ref=e407]: Fluency practice
+          - paragraph [ref=e410]: toki pona dojo - 2026
+        - button "Open chat" [ref=e412] [cursor=pointer]:
+          - img [ref=e413]
+  - region "Notifications alt+T"

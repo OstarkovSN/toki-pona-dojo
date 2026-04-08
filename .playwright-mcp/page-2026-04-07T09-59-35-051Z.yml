@@ -1,0 +1,34 @@
+- generic [ref=e2]:
+  - generic [ref=e207]:
+    - button "Toggle theme" [ref=e210] [cursor=pointer]:
+      - img
+      - generic [ref=e211]: Toggle theme
+    - generic [ref=e214]:
+      - heading "Login to your account" [level=1] [ref=e216]
+      - generic [ref=e217]:
+        - generic [ref=e218]:
+          - generic [ref=e219]: Email
+          - textbox "Email" [ref=e220]:
+            - /placeholder: user@example.com
+        - generic [ref=e221]:
+          - generic [ref=e222]:
+            - generic [ref=e223]: Password
+            - link "Forgot your password?" [ref=e224] [cursor=pointer]:
+              - /url: /recover-password
+          - generic [ref=e225]:
+            - textbox "Password" [ref=e226]
+            - button "Show password" [ref=e227] [cursor=pointer]:
+              - img
+        - button "Log In" [ref=e228] [cursor=pointer]
+      - generic [ref=e229]:
+        - paragraph [ref=e230]:
+          - text: Don't have an account yet?
+          - link "Sign up" [ref=e231] [cursor=pointer]:
+            - /url: /signup
+        - paragraph [ref=e232]:
+          - text: Need an invite?
+          - link "Request access via Telegram" [ref=e233] [cursor=pointer]:
+            - /url: "#"
+    - contentinfo [ref=e234]:
+      - paragraph [ref=e236]: toki pona dojo - 2026
+  - region "Notifications alt+T"

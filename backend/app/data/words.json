@@ -1,108 +1,3802 @@
 [
-  {"word": "mi", "ku": false, "pos": ["pronoun"], "definitions": [{"pos": "pronoun", "definition": "I, me, my, we, us, our"}], "note": null},
-  {"word": "sina", "ku": false, "pos": ["pronoun"], "definitions": [{"pos": "pronoun", "definition": "you, your"}], "note": null},
-  {"word": "pona", "ku": false, "pos": ["adjective", "verb", "noun"], "definitions": [{"pos": "adjective", "definition": "good, simple, positive, useful"}, {"pos": "verb", "definition": "to improve, to fix, to help"}, {"pos": "noun", "definition": "goodness, simplicity"}], "note": null},
-  {"word": "ike", "ku": false, "pos": ["adjective", "verb", "noun"], "definitions": [{"pos": "adjective", "definition": "bad, negative, wrong, harmful"}, {"pos": "verb", "definition": "to be bad, to make worse"}, {"pos": "noun", "definition": "badness, evil, harm"}], "note": null},
-  {"word": "toki", "ku": false, "pos": ["noun", "verb"], "definitions": [{"pos": "noun", "definition": "language, speech, communication"}, {"pos": "verb", "definition": "to speak, to communicate, to say"}], "note": null},
-  {"word": "moku", "ku": false, "pos": ["noun", "verb"], "definitions": [{"pos": "noun", "definition": "food, drink, meal"}, {"pos": "verb", "definition": "to eat, to drink, to consume"}], "note": null},
-  {"word": "jan", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "person, human being, somebody"}], "note": null},
-  {"word": "tomo", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "house, room, home, building"}], "note": null},
-  {"word": "telo", "ku": false, "pos": ["noun", "adjective"], "definitions": [{"pos": "noun", "definition": "water, liquid, fluid"}, {"pos": "adjective", "definition": "wet, liquid"}], "note": null},
-  {"word": "soweli", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "animal, mammal, land animal"}], "note": null},
-  {"word": "suno", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "sun, light, brightness, shine"}], "note": null},
-  {"word": "ma", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "land, place, area, country"}], "note": null},
-  {"word": "nimi", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "name, word"}], "note": null},
-  {"word": "lukin", "ku": false, "pos": ["verb", "noun", "pre-verb"], "definitions": [{"pos": "verb", "definition": "to see, to look at, to watch"}, {"pos": "noun", "definition": "eye, sight, vision"}, {"pos": "pre-verb", "definition": "to try to"}], "note": null},
-  {"word": "lape", "ku": false, "pos": ["verb", "adjective"], "definitions": [{"pos": "verb", "definition": "to sleep, to rest"}, {"pos": "adjective", "definition": "sleeping, resting"}], "note": null},
-  {"word": "pali", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to do, to make, to work, to act"}, {"pos": "noun", "definition": "work, deed, action"}], "note": null},
-  {"word": "kama", "ku": false, "pos": ["verb", "pre-verb"], "definitions": [{"pos": "verb", "definition": "to come, to arrive"}, {"pos": "pre-verb", "definition": "to become, to manage to"}], "note": null},
-  {"word": "jo", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to have, to contain, to carry"}, {"pos": "noun", "definition": "possession, property"}], "note": null},
-  {"word": "li", "ku": false, "pos": ["particle"], "definitions": [{"pos": "particle", "definition": "separates subject from predicate (not used after mi or sina alone)"}], "note": null},
-  {"word": "e", "ku": false, "pos": ["particle"], "definitions": [{"pos": "particle", "definition": "marks the direct object of a verb"}], "note": null},
-  {"word": "ona", "ku": false, "pos": ["pronoun"], "definitions": [{"pos": "pronoun", "definition": "she, he, it, they, his, her, its, their"}], "note": null},
-  {"word": "ni", "ku": false, "pos": ["pronoun", "adjective"], "definitions": [{"pos": "pronoun", "definition": "this, that"}, {"pos": "adjective", "definition": "this, that"}], "note": null},
-  {"word": "seme", "ku": false, "pos": ["pronoun"], "definitions": [{"pos": "pronoun", "definition": "what, which, who (question word)"}], "note": null},
-  {"word": "mute", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "many, a lot, much, more"}, {"pos": "noun", "definition": "amount, quantity"}], "note": null},
-  {"word": "lili", "ku": false, "pos": ["adjective"], "definitions": [{"pos": "adjective", "definition": "small, little, few, young"}], "note": null},
-  {"word": "suli", "ku": false, "pos": ["adjective"], "definitions": [{"pos": "adjective", "definition": "big, large, important, tall"}], "note": null},
-  {"word": "wawa", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "strong, powerful, energetic"}, {"pos": "noun", "definition": "power, strength, energy"}], "note": null},
-  {"word": "sin", "ku": false, "pos": ["adjective"], "definitions": [{"pos": "adjective", "definition": "new, fresh, another, more"}], "note": null},
-  {"word": "ante", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "different, other, changed"}, {"pos": "noun", "definition": "difference, change"}], "note": null},
-  {"word": "pi", "ku": false, "pos": ["particle"], "definitions": [{"pos": "particle", "definition": "regroups modifiers; of, belonging to"}], "note": "Used to attach a noun phrase as a modifier"},
-  {"word": "sona", "ku": false, "pos": ["verb", "noun", "pre-verb"], "definitions": [{"pos": "verb", "definition": "to know, to understand"}, {"pos": "noun", "definition": "knowledge, wisdom"}, {"pos": "pre-verb", "definition": "to know how to"}], "note": null},
-  {"word": "kalama", "ku": false, "pos": ["noun", "verb"], "definitions": [{"pos": "noun", "definition": "sound, noise, voice"}, {"pos": "verb", "definition": "to make noise, to play an instrument"}], "note": null},
-  {"word": "ilo", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "tool, instrument, device, machine"}], "note": null},
-  {"word": "nasin", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "way, path, road, method, doctrine"}], "note": null},
-  {"word": "la", "ku": false, "pos": ["particle"], "definitions": [{"pos": "particle", "definition": "introduces context or condition; if, when, in context of"}], "note": null},
-  {"word": "tenpo", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "time, period, moment, situation"}], "note": null},
-  {"word": "sike", "ku": false, "pos": ["noun", "adjective"], "definitions": [{"pos": "noun", "definition": "circle, ball, round shape, cycle"}, {"pos": "adjective", "definition": "round, circular, cyclical"}], "note": null},
-  {"word": "open", "ku": false, "pos": ["verb", "pre-verb"], "definitions": [{"pos": "verb", "definition": "to open, to start, to begin"}, {"pos": "pre-verb", "definition": "to start, to begin to"}], "note": null},
-  {"word": "pini", "ku": false, "pos": ["verb", "adjective", "pre-verb"], "definitions": [{"pos": "verb", "definition": "to end, to finish, to stop"}, {"pos": "adjective", "definition": "finished, past, done"}, {"pos": "pre-verb", "definition": "to stop, to finish"}], "note": null},
-  {"word": "o", "ku": false, "pos": ["particle"], "definitions": [{"pos": "particle", "definition": "marks imperative or vocative; hey, oh, please"}], "note": null},
-  {"word": "wile", "ku": false, "pos": ["verb", "noun", "pre-verb"], "definitions": [{"pos": "verb", "definition": "to want, to need, to require"}, {"pos": "pre-verb", "definition": "to want to, to need to"}, {"pos": "noun", "definition": "desire, need, want"}], "note": null},
-  {"word": "ken", "ku": false, "pos": ["verb", "pre-verb", "noun"], "definitions": [{"pos": "verb", "definition": "to be able, to be possible"}, {"pos": "pre-verb", "definition": "can, may, might"}, {"pos": "noun", "definition": "possibility, ability"}], "note": null},
-  {"word": "olin", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to love, to have compassion for"}, {"pos": "noun", "definition": "love, compassion, affection"}], "note": null},
-  {"word": "pilin", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to feel, to touch, to sense"}, {"pos": "noun", "definition": "feeling, emotion, heart, sense"}], "note": null},
-  {"word": "musi", "ku": false, "pos": ["adjective", "noun", "verb"], "definitions": [{"pos": "adjective", "definition": "fun, playful, entertaining"}, {"pos": "noun", "definition": "play, game, entertainment, art"}, {"pos": "verb", "definition": "to play, to have fun, to entertain"}], "note": null},
-  {"word": "sitelen", "ku": false, "pos": ["noun", "verb"], "definitions": [{"pos": "noun", "definition": "image, picture, writing, symbol, drawing"}, {"pos": "verb", "definition": "to draw, to write, to depict"}], "note": null},
-  {"word": "lon", "ku": false, "pos": ["preposition", "verb", "adjective"], "definitions": [{"pos": "preposition", "definition": "at, in, on (location or existence)"}, {"pos": "verb", "definition": "to be present, to exist"}, {"pos": "adjective", "definition": "real, true, existing"}], "note": null},
-  {"word": "tawa", "ku": false, "pos": ["preposition", "verb", "adjective"], "definitions": [{"pos": "preposition", "definition": "to, for, from perspective of, going to"}, {"pos": "verb", "definition": "to move, to travel"}, {"pos": "adjective", "definition": "moving"}], "note": null},
-  {"word": "tan", "ku": false, "pos": ["preposition", "noun"], "definitions": [{"pos": "preposition", "definition": "from, because of, due to"}, {"pos": "noun", "definition": "origin, cause, reason"}], "note": null},
-  {"word": "kepeken", "ku": false, "pos": ["preposition", "verb"], "definitions": [{"pos": "preposition", "definition": "using, with, by means of"}, {"pos": "verb", "definition": "to use"}], "note": null},
-  {"word": "a", "ku": false, "pos": ["interjection"], "definitions": [{"pos": "interjection", "definition": "ah, ha, uh (emotional emphasis or filler)"}], "note": null},
-  {"word": "akesi", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "reptile, amphibian, non-cute animal"}], "note": null},
-  {"word": "ala", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "no, not, zero"}, {"pos": "noun", "definition": "nothing, absence"}], "note": null},
-  {"word": "alasa", "ku": false, "pos": ["verb"], "definitions": [{"pos": "verb", "definition": "to hunt, to gather, to search for"}], "note": null},
-  {"word": "ale", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "all, every, infinite"}, {"pos": "noun", "definition": "everything, universe"}], "note": null},
-  {"word": "anpa", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "below, down, inferior"}, {"pos": "noun", "definition": "bottom, floor"}], "note": null},
-  {"word": "awen", "ku": false, "pos": ["verb", "pre-verb"], "definitions": [{"pos": "verb", "definition": "to stay, to remain, to keep"}, {"pos": "pre-verb", "definition": "to keep on, to continue to"}], "note": null},
-  {"word": "en", "ku": false, "pos": ["conjunction"], "definitions": [{"pos": "conjunction", "definition": "and (joins subjects)"}], "note": null},
-  {"word": "esun", "ku": false, "pos": ["noun", "verb"], "definitions": [{"pos": "noun", "definition": "market, trade, shop"}, {"pos": "verb", "definition": "to buy, to sell, to trade"}], "note": null},
-  {"word": "insa", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "inside, content, stomach, middle"}], "note": null},
-  {"word": "jaki", "ku": false, "pos": ["adjective"], "definitions": [{"pos": "adjective", "definition": "disgusting, dirty, gross, toxic"}], "note": null},
-  {"word": "jasima", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to reflect, to mirror, to be opposite"}, {"pos": "noun", "definition": "reflection, mirror, opposite"}], "note": null},
-  {"word": "jelo", "ku": false, "pos": ["adjective"], "definitions": [{"pos": "adjective", "definition": "yellow, light green"}], "note": null},
-  {"word": "kala", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "fish, sea creature, marine animal"}], "note": null},
-  {"word": "kasi", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "plant, grass, herb, leaf, tree"}], "note": null},
-  {"word": "kijetesantakalu", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "raccoon, mustelid, any similar animal"}], "note": "Joke word by jan Sonja"},
-  {"word": "kili", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "fruit, vegetable, mushroom"}], "note": null},
-  {"word": "kin", "ku": false, "pos": ["adverb"], "definitions": [{"pos": "adverb", "definition": "also, too, indeed (emphasis)"}], "note": null},
-  {"word": "kipisi", "ku": false, "pos": ["verb"], "definitions": [{"pos": "verb", "definition": "to cut, to divide, to split"}], "note": null},
-  {"word": "kiwen", "ku": false, "pos": ["noun", "adjective"], "definitions": [{"pos": "noun", "definition": "hard thing, rock, stone, metal"}, {"pos": "adjective", "definition": "hard, solid, stone-like"}], "note": null},
-  {"word": "ko", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "semi-solid substance, paste, clay, powder"}], "note": null},
-  {"word": "kon", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "air, wind, smell, spirit, essence"}], "note": null},
-  {"word": "ku", "ku": true, "pos": ["verb"], "definitions": [{"pos": "verb", "definition": "to interact with the toki pona dictionary (ku)"}], "note": "Word from the ku supplementary dictionary"},
-  {"word": "kule", "ku": false, "pos": ["noun", "adjective"], "definitions": [{"pos": "noun", "definition": "color, paint"}, {"pos": "adjective", "definition": "colorful"}], "note": null},
-  {"word": "kulupu", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "community, group, company, nation, society"}], "note": null},
-  {"word": "kute", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to hear, to listen, to obey"}, {"pos": "noun", "definition": "ear"}], "note": null},
-  {"word": "lanpan", "ku": false, "pos": ["verb"], "definitions": [{"pos": "verb", "definition": "to take, to seize, to grab, to steal"}], "note": null},
-  {"word": "laso", "ku": false, "pos": ["adjective"], "definitions": [{"pos": "adjective", "definition": "blue, green"}], "note": null},
-  {"word": "lawa", "ku": false, "pos": ["noun", "verb"], "definitions": [{"pos": "noun", "definition": "head, mind, leadership"}, {"pos": "verb", "definition": "to lead, to control, to rule, to guide"}], "note": null},
-  {"word": "len", "ku": false, "pos": ["noun", "verb"], "definitions": [{"pos": "noun", "definition": "cloth, clothing, layer, fabric"}, {"pos": "verb", "definition": "to wear, to cover"}], "note": null},
-  {"word": "lete", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "cold, cool, uncooked, raw"}, {"pos": "noun", "definition": "cold, coolness"}], "note": null},
-  {"word": "luka", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "hand, arm, touch, five"}], "note": null},
-  {"word": "lupa", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "door, hole, window, opening"}], "note": null},
-  {"word": "mama", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "parent, ancestor, creator, caretaker"}], "note": null},
-  {"word": "meli", "ku": false, "pos": ["noun", "adjective"], "definitions": [{"pos": "noun", "definition": "woman, female, wife"}, {"pos": "adjective", "definition": "feminine"}], "note": null},
-  {"word": "mije", "ku": false, "pos": ["noun", "adjective"], "definitions": [{"pos": "noun", "definition": "man, male, husband"}, {"pos": "adjective", "definition": "masculine"}], "note": null},
-  {"word": "monsuta", "ku": false, "pos": ["noun", "verb"], "definitions": [{"pos": "noun", "definition": "fear, monster, threat"}, {"pos": "verb", "definition": "to fear, to be afraid of"}], "note": null},
-  {"word": "mun", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "moon, star, night sky object"}], "note": null},
-  {"word": "namako", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "additional, extra, spice-like"}, {"pos": "noun", "definition": "spice, additive, extra"}], "note": null},
-  {"word": "nena", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "bump, button, hill, mountain, nose"}], "note": null},
-  {"word": "noka", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "foot, leg, bottom part"}], "note": null},
-  {"word": "pakala", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to break, to mess up, to damage"}, {"pos": "noun", "definition": "damage, mistake, accident"}], "note": null},
-  {"word": "palisa", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "long hard object, stick, rod, bone"}], "note": null},
-  {"word": "pan", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "grain, bread, cereal, baked food"}], "note": null},
-  {"word": "pana", "ku": false, "pos": ["verb"], "definitions": [{"pos": "verb", "definition": "to give, to put, to send, to provide"}], "note": null},
-  {"word": "pipi", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "bug, insect, spider"}], "note": null},
-  {"word": "po", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "four"}], "note": "Unofficial numeral"},
-  {"word": "tonsi", "ku": true, "pos": ["noun", "adjective"], "definitions": [{"pos": "noun", "definition": "non-binary person, gender-nonconforming person"}, {"pos": "adjective", "definition": "non-binary, gender-nonconforming"}], "note": "Word from the ku supplementary dictionary"},
-  {"word": "unpa", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to have sex with, to be intimate with"}, {"pos": "noun", "definition": "sex, intimacy"}], "note": null},
-  {"word": "uta", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "mouth, lips, jaw"}], "note": null},
-  {"word": "utala", "ku": false, "pos": ["verb", "noun"], "definitions": [{"pos": "verb", "definition": "to fight, to battle, to attack, to compete"}, {"pos": "noun", "definition": "fight, battle, conflict, war"}], "note": null},
-  {"word": "walo", "ku": false, "pos": ["adjective"], "definitions": [{"pos": "adjective", "definition": "white, light-colored, pale"}], "note": null},
-  {"word": "wan", "ku": false, "pos": ["adjective", "noun"], "definitions": [{"pos": "adjective", "definition": "unique, united, one"}, {"pos": "noun", "definition": "one, a unit"}], "note": null},
-  {"word": "weka", "ku": false, "pos": ["adjective", "verb"], "definitions": [{"pos": "adjective", "definition": "absent, away, missing, far"}, {"pos": "verb", "definition": "to remove, to get rid of"}], "note": null},
-  {"word": "oko", "ku": false, "pos": ["noun"], "definitions": [{"pos": "noun", "definition": "eye (alternative to lukin as noun)"}], "note": null},
-  {"word": "pake", "ku": false, "pos": ["verb"], "definitions": [{"pos": "verb", "definition": "to block, to obstruct, to stop"}], "note": null}
+  {
+    "word": "Pingo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "car"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "Pingo",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "a",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(emphasis, emotion or confirmation)"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "a",
+    "sitelen_emosi": "❗",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "kin",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "akesi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "reptile, amphibian"
+      }
+    ],
+    "note": "hagedis ‘lizard’",
+    "sitelen_pona": "akesi akesi2",
+    "sitelen_emosi": "🦎",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ala",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "no, not, zero; [~ ala ~] (used to form a yes-no question); nothing"
+      }
+    ],
+    "note": "არა ara ‘no’",
+    "sitelen_pona": "ala",
+    "sitelen_emosi": "❌",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "alasa",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "to hunt, forage, seek | ALT (pv.) try to, attempt"
+      }
+    ],
+    "note": "à la chasse ‘hunting, (lit.) on the hunt’",
+    "sitelen_pona": "alasa",
+    "sitelen_emosi": "🏹",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "lukin",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ale",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "all; abundant, countless, bountiful, every, plentiful; abundance, everything, life, universe; one hundred | ALT 100"
+      }
+    ],
+    "note": "alle ‘all’",
+    "sitelen_pona": "ale",
+    "sitelen_emosi": "♾️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "ali",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ali",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "[alternate form of ale]"
+      }
+    ],
+    "note": "alle ‘all’",
+    "sitelen_pona": "ali",
+    "sitelen_emosi": "♾️",
+    "usage_category": "uncommon",
+    "book": "pu",
+    "see_also": "ale",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "anpa",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "bowing down, downward, humble, lowly, dependent | ALT bottom, lower part, under, below, floor, beneath; low, lower, bottom, down"
+      }
+    ],
+    "note": "en bas ‘below’",
+    "sitelen_pona": "anpa",
+    "sitelen_emosi": "⬇️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "noka",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ante",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "different, altered, changed, other"
+      }
+    ],
+    "note": "ander ‘other, different’",
+    "sitelen_pona": "ante",
+    "sitelen_emosi": "🔀",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "sama",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "anu",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "or | ALT choose, decide"
+      }
+    ],
+    "note": "ან an ‘or’",
+    "sitelen_pona": "anu",
+    "sitelen_emosi": "☯️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "apeja",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "guilt, shame, shun, stigma, disgrace; to accuse, to single out, to expose, to dishonor, to embarrass"
+      }
+    ],
+    "note": "häpeä ‘shame, disgrace, dishonor’",
+    "sitelen_pona": "apeja",
+    "sitelen_emosi": "😢",
+    "usage_category": "uncommon",
+    "book": "ku lili",
+    "see_also": "pilin",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "awen",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "enduring, kept, protected, safe, waiting, staying; (pv.) to continue to, to keep"
+      }
+    ],
+    "note": "houden ‘keep, care for, hold (in a particular state)’",
+    "sitelen_pona": "awen",
+    "sitelen_emosi": "⚓",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "e",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(before the direct object)"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "e",
+    "sitelen_emosi": "⏩",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "en",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(between multiple subjects)"
+      }
+    ],
+    "note": "en ‘and’",
+    "sitelen_pona": "en",
+    "sitelen_emosi": "➕",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "epiku",
+    "ku": true,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "epic, cool, awesome, amazing"
+      }
+    ],
+    "note": "épique ‘epic’",
+    "sitelen_pona": "epiku epiku1",
+    "sitelen_emosi": "😎",
+    "usage_category": "common",
+    "book": "ku suli",
+    "see_also": "pona, wawa",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "esun",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "market, shop, fair, bazaar, business transaction"
+      }
+    ],
+    "note": "unknown",
+    "sitelen_pona": "esun",
+    "sitelen_emosi": "🛒",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "mani",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ete",
+    "ku": false,
+    "pos": [
+      "preposition"
+    ],
+    "definitions": [
+      {
+        "pos": "preposition",
+        "definition": "beyond, exceeding, outside of, more than"
+      }
+    ],
+    "note": "Turkish: öte ‘beyond, further, over’; Quenya: ettë ‘outside’",
+    "sitelen_pona": "ete ete2",
+    "sitelen_emosi": "🔃",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "suli, sewi, wawa",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "ewe",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "stone, gravel, rock, pebble, lava, magma"
+      }
+    ],
+    "note": "Japanese: 岩 iwa ‘rock, boulder’; toki pona: kiwen",
+    "sitelen_pona": "ewe",
+    "sitelen_emosi": "🌋",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "kiwen",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "ijo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "thing, phenomenon, object, matter"
+      }
+    ],
+    "note": "io ‘something’ ← Romance i- ‘(relative pronoun root)’",
+    "sitelen_pona": "ijo",
+    "sitelen_emosi": "🐚",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ike",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "bad, negative; non-essential, irrelevant | ALT complicated, complex"
+      }
+    ],
+    "note": "ilkeä ‘bad, mean, wicked’",
+    "sitelen_pona": "ike",
+    "sitelen_emosi": "👎",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ilo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "tool, implement, machine, device"
+      }
+    ],
+    "note": "ilo ‘tool’ ← German -el ‘(agent suffix)’ {cf. Schlüssel ‘key’ ~ schließen ‘lock, shut’}",
+    "sitelen_pona": "ilo",
+    "sitelen_emosi": "⚙️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "insa",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "centre, content, inside, between; internal organ, stomach"
+      }
+    ],
+    "note": "insait ‘inside, center, stomach’ ← English inside",
+    "sitelen_pona": "insa",
+    "sitelen_emosi": "⏺️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "isipin",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "to think, brainstorm, rationalize, conclude, ponder"
+      }
+    ],
+    "note": "isipin ‘to think’",
+    "sitelen_pona": "isipin",
+    "sitelen_emosi": null,
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "pilin, toki, insa, lawa",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "jaki",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "disgusting, obscene, sickly, toxic, unclean, unsanitary"
+      }
+    ],
+    "note": "yucky",
+    "sitelen_pona": "jaki",
+    "sitelen_emosi": "💩",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "jan",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "human being, person, somebody"
+      }
+    ],
+    "note": "人 jan ‘person’",
+    "sitelen_pona": "jan",
+    "sitelen_emosi": "👤",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "jasima",
+    "ku": true,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "reflect, resound, mirror, be on the opposite/polar end of"
+      }
+    ],
+    "note": "yansıtmak ‘to reflect, reverberate’",
+    "sitelen_pona": "jasima",
+    "sitelen_emosi": null,
+    "usage_category": "uncommon",
+    "book": "ku suli",
+    "see_also": "tu, lukin",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "jelo",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "yellow, yellowish"
+      }
+    ],
+    "note": "yellow",
+    "sitelen_pona": "jelo",
+    "sitelen_emosi": "💛",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "jo",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "to have, carry, contain, hold"
+      }
+    ],
+    "note": "有 yǒu ‘have’",
+    "sitelen_pona": "jo",
+    "sitelen_emosi": "👜",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "lon, poki, lanpan",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ju",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(word reserved for future use by Sonja Lang)"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "ju",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "pu, ku",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kala",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "fish, marine animal, sea creature"
+      }
+    ],
+    "note": "kala ‘fish’",
+    "sitelen_pona": "kala kala2",
+    "sitelen_emosi": "🐟",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kalamARR",
+    "ku": false,
+    "pos": [
+      "interjection"
+    ],
+    "definitions": [
+      {
+        "pos": "interjection",
+        "definition": "pirate noise"
+      }
+    ],
+    "note": "toki pona: kalama; English: arr ‘(imitation of pirates)’",
+    "sitelen_pona": "kalamARR",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "kalama",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kalama",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "to produce a sound; recite, utter aloud"
+      }
+    ],
+    "note": "галама galama ‘noise of many human voices’",
+    "sitelen_pona": "kalama",
+    "sitelen_emosi": "🔈",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kama",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "arriving, coming, future, summoned; (pv.) to become, manage to, succeed in"
+      }
+    ],
+    "note": "kamap ‘event, arrive, happen, become, bring about, summon’ ← English come up",
+    "sitelen_pona": "kama",
+    "sitelen_emosi": "🚶",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kamalawala",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "anarchy, uprising, revolt, rebellion"
+      }
+    ],
+    "note": "kama pi lawa ala",
+    "sitelen_pona": "kamalawala",
+    "sitelen_emosi": "💣",
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kan",
+    "ku": false,
+    "pos": [
+      "preposition"
+    ],
+    "definitions": [
+      {
+        "pos": "preposition",
+        "definition": "with, among, in the company of"
+      }
+    ],
+    "note": "Finnish: kanssa ‘with’; Esperanto: kun ‘with’ (← Latin cum)",
+    "sitelen_pona": "kan",
+    "sitelen_emosi": "🔗",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "kepeken, poka, en",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kapesi",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "brown, gray"
+      }
+    ],
+    "note": "Cantonese: 咖啡色 gaa³ fe¹ sik¹; Mandarin: 咖啡色 kāfēisè ‘brown, coffee (colour)’",
+    "sitelen_pona": "kapesi kapesi2",
+    "sitelen_emosi": "🟤",
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "pimeja",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kasi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "plant, vegetation; herb, leaf"
+      }
+    ],
+    "note": "kasvi ‘plant’",
+    "sitelen_pona": "kasi",
+    "sitelen_emosi": "🌴",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ke",
+    "ku": false,
+    "pos": [
+      "interjection"
+    ],
+    "definitions": [
+      {
+        "pos": "interjection",
+        "definition": "(acknowledgement or acceptance)"
+      }
+    ],
+    "note": "’kay ← okay",
+    "sitelen_pona": "ke",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "oke, n",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "ken",
+    "ku": false,
+    "pos": [
+      "pre-verb"
+    ],
+    "definitions": [
+      {
+        "pos": "pre-verb",
+        "definition": "to be able to, be allowed to, can, may; possible"
+      }
+    ],
+    "note": "ken ← English can",
+    "sitelen_pona": "ken",
+    "sitelen_emosi": "💪",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kepeken",
+    "ku": false,
+    "pos": [
+      "preposition"
+    ],
+    "definitions": [
+      {
+        "pos": "preposition",
+        "definition": "to use, with, by means of"
+      }
+    ],
+    "note": "gebruiken ‘to use’",
+    "sitelen_pona": "kepeken",
+    "sitelen_emosi": "🔧",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kese",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "queer, LGBT+"
+      }
+    ],
+    "note": "קֶשֶׁת kéšet ‘rainbow, bow, arc‘; named for the Jewish LGBT organization Keshet",
+    "sitelen_pona": "kese",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "kule, tonsi",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kijetesantakalu",
+    "ku": true,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "any animal from the Procyonidae family, such as raccoons, coatis, kinkajous, olingos, ringtails and cacomistles | ALT any animal from the Musteloidea superfamily, including raccoons, weasels, otters, skunks, and red pandas"
+      }
+    ],
+    "note": "kierteishäntäkarhu ‘kinkajou’ ← kierteis- ‘spiral’ + häntä ‘tail’ + karhu ‘bear’",
+    "sitelen_pona": "kijetesantakalu",
+    "sitelen_emosi": "🦝",
+    "usage_category": "widespread",
+    "book": "ku suli",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kiki",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "spiky, sharp, angle, point, triangular"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "kiki",
+    "sitelen_emosi": null,
+    "usage_category": "uncommon",
+    "book": "ku lili",
+    "see_also": "kipisi",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kili",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "fruit, vegetable, mushroom"
+      }
+    ],
+    "note": "ხილი xili ‘fruit’",
+    "sitelen_pona": "kili",
+    "sitelen_emosi": "🍎",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "kasi, moku, soko",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kin",
+    "ku": true,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "{see a} | ALT indeed, too, also, as well"
+      }
+    ],
+    "note": "-kin ‘too, also, still’",
+    "sitelen_pona": "kin",
+    "sitelen_emosi": "❕",
+    "usage_category": "widespread",
+    "book": "ku suli",
+    "see_also": "a",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kipisi",
+    "ku": true,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "split, cut, slice, sever; sharp"
+      }
+    ],
+    "note": "kipisi- ‘to cut (intrans.)’",
+    "sitelen_pona": "kipisi",
+    "sitelen_emosi": "✂️",
+    "usage_category": "common",
+    "book": "ku suli",
+    "see_also": "tu, wan, pakala, mute",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kiwen",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "hard object, metal, rock, stone"
+      }
+    ],
+    "note": "kiven, genitive of kivi ‘stone’",
+    "sitelen_pona": "kiwen",
+    "sitelen_emosi": "💎",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ko",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "clay, clinging form, dough, semi-solid, paste, powder"
+      }
+    ],
+    "note": "膏 gou ‘cream, paste’",
+    "sitelen_pona": "ko",
+    "sitelen_emosi": "🍦",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kokosila",
+    "ku": true,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "to speak a non-Toki Pona language in an environment where Toki Pona is more appropriate"
+      }
+    ],
+    "note": "krokodilas ‘[present of krokodili]’ ← krokodilo ‘crocodile’",
+    "sitelen_pona": "kokosila kokosila2",
+    "sitelen_emosi": null,
+    "usage_category": "uncommon",
+    "book": "ku suli",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kon",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "air, breath; essence, spirit; hidden reality, unseen agent"
+      }
+    ],
+    "note": "空氣 kōngqì ‘air, atmosphere, ambience, opinion’",
+    "sitelen_pona": "kon",
+    "sitelen_emosi": "💨",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ku",
+    "ku": true,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "interacting with the Toki Pona Dictionary by Sonja Lang"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "ku",
+    "sitelen_emosi": null,
+    "usage_category": "widespread",
+    "book": "ku suli",
+    "see_also": "pu",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kule",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "colorful, pigmented, painted | ALT of or relating to the LGBT+ community"
+      }
+    ],
+    "note": "couleur ‘color’",
+    "sitelen_pona": "kule",
+    "sitelen_emosi": "🌈",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kulijo",
+    "ku": false,
+    "pos": [
+      "interjection"
+    ],
+    "definitions": [
+      {
+        "pos": "interjection",
+        "definition": "[interjection] casual expression of appreciation or acknowledgement; cool, fine, okay"
+      }
+    ],
+    "note": "coolio",
+    "sitelen_pona": "kulijo",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "oke",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kulupu",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "community, company, group, nation, society, tribe"
+      }
+    ],
+    "note": "kulupu ← English group",
+    "sitelen_pona": "kulupu",
+    "sitelen_emosi": "👥",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "kuntu",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "laughter, chuckle, laugh, comedy, humor"
+      }
+    ],
+    "note": "k.m.t.u ← kalama musi tan uta",
+    "sitelen_pona": "kuntu",
+    "sitelen_emosi": "🤣",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "kute",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "ear; to hear, listen; pay attention to, obey"
+      }
+    ],
+    "note": "écouter ‘listen’",
+    "sitelen_pona": "kute",
+    "sitelen_emosi": "👂",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "la",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(between the context phrase and the main sentence)"
+      }
+    ],
+    "note": "Esperanto: la ‘(definite article)’ (← Romance la ‘(feminine singular definite article)’); Acadian French: -la ‘(proximal & topical suffix)’",
+    "sitelen_pona": "la",
+    "sitelen_emosi": "🔼",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "lanpan",
+    "ku": true,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "take, seize, catch, receive, get"
+      }
+    ],
+    "note": "λαμβάνω lamváno ‘take, seize, grasp, receive’",
+    "sitelen_pona": "lanpan lanpan3",
+    "sitelen_emosi": "📥",
+    "usage_category": "common",
+    "book": "ku suli",
+    "see_also": "jo, alasa",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "lape",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "sleeping, resting"
+      }
+    ],
+    "note": "slapen ‘sleep’",
+    "sitelen_pona": "lape",
+    "sitelen_emosi": "😴",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "laso",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "blue, green"
+      }
+    ],
+    "note": "glas ‘blue, inexperienced’ ← Proto-Brythonic glas ‘green, blue’",
+    "sitelen_pona": "laso",
+    "sitelen_emosi": "🔵",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "lawa",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "head, mind; to control, direct, guide, lead, own, plan, regulate, rule"
+      }
+    ],
+    "note": "glava глава ‘head’",
+    "sitelen_pona": "lawa",
+    "sitelen_emosi": "😶",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "leko",
+    "ku": true,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "stairs, square, block, corner, cube"
+      }
+    ],
+    "note": "English: Lego (← Danish Lego ← ‘leg godt’ ‘play well’); Finnish: lohko ‘block, section’",
+    "sitelen_pona": "leko",
+    "sitelen_emosi": "🧱",
+    "usage_category": "widespread",
+    "book": "ku suli",
+    "see_also": "sike",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "len",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "cloth, clothing, fabric, textile; cover, layer of privacy"
+      }
+    ],
+    "note": "linge ‘clothing’",
+    "sitelen_pona": "len",
+    "sitelen_emosi": "👕",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "lete",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "cold, cool; uncooked, raw"
+      }
+    ],
+    "note": "frette ‘cold’ ← Old French freit ‘cold’",
+    "sitelen_pona": "lete",
+    "sitelen_emosi": "❄️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "seli",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "li",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(between any subject except mi alone or sina alone and its verb; also to introduce a new verb for the same subject)"
+      }
+    ],
+    "note": "li ‘he’ ← Latin ille {cf. Tok Pisin i ← English he}",
+    "sitelen_pona": "li",
+    "sitelen_emosi": "▶️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "o",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "likujo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "collection, assortment, menagerie, arrangement, handful, harvest; seven"
+      }
+    ],
+    "note": "recueil ‘collection, ensemble, anthology’",
+    "sitelen_pona": "likujo",
+    "sitelen_emosi": "🧺",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "kulupu, alasa",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "lili",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "little, small, short; few; a bit; young"
+      }
+    ],
+    "note": "liklik ‘small, little’ ← Ramoaaina liklik",
+    "sitelen_pona": "lili",
+    "sitelen_emosi": "🐭",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "suli",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "linja",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "long and flexible thing; cord, hair, rope, thread, yarn | ALT line, connection"
+      }
+    ],
+    "note": "linja ‘line’ ← Old Swedish linia",
+    "sitelen_pona": "linja",
+    "sitelen_emosi": "〰️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "palisa",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "linluwi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "network, internet, connection; weave, braid, interlace"
+      }
+    ],
+    "note": "rhyngrwyd ‘internet’ (← rhwng ‘between’ + rhwyd ‘net’)",
+    "sitelen_pona": "linluwi linluwi2",
+    "sitelen_emosi": "🌐",
+    "usage_category": "uncommon",
+    "book": "ku lili",
+    "see_also": "len, ilo, wan",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "lipu",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "flat object; book, document, card, paper, record, website"
+      }
+    ],
+    "note": "lippu ‘flag, banner, ticket’",
+    "sitelen_pona": "lipu",
+    "sitelen_emosi": "📄",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "loje",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "red, reddish"
+      }
+    ],
+    "note": "rooie, inflected form of rood ‘red’",
+    "sitelen_pona": "loje",
+    "sitelen_emosi": "🔴",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "loka",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "limb"
+      }
+    ],
+    "note": "luka & noka",
+    "sitelen_pona": "loka",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "luka, noka",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "lon",
+    "ku": false,
+    "pos": [
+      "preposition"
+    ],
+    "definitions": [
+      {
+        "pos": "preposition",
+        "definition": "located at, present at, real, true, existing | ALT (affirmative response)"
+      }
+    ],
+    "note": "long ‘at, in, on, (spacial particle)’ ← English along",
+    "sitelen_pona": "lon",
+    "sitelen_emosi": "📍",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "tenpo, ma",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "lu",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(word reserved for future use by Sonja Lang)"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "lu",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "pu, ku",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "luka",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "arm, hand, tactile organ; five | ALT touch/feel physically, interact, press"
+      }
+    ],
+    "note": "рука ruka ‘hand, arm’",
+    "sitelen_pona": "luka",
+    "sitelen_emosi": "✋",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "noka",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "lukin",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "eye; look at, see, examine, observe, read, watch; look for, seek; (pv.) try to"
+      }
+    ],
+    "note": "lukim ‘see, look at’ ← luk ‘look’ (← English look) + -im ‘(transitive suffix)’ (← English him, ’em)",
+    "sitelen_pona": "lukin",
+    "sitelen_emosi": "👀",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "oko, alasa",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "lupa",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "door, hole, orifice, window"
+      }
+    ],
+    "note": "clupa ‘loop’ (← Mandarin 圈 quān, English loop, Hindi पाश pāś, Arabic أنشوطة‏ ʾanšūṭa)",
+    "sitelen_pona": "lupa",
+    "sitelen_emosi": "🕳️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ma",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "earth, land; outdoors, world; country, territory; soil"
+      }
+    ],
+    "note": "maa ‘earth, land’",
+    "sitelen_pona": "ma",
+    "sitelen_emosi": "🏝️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "majuna",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "old, aged, ancient"
+      }
+    ],
+    "note": "maljuna ‘old’ ← mal- ‘(opposite of)’ (← Latin malus ‘bad’) + juna ‘young’ (← German jung & French jeune)",
+    "sitelen_pona": "majuna majuna2",
+    "sitelen_emosi": "👵",
+    "usage_category": "uncommon",
+    "book": "ku lili",
+    "see_also": "suli, tenpo",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "mama",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "parent, ancestor; creator, originator; caretaker, sustainer"
+      }
+    ],
+    "note": "მამა mama ‘father’",
+    "sitelen_pona": "mama",
+    "sitelen_emosi": "👪",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "mani",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "money, cash, savings, wealth; large domesticated animal"
+      }
+    ],
+    "note": "money {cf. fee ← Proto-Germanic *fehu ‘livestock’, and pecuniary ← Latin pecū ‘cattle’}",
+    "sitelen_pona": "mani",
+    "sitelen_emosi": "💰",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "esun",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "meli",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "woman, female, feminine person; wife"
+      }
+    ],
+    "note": "meri ‘woman, wife, feminine’ ← Tolai mari ‘pretty’ & English Mary",
+    "sitelen_pona": "meli meli2",
+    "sitelen_emosi": "👧",
+    "usage_category": "widespread",
+    "book": "pu",
+    "see_also": "mije, tonsi",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "meso",
+    "ku": true,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "midpoint, medium, mediocre; neither one not the other, neither fully is nor isn't"
+      }
+    ],
+    "note": "μέσος mésos ‘middle’",
+    "sitelen_pona": "meso meso2",
+    "sitelen_emosi": null,
+    "usage_category": "common",
+    "book": "ku suli",
+    "see_also": "insa",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "mi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "I, me, we, us"
+      }
+    ],
+    "note": "mi ‘I, me’ ← Romance m- ‘(1st person singular oblique)’",
+    "sitelen_pona": "mi",
+    "sitelen_emosi": "👈",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "mije",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "man, male, masculine person; husband"
+      }
+    ],
+    "note": "mies ‘man, husband’",
+    "sitelen_pona": "mije mije2",
+    "sitelen_emosi": "👨",
+    "usage_category": "widespread",
+    "book": "pu",
+    "see_also": "meli, tonsi",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "misa",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "Glires or Eulipotyphla; rat, mouse, squirrel, rabbit, rodent; {~ suli} capybara"
+      }
+    ],
+    "note": "мишка myshka, diminutive of миша misha 'mouse'",
+    "sitelen_pona": "misa misa5",
+    "sitelen_emosi": null,
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "soweli",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "misikeke",
+    "ku": true,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "medicine, medical"
+      }
+    ],
+    "note": "mashkiki ‘medicine, drug’",
+    "sitelen_pona": "misikeke",
+    "sitelen_emosi": "💊",
+    "usage_category": "common",
+    "book": "ku suli",
+    "see_also": "moku",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "moku",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "to eat, drink, consume, swallow, ingest"
+      }
+    ],
+    "note": "モグモグ mogumogu ‘munching’",
+    "sitelen_pona": "moku",
+    "sitelen_emosi": "🍽️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "moli",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "dead, dying"
+      }
+    ],
+    "note": "mourir ‘die’",
+    "sitelen_pona": "moli",
+    "sitelen_emosi": "💀",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "pini",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "monsi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "back, behind, rear"
+      }
+    ],
+    "note": "mon tchu ‘{vulgar} my ass’",
+    "sitelen_pona": "monsi",
+    "sitelen_emosi": "⬅️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "sinpin",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "monsuta",
+    "ku": true,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "fear, dread; monster, predator; threat, danger"
+      }
+    ],
+    "note": "モンスター monsutā ‘monster’ ← English monster",
+    "sitelen_pona": "monsuta",
+    "sitelen_emosi": "👹",
+    "usage_category": "widespread",
+    "book": "ku suli",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "mu",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(animal noise or communication) | ALT (non-speech vocalization)"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "mu mu2",
+    "sitelen_emosi": "😹",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "kalama",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "mulapisu",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "pizza"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "mulapisu",
+    "sitelen_emosi": "🍕",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "pan",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "mun",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "moon, night sky object, star | ALT glow, glowing light, light in the dark"
+      }
+    ],
+    "note": "moon",
+    "sitelen_pona": "mun",
+    "sitelen_emosi": "🌙",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "suno",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "musi",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "artistic, entertaining, frivolous, playful, recreation"
+      }
+    ],
+    "note": "amuzi ‘amuse, entertain’ ← French amuser",
+    "sitelen_pona": "musi",
+    "sitelen_emosi": "😃",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "pona",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "mute",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "many, a lot, more, much, several, very; quantity | ALT three (or more), 20"
+      }
+    ],
+    "note": "multe ‘a lot’ ← Latin multus",
+    "sitelen_pona": "mute",
+    "sitelen_emosi": "👐",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "wan, tu, ale",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "n",
+    "ku": true,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(indicates thinking, pondering, recognition, agreement, or humming)"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "n",
+    "sitelen_emosi": null,
+    "usage_category": "widespread",
+    "book": "ku suli",
+    "see_also": "a",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "namako",
+    "ku": true,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "{see sin} | ALT embellishment, spice; extra, additional"
+      }
+    ],
+    "note": "Hindi: नमक namak ‘salt’ (← Persian نمک namak ‘salt’); Persian: نمک namak ‘salt’",
+    "sitelen_pona": "namako namako2",
+    "sitelen_emosi": "🧂",
+    "usage_category": "widespread",
+    "book": "ku suli",
+    "see_also": "sin",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "nanpa",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "-th (ordinal number); numbers"
+      }
+    ],
+    "note": "namba ‘number, (ordinal marker)’ ← English number",
+    "sitelen_pona": "nanpa",
+    "sitelen_emosi": "#️⃣",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "nasa",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "unusual, strange; silly; drunk, intoxicated"
+      }
+    ],
+    "note": "nasau ‘dunderhead’",
+    "sitelen_pona": "nasa",
+    "sitelen_emosi": "🌀",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "nasin",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "way, custom, doctrine, method, path, road"
+      }
+    ],
+    "note": "начин način ‘way, method’",
+    "sitelen_pona": "nasin",
+    "sitelen_emosi": "🛣️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "neja",
+    "ku": false,
+    "pos": [
+      "number"
+    ],
+    "definitions": [
+      {
+        "pos": "number",
+        "definition": "four"
+      }
+    ],
+    "note": "neljä ‘four’",
+    "sitelen_pona": "neja",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "nena",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "bump, button, hill, mountain, nose, protuberance"
+      }
+    ],
+    "note": "nenä ‘nose’",
+    "sitelen_pona": "nena",
+    "sitelen_emosi": "🗻",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ni",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "that, this"
+      }
+    ],
+    "note": "呢 ni¹ ‘this’ ← substrate, cf. Tai, Mon-Khmer, Hmong-Mien, Austronesian; 哩 le¹ ‘[continuation of a state/action]’",
+    "sitelen_pona": "ni ni2",
+    "sitelen_emosi": "👇",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "ona",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "nimi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "name, word"
+      }
+    ],
+    "note": "nimi ‘name’",
+    "sitelen_pona": "nimi",
+    "sitelen_emosi": "💬",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "noka",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "foot, leg, organ of locomotion; bottom, lower part"
+      }
+    ],
+    "note": "нога noga ‘foot, leg’",
+    "sitelen_pona": "noka",
+    "sitelen_emosi": "🦵",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "luka",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "nu",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(word reserved for future use by Sonja Lang)"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "nu",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "pu, ku",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "o",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "hey! O! (vocative, imperative, or optative)"
+      }
+    ],
+    "note": "-ო -o ‘(vocative suffix)’",
+    "sitelen_pona": "o",
+    "sitelen_emosi": "👋",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "li",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "oke",
+    "ku": false,
+    "pos": [
+      "interjection"
+    ],
+    "definitions": [
+      {
+        "pos": "interjection",
+        "definition": "(acknowledgement or acceptance)"
+      }
+    ],
+    "note": "okay",
+    "sitelen_pona": "oke",
+    "sitelen_emosi": "👌",
+    "usage_category": "uncommon",
+    "book": "ku lili",
+    "see_also": "pona, ke, n, a",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "oko",
+    "ku": true,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "{see lukin} | ALT eye, ocular, visual {cf. lukin}"
+      }
+    ],
+    "note": "оko око ‘eye’",
+    "sitelen_pona": "oko",
+    "sitelen_emosi": "👁️",
+    "usage_category": "common",
+    "book": "ku suli",
+    "see_also": "lukin",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "olin",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "love, have compassion for, respect, show affection to"
+      }
+    ],
+    "note": "волим volim ‘I love’",
+    "sitelen_pona": "olin olin2",
+    "sitelen_emosi": "💕",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "ona",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "he, she, it, they"
+      }
+    ],
+    "note": "она ona ‘she’",
+    "sitelen_pona": "ona",
+    "sitelen_emosi": "👆",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "ni",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "open",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "begin, start; open; turn on"
+      }
+    ],
+    "note": "open",
+    "sitelen_pona": "open",
+    "sitelen_emosi": "🔓",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "kama",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pakala",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "botched, broken, damaged, harmed, messed up | ALT (curse expletive, e.g. fuck!)"
+      }
+    ],
+    "note": "bagarap ‘accident’ ← English bugger up",
+    "sitelen_pona": "pakala",
+    "sitelen_emosi": "💥",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "pini, kipisi",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pake",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "stop, cease, halt; to block the way, to interrupt; to prevent"
+      }
+    ],
+    "note": "block",
+    "sitelen_pona": "pake",
+    "sitelen_emosi": "🚧",
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "pini",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pali",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "do, take action on, work on; build, make, prepare"
+      }
+    ],
+    "note": "fari ‘do, make’",
+    "sitelen_pona": "pali",
+    "sitelen_emosi": "✊",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "palisa",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "long hard thing; branch, rod, stick"
+      }
+    ],
+    "note": "палица palica ‘bat, rod, cane’",
+    "sitelen_pona": "palisa",
+    "sitelen_emosi": "📏",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "linja",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pan",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "cereal, grain; barley, corn, oat, rice, wheat; bread, pasta"
+      }
+    ],
+    "note": "Romance: pan ‘bread’; Japanese: パン pan ‘bread’ (← Portuguese pão)",
+    "sitelen_pona": "pan",
+    "sitelen_emosi": "🍞",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "moku",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pana",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "give, send, emit, provide, put, release"
+      }
+    ],
+    "note": "Finnish: panna ‘put, set, place’; Swahili: pana ‘give to each other’",
+    "sitelen_pona": "pana",
+    "sitelen_emosi": "📤",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pata",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "brother, sister, sibling"
+      }
+    ],
+    "note": "Serbo-Croatian: брат brat ‘brother’; Tok Pisin: brata ‘sibling or cousin of the same gender’ (← English brother)",
+    "sitelen_pona": "pata",
+    "sitelen_emosi": "👯‍♀️",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "sama",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "peto",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "cry, tears; sad, sadness"
+      }
+    ],
+    "note": "p.e.t.o. ← pana e telo oko",
+    "sitelen_pona": "peto",
+    "sitelen_emosi": "😭",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "pi",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "of (used to divide a second noun group that describes a first noun group) | ALT (introduces a genitive noun)"
+      }
+    ],
+    "note": "bilong ‘of’ ← English belong",
+    "sitelen_pona": "pi",
+    "sitelen_emosi": "⏹️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pilin",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "heart (physical or emotional); feeling (an emotion, a direct experience)"
+      }
+    ],
+    "note": "pilim ‘feel’ ← pil ‘feel’ (← English feel) + -im ‘(transitive suffix)’ (← English him, ’em)",
+    "sitelen_pona": "pilin",
+    "sitelen_emosi": "❤️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pimeja",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "black, dark, unlit"
+      }
+    ],
+    "note": "pimeä ‘dark’",
+    "sitelen_pona": "pimeja",
+    "sitelen_emosi": "⚫",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "suno, walo",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pini",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "ago, completed, ended, finished, past"
+      }
+    ],
+    "note": "Acadian French: fini ‘finished, completed’; Tok Pisin: pinis ‘(perfective aspect)’(← English finish)",
+    "sitelen_pona": "pini",
+    "sitelen_emosi": "🏁",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "open, kama",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pipi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "bug, insect, ant, spider"
+      }
+    ],
+    "note": "bibitte ‘bug’",
+    "sitelen_pona": "pipi",
+    "sitelen_emosi": "🐞",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "po",
+    "ku": false,
+    "pos": [
+      "number"
+    ],
+    "definitions": [
+      {
+        "pos": "number",
+        "definition": "four"
+      }
+    ],
+    "note": "four",
+    "sitelen_pona": "po",
+    "sitelen_emosi": "🍀",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "mute",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "poka",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "hip, side; next to, nearby, vicinity | ALT along with (comitative), beside"
+      }
+    ],
+    "note": "boka бока, genitive of bok бок ‘side, flank’",
+    "sitelen_pona": "poka",
+    "sitelen_emosi": "↔️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "lon",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "poki",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "container, bag, bowl, box, cup, cupboard, drawer, vessel"
+      }
+    ],
+    "note": "bokis ‘box, {vulgar} female genitalia’ ← English box",
+    "sitelen_pona": "poki",
+    "sitelen_emosi": "📦",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "polinpin",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "bowling pin"
+      }
+    ],
+    "note": "bowling pin",
+    "sitelen_pona": "polinpin",
+    "sitelen_emosi": "🎳",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "pomotolo",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "effective, useful, give good results"
+      }
+    ],
+    "note": "pomodoro ‘tomato’",
+    "sitelen_pona": "pomotolo",
+    "sitelen_emosi": "📈",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "pona, ken, wawa",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "pona",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "good, positive, useful; friendly, peaceful; simple"
+      }
+    ],
+    "note": "bona ‘good’",
+    "sitelen_pona": "pona",
+    "sitelen_emosi": "👍",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "ike",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "powe",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "unreal, false, untrue; pretend; deceive, trick"
+      }
+    ],
+    "note": "pas vrai ‘not true’",
+    "sitelen_pona": "powe",
+    "sitelen_emosi": "🧞",
+    "usage_category": "uncommon",
+    "book": "ku lili",
+    "see_also": "ike, lon",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "pu",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "interacting with the official Toki Pona book"
+      }
+    ],
+    "note": "Mandarin: 樸 pǔ ‘unworked wood; sincere, honest; inherent quality; simple’; English: book",
+    "sitelen_pona": "pu",
+    "sitelen_emosi": "📖",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "ku",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sama",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "same, similar; each other; sibling, peer, fellow; as, like"
+      }
+    ],
+    "note": "Finnish: sama ‘same’ (← Proto-Germanic *samaz ‘same, alike’); Esperanto: sama ‘same’ (← English same)",
+    "sitelen_pona": "sama",
+    "sitelen_emosi": "⚖️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "ante",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "samu",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "wanting to create new words"
+      }
+    ],
+    "note": "jan Samu",
+    "sitelen_pona": "samu",
+    "sitelen_emosi": "✍️",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "nimisin",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "san",
+    "ku": false,
+    "pos": [
+      "number"
+    ],
+    "definitions": [
+      {
+        "pos": "number",
+        "definition": "three"
+      }
+    ],
+    "note": "Japanese: 三 san ‘three’; Cantonese: 三/叁 sāam",
+    "sitelen_pona": "san",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "mute, tuli",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "seli",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "fire; cooking element, chemical reaction, heat source"
+      }
+    ],
+    "note": "ცხელი cxeli ‘hot’",
+    "sitelen_pona": "seli",
+    "sitelen_emosi": "🔥",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "lete",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "selo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "outer form, outer layer; bark, peel, shell, skin; boundary"
+      }
+    ],
+    "note": "ŝelo ‘skin, peel’ ← German Schale ‘peel, husk, shell’",
+    "sitelen_pona": "selo",
+    "sitelen_emosi": "🔲",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "seme",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "what? which?"
+      }
+    ],
+    "note": "什麼 shénme ‘what, something’",
+    "sitelen_pona": "seme",
+    "sitelen_emosi": "❓",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sewi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "area above, highest part, something elevated; awe-inspiring, divine, sacred, supernatural"
+      }
+    ],
+    "note": "ზევით zevit ‘upwards’",
+    "sitelen_pona": "sewi sewi2",
+    "sitelen_emosi": "⬆️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "anpa",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sijelo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "body (of person or animal), physical state, torso"
+      }
+    ],
+    "note": "тијело tijelo ‘body’",
+    "sitelen_pona": "sijelo",
+    "sitelen_emosi": "🏋️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sike",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "round or circular thing; ball, circle, cycle, sphere, wheel; of one year"
+      }
+    ],
+    "note": "circle",
+    "sitelen_pona": "sike",
+    "sitelen_emosi": "⭕",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "leko",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sin",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "new, fresh; additional, another, extra"
+      }
+    ],
+    "note": "新 xīn ‘new, fresh’",
+    "sitelen_pona": "sin",
+    "sitelen_emosi": "🎁",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "namako",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sina",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "you"
+      }
+    ],
+    "note": "sinä ‘you’",
+    "sitelen_pona": "sina",
+    "sitelen_emosi": "👉",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sinpin",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "face, foremost, front, wall"
+      }
+    ],
+    "note": "前邊 tsin bin ‘in front’",
+    "sitelen_pona": "sinpin",
+    "sitelen_emosi": "➡️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "monsi",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sitelen",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "image, picture, representation, symbol, mark, writing"
+      }
+    ],
+    "note": "schilderen ‘paint’",
+    "sitelen_pona": "sitelen",
+    "sitelen_emosi": "🖼️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "soko",
+    "ku": true,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "fungus, fungi"
+      }
+    ],
+    "note": "სოკო sok’o ‘mushroom’",
+    "sitelen_pona": "soko soko2",
+    "sitelen_emosi": "🍄",
+    "usage_category": "common",
+    "book": "ku suli",
+    "see_also": "kasi, kili",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "sona",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "know, be skilled in, be wise about, have information on; (pv.) know how to"
+      }
+    ],
+    "note": "ცოდნა codna ‘knowledge’",
+    "sitelen_pona": "sona",
+    "sitelen_emosi": "🧠",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "soto",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "left, left side, port side"
+      }
+    ],
+    "note": "shoto ‘left side’",
+    "sitelen_pona": "soto",
+    "sitelen_emosi": "🤛",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "poka, teje",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "soweli",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "animal, beast, land mammal"
+      }
+    ],
+    "note": "ცხოველი cxoveli ‘beastly animal, lively, passionate’",
+    "sitelen_pona": "soweli",
+    "sitelen_emosi": "🐒",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "su",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "interacting with a book from the illustrated story book series that began with The Wonderful Wizard of Oz, produced by Sonja Lang"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "su",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "pu, ku",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "suke",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "[typo of sike]"
+      }
+    ],
+    "note": "typo of sike",
+    "sitelen_pona": "suke",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "suli",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "big, heavy, large, long, tall; important; adult"
+      }
+    ],
+    "note": "suuri ‘big, large, great’",
+    "sitelen_pona": "suli",
+    "sitelen_emosi": "🐘",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "lili",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "suno",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "sun; light, brightness, glow, radiance, shine; light source"
+      }
+    ],
+    "note": "suno ‘sun’",
+    "sitelen_pona": "suno",
+    "sitelen_emosi": "☀️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "mun, pimeja",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "supa",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "horizontal surface, thing to put or rest something on"
+      }
+    ],
+    "note": "surfaco ‘surface’ ← Acadian French & English surface",
+    "sitelen_pona": "supa",
+    "sitelen_emosi": "🛏️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "sinpin",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "sutopatikuna",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "platypus"
+      }
+    ],
+    "note": "čudnovati kljunaš ‘platypus, lit. strange beak’",
+    "sitelen_pona": "sutopatikuna",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "kijetesantakalu",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "suwi",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "sweet, fragrant; cute, innocent, adorable"
+      }
+    ],
+    "note": "swit ← English sweet",
+    "sitelen_pona": "suwi",
+    "sitelen_emosi": "🍭",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "pona",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "taki",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "sticky, magnetic; bond, attract, attach, clip"
+      }
+    ],
+    "note": "탁 tag ‘(onomatopoeia) the sound of two magnets hitting each other’",
+    "sitelen_pona": "taki taki2",
+    "sitelen_emosi": null,
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "wan, wile",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "tan",
+    "ku": false,
+    "pos": [
+      "preposition"
+    ],
+    "definitions": [
+      {
+        "pos": "preposition",
+        "definition": "by, from, because of; origin, cause"
+      }
+    ],
+    "note": "從 tsung ‘from’",
+    "sitelen_pona": "tan",
+    "sitelen_emosi": "↩️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "taso",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "but, however; only"
+      }
+    ],
+    "note": "tasol ‘just, only, but, however’ ← English that’s all",
+    "sitelen_pona": "taso",
+    "sitelen_emosi": "🤔",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "tawa",
+    "ku": false,
+    "pos": [
+      "preposition"
+    ],
+    "definitions": [
+      {
+        "pos": "preposition",
+        "definition": "going to, toward; for; from the perspective of; moving | ALT (pv.) going to"
+      }
+    ],
+    "note": "toward(s)",
+    "sitelen_pona": "tawa",
+    "sitelen_emosi": "↪️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "awen, kama",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "te",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(particle introducing a quote)"
+      }
+    ],
+    "note": "って tte ‘quotative’",
+    "sitelen_pona": "te",
+    "sitelen_emosi": "🤜",
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "to",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "teje",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "right, right side, starboard"
+      }
+    ],
+    "note": "de (/deː/) ‘right’",
+    "sitelen_pona": "teje",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "poka, soto",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "telo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "water, liquid, fluid, wet substance; beverages"
+      }
+    ],
+    "note": "de l’eau ‘(some) water’",
+    "sitelen_pona": "telo",
+    "sitelen_emosi": "💧",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "tenpo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "time, duration, moment, occasion, period, situation"
+      }
+    ],
+    "note": "tempo ‘time’ ← Latin tempus",
+    "sitelen_pona": "tenpo",
+    "sitelen_emosi": "⏰",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "lon",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "to",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(particle closing a quote)"
+      }
+    ],
+    "note": "と to ‘quotative’",
+    "sitelen_pona": "to",
+    "sitelen_emosi": null,
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "te",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "toki",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "communicate, say, speak, talk, use language, think; hello"
+      }
+    ],
+    "note": "tok ← English talk",
+    "sitelen_pona": "toki",
+    "sitelen_emosi": "🗣️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "toma",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "[typo of tomo]"
+      }
+    ],
+    "note": "typo of tomo",
+    "sitelen_pona": "toma",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "tomo",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "indoor space; building, home, house, room"
+      }
+    ],
+    "note": "domo ‘house’ ← Polish dom, Latin domus, Ancient Greek δόμος",
+    "sitelen_pona": "tomo",
+    "sitelen_emosi": "🏠",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "poki",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "tonsi",
+    "ku": true,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "non-binary, gender-non-conforming | ALT trans, non-cisgender"
+      }
+    ],
+    "note": "同志 tóngzhì ‘comrade (same will/purpose); LGBT+’",
+    "sitelen_pona": "tonsi",
+    "sitelen_emosi": "♐",
+    "usage_category": "widespread",
+    "book": "ku suli",
+    "see_also": "meli, mije, kule",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "tu",
+    "ku": false,
+    "pos": [
+      "number"
+    ],
+    "definitions": [
+      {
+        "pos": "number",
+        "definition": "two | ALT separate, cut"
+      }
+    ],
+    "note": "English: two; Esperanto: du",
+    "sitelen_pona": "tu",
+    "sitelen_emosi": "✌️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "kipisi",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "tuli",
+    "ku": false,
+    "pos": [
+      "number"
+    ],
+    "definitions": [
+      {
+        "pos": "number",
+        "definition": "three"
+      }
+    ],
+    "note": "three",
+    "sitelen_pona": "tuli",
+    "sitelen_emosi": "☘️",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "san",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "u",
+    "ku": false,
+    "pos": [
+      "particle"
+    ],
+    "definitions": [
+      {
+        "pos": "particle",
+        "definition": "(word reserved for future use by Sonja Lang)"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "u",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "pu, ku",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "umesu",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "amaze people by being on the top of the leaderboard of a toki pona game"
+      }
+    ],
+    "note": "Umeyz ‘to amaze (someone); surprise; impress’",
+    "sitelen_pona": "umesu",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "unpa",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "have sexual relations with"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "unpa",
+    "sitelen_emosi": "🍆",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "unu",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "purple"
+      }
+    ],
+    "note": "ungu ‘purple’",
+    "sitelen_pona": "unu",
+    "sitelen_emosi": null,
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "laso, loje, pimeja",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "usawi",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "magic, sorcery; enchant; magical, supernatural, occult, incomprehensible"
+      }
+    ],
+    "note": "uchawi ‘witchcraft, sorcery’",
+    "sitelen_pona": "usawi",
+    "sitelen_emosi": null,
+    "usage_category": "uncommon",
+    "book": "ku lili",
+    "see_also": "wawa, nasa, ken",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "uta",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "mouth, lips, oral cavity, jaw"
+      }
+    ],
+    "note": "уста usta ‘mouth’",
+    "sitelen_pona": "uta uta2",
+    "sitelen_emosi": "👄",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "utala",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "battle, challenge, compete against, struggle against"
+      }
+    ],
+    "note": "ударати udarati ‘strike, hit, beat’",
+    "sitelen_pona": "utala",
+    "sitelen_emosi": "⚔️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "ike, anpa",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "wa",
+    "ku": false,
+    "pos": [
+      "interjection"
+    ],
+    "definitions": [
+      {
+        "pos": "interjection",
+        "definition": "[interjection] indicating awe or amazement"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "wa",
+    "sitelen_emosi": null,
+    "usage_category": "rare",
+    "book": "ku lili",
+    "see_also": "a, n, je",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "waleja",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "context, topic, salience, pertinent, topical, pertain to, be relevant"
+      }
+    ],
+    "note": "valdea ‘of moment, important’ ← valda ‘worth, worthy, dear’",
+    "sitelen_pona": "waleja",
+    "sitelen_emosi": "ℹ️",
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "tenpo",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "walo",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "white, whitish; light-coloured, pale"
+      }
+    ],
+    "note": "valko- ‘white’",
+    "sitelen_pona": "walo",
+    "sitelen_emosi": "⚪",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "pimeja",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "wan",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "unique, united; one"
+      }
+    ],
+    "note": "one",
+    "sitelen_pona": "wan",
+    "sitelen_emosi": "☝️",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "tu, mute",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "waso",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "bird, flying creature, winged animal"
+      }
+    ],
+    "note": "oiseau ‘bird’",
+    "sitelen_pona": "waso",
+    "sitelen_emosi": "🦅",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "wasoweli",
+    "ku": false,
+    "pos": [
+      "noun"
+    ],
+    "definitions": [
+      {
+        "pos": "noun",
+        "definition": "animal with qualities of both waso & soweli"
+      }
+    ],
+    "note": "waso + soweli",
+    "sitelen_pona": "wasoweli",
+    "sitelen_emosi": null,
+    "usage_category": "obscure",
+    "book": "ku lili",
+    "see_also": "waso, soweli, sutopatikuna",
+    "coined_era": "post-pu"
+  },
+  {
+    "word": "wawa",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "strong, powerful; confident, sure; energetic, intense"
+      }
+    ],
+    "note": "vahva ‘strong, powerful, thick’",
+    "sitelen_pona": "wawa",
+    "sitelen_emosi": "⚡",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "weka",
+    "ku": false,
+    "pos": [
+      "adjective"
+    ],
+    "definitions": [
+      {
+        "pos": "adjective",
+        "definition": "absent, away, ignored"
+      }
+    ],
+    "note": "weg ‘away, gone’",
+    "sitelen_pona": "weka",
+    "sitelen_emosi": "🛫",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": "pini",
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "wile",
+    "ku": false,
+    "pos": [
+      "pre-verb"
+    ],
+    "definitions": [
+      {
+        "pos": "pre-verb",
+        "definition": "must, need, require, should, want, wish"
+      }
+    ],
+    "note": "willen ‘want, desire’",
+    "sitelen_pona": "wile wile2",
+    "sitelen_emosi": "💭",
+    "usage_category": "core",
+    "book": "pu",
+    "see_also": null,
+    "coined_era": "pre-pu"
+  },
+  {
+    "word": "yupekosi",
+    "ku": false,
+    "pos": [
+      "verb"
+    ],
+    "definitions": [
+      {
+        "pos": "verb",
+        "definition": "to behave like George Lucas and revise your old creative works and actually make them worse"
+      }
+    ],
+    "note": null,
+    "sitelen_pona": "yupekosi",
+    "sitelen_emosi": "📉",
+    "usage_category": "uncommon",
+    "book": "ku lili",
+    "see_also": null,
+    "coined_era": "post-pu"
+  }
 ]

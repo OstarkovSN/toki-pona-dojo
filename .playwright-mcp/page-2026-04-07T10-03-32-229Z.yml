@@ -1,0 +1,50 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "toki pona dojo" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - list [ref=e12]:
+        - listitem [ref=e13]:
+          - link "Dashboard" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - img [ref=e15]
+            - generic [ref=e18]: Dashboard
+      - generic [ref=e19]:
+        - listitem [ref=e20]:
+          - button "Appearance Toggle theme" [ref=e21] [cursor=pointer]:
+            - img [ref=e22]
+            - generic [ref=e24]: Appearance
+            - generic [ref=e25]: Toggle theme
+        - list [ref=e26]:
+          - listitem [ref=e27]:
+            - button "JS jan sona jan.sona@toki.pona" [ref=e28] [cursor=pointer]:
+              - generic [ref=e29]:
+                - generic [ref=e31]: JS
+                - generic [ref=e32]:
+                  - paragraph [ref=e33]: jan sona
+                  - paragraph [ref=e34]: jan.sona@toki.pona
+              - img [ref=e35]
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - button "Collapse Sidebar" [ref=e42] [cursor=pointer]:
+            - img
+            - generic [ref=e43]: Collapse Sidebar
+          - main [ref=e44]:
+            - generic [ref=e69]:
+              - paragraph [ref=e71]: unit 2 · ijo · exercise 1 of 4
+              - generic [ref=e73]:
+                - paragraph [ref=e74]: Match each word with its meaning
+                - generic [ref=e75]:
+                  - generic [ref=e76]:
+                    - 'button "toki pona: tomo" [disabled] [ref=e77] [cursor=pointer]': tomo
+                    - 'button "toki pona: suno" [disabled] [ref=e78] [cursor=pointer]': suno
+                    - 'button "toki pona: jan" [active] [ref=e79] [cursor=pointer]': jan
+                  - generic [ref=e80]:
+                    - 'button "english: person, human being, somebody" [ref=e81] [cursor=pointer]': person, human being, somebody
+                    - 'button "english: house, room, home, building" [disabled] [ref=e82] [cursor=pointer]': house, room, home, building
+                    - 'button "english: sun, light, brightness, shine" [disabled] [ref=e83] [cursor=pointer]': sun, light, brightness, shine
+          - paragraph [ref=e64]: toki pona dojo - 2026
+        - button "Open chat" [ref=e66] [cursor=pointer]:
+          - img [ref=e67]
+  - region "Notifications alt+T"

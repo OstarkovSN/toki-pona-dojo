@@ -150,6 +150,18 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **Two `ExerciseResult` interfaces with incompatible `correct` types** — `useProgress.ts` defines `correct: number` while `types/exercises.ts` defines `correct: boolean`; the lesson page bridges them with `result.correct ? 1 : 0`. Consider renaming one to `ProgressExerciseResult` to avoid confusion.
 - **`ralph-loop.local.md` must be gitignored** — `.claude/ralph-loop.local.md` is session-local automation state; add to `.gitignore` and `git rm --cached` it if accidentally committed.
 
+## Phase 10.5: Error Handling & Silent Failures
+
+- **`useChat` `loadMessages()` catch block returns `[]` on any JSON parse error with no logging** — corrupt sessionStorage goes completely undetected; malformed stored data is silently lost.
+- **`useChat` `saveMessages()` has intentional silent-ignore on quota exhaustion** — no console.warn even in dev, so `localStorage.setItem` failures (storage full, private browsing) are invisible to devs.
+- **`ChatContext` `localStorage.getItem("tp-chat-open")` in useState initializer has no try/catch** — `SecurityError` in private browsing or restricted iframe crashes the provider on mount.
+- **`vite.config.ts` proxy added without error logging** — proxy errors (backend unreachable) produce no dev-server console output; developers see silent 502s from unmocked routes.
+- **`testBYOMConnection` calls `response.json()` but discards result** — if JSON parse fails (malformed body from provider), the error propagates as an unhandled rejection from the caller's perspective.
+- **`processSSEChunk` inner catch block swallows JSON parse errors on SSE data lines** — malformed responses from provider are invisible; streaming silently stops.
+- **`ChatPanel` useEffect dependency array bug: changed from `[messages]` to `[]`** — auto-scroll fires only on mount, never on new messages (functional regression for scroll-to-bottom).
+- **`ExerciseWordBank` `WordChip` `onSelect` callback receives `word` string but caller ignores argument** — `handleTapBank(word, i)` doesn't use the arg; signature mismatch is silent if `WordChip` changes in future.
+- **`WordChip` always renders `<Link>` relying on `e.preventDefault()`** — middle-click, ctrl+click, and right-click bypass preventDefault and navigate away from exercise mid-lesson.
+
 ## Phase 10 Gotchas
 
 - **`ChatMessage` renders a 3-dot pulse animation inline when `!content && isStreaming`** — a dedicated `ChatTypingIndicator` component replaced the early-render path but the inline dots remain for mid-stream cases (content exists but more is coming). No need to manage two separate animations.
@@ -202,6 +214,11 @@ const { data } = useQuery({ queryKey: ['users'], queryFn: () => UsersService.rea
 - **Grammar page does not need skeleton tests** — the grammar/modifiers page renders `FALLBACK_SECTIONS` synchronously. Even with a slowed API route, the skeleton may not appear because fallback data renders immediately. Loading-state tests for grammar should only assert page content renders, not that the skeleton appears.
 - **ChatContext uses `"tp-chat-open"` localStorage key** — to force mobile floating button visible in tests, use `localStorage.setItem("tp-chat-open", "false")` in `addInitScript`.
 - **Biome auto-formats test files on `bun run lint`** — after writing new test files, run lint to auto-fix import ordering and rename unused variables with `_` prefix (e.g., `_skeleton`). Always run lint after test creation.
+- **Grammar components use Tailwind color utility naming (e.g., `bg-zen-teal-bg`, `text-zen-teal-dark`)** — must match theme definitions in `index.css`; no validation at build time if color doesn't exist.
+- **`ChainWord` role type includes `"pi-group"` as special modifier role** — distinct from `"modifier"` for visual distinction in color-coded chains; not a typo or optional.
+- **Grammar modifiers page uses local `useState` for quiz answers** — API fallback data provides questions but page intentionally doesn't persist quiz results to backend (Phase 5 design, not a missing feature).
+- **Grammar particles page uses only hardcoded `PARTICLES` array** — no API integration despite similar pattern in modifiers; static content, not a data loading issue.
+- **Grammar table rendering uses plain HTML `<table>` instead of shadcn `Table`** — shadcn table not installed in this phase; avoid dependency bloat.
 - **`ruff` post-edit hook drops newly added top-level imports if a duplicate exists elsewhere in the file** — when adding imports like `import pytest`, if the file body has a duplicate like `from unittest.mock import patch`, the formatter removes the new import; use `Write` to rewrite the entire file to survive the formatter.
 - **`llm-client.ts` stores BYOM config as three separate localStorage keys** (`tp-byom-url`, `tp-byom-key`, `tp-byom-model`), not a single JSON blob — Playwright `addInitScript` must set all three individually.
 - **`ProviderSettings.tsx` renders "Connected to your provider" text in a `<span>` when BYOM is configured** — concrete assertion target for configured-state tests.

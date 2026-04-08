@@ -133,6 +133,7 @@ export type UnitSummary = {
     words: Array<(string)>;
     exercise_types: Array<(string)>;
     requires: Array<(number)>;
+    lesson_count: number;
 };
 
 export type UpdatePassword = {
@@ -161,6 +162,7 @@ export type UserRegister = {
     email: string;
     password: string;
     full_name?: (string | null);
+    invite_token?: (string | null);
 };
 
 export type UsersPublic = {
@@ -202,6 +204,10 @@ export type ChatGradeExerciseData = {
 };
 
 export type ChatGradeExerciseResponse = (ExerciseGradeResponse);
+
+export type ConfigGetPublicConfigResponse = ({
+    [key: string]: unknown;
+});
 
 export type DictionaryListWordsData = {
     pos?: (string | null);
@@ -290,6 +296,10 @@ export type ProgressSyncProgressData = {
 
 export type ProgressSyncProgressResponse = (ProgressPublic);
 
+export type TelegramTelegramWebhookResponse = ({
+    [key: string]: unknown;
+});
+
 export type UsersReadUsersData = {
     limit?: number;
     skip?: number;
@@ -324,6 +334,14 @@ export type UsersRegisterUserData = {
 };
 
 export type UsersRegisterUserResponse = (UserPublic);
+
+export type UsersValidateTokenData = {
+    token: string;
+};
+
+export type UsersValidateTokenResponse = ({
+    [key: string]: (boolean);
+});
 
 export type UsersReadUserByIdData = {
     userId: string;

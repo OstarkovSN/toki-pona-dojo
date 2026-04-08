@@ -1,0 +1,1482 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "toki pona dojo" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - list [ref=e12]:
+        - listitem [ref=e13]:
+          - link "Dashboard" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - img [ref=e15]
+            - generic [ref=e18]: Dashboard
+        - listitem [ref=e19]:
+          - link "Admin" [ref=e20] [cursor=pointer]:
+            - /url: /admin
+            - img [ref=e21]
+            - generic [ref=e26]: Admin
+      - generic [ref=e27]:
+        - listitem [ref=e28]:
+          - button "Appearance Toggle theme" [ref=e29] [cursor=pointer]:
+            - img [ref=e30]
+            - generic [ref=e32]: Appearance
+            - generic [ref=e33]: Toggle theme
+        - list [ref=e34]:
+          - listitem [ref=e35]:
+            - button "U admin@example.com" [ref=e36] [cursor=pointer]:
+              - generic [ref=e37]:
+                - generic [ref=e39]: U
+                - generic [ref=e40]:
+                  - paragraph
+                  - paragraph [ref=e41]: admin@example.com
+              - img [ref=e42]
+    - main [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - button "Collapse Sidebar" [ref=e49] [cursor=pointer]:
+            - img
+            - generic [ref=e50]: Collapse Sidebar
+          - main [ref=e51]:
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - heading "nimi ale" [level=1] [ref=e55]
+                - paragraph [ref=e56]: all words
+              - generic [ref=e58]:
+                - img [ref=e59]
+                - textbox "Search words or definitions..." [ref=e62]
+              - generic [ref=e63]:
+                - button "all" [pressed] [ref=e64] [cursor=pointer]
+                - button "noun" [ref=e65] [cursor=pointer]
+                - button "verb" [ref=e66] [cursor=pointer]
+                - button "adjective" [ref=e67] [cursor=pointer]
+                - button "particle" [ref=e68] [cursor=pointer]
+                - button "number" [ref=e69] [cursor=pointer]
+                - button "pre-verb" [ref=e70] [cursor=pointer]
+                - button "preposition" [ref=e71] [cursor=pointer]
+              - generic [ref=e72]:
+                - button "all" [pressed] [ref=e73] [cursor=pointer]
+                - button "pu" [ref=e74] [cursor=pointer]
+                - button "ku suli" [ref=e75] [cursor=pointer]
+              - generic [ref=e76]:
+                - button "A" [ref=e77] [cursor=pointer]
+                - button "B" [disabled] [ref=e78]
+                - button "C" [disabled] [ref=e79]
+                - button "D" [disabled] [ref=e80]
+                - button "E" [ref=e81] [cursor=pointer]
+                - button "F" [disabled] [ref=e82]
+                - button "G" [disabled] [ref=e83]
+                - button "H" [disabled] [ref=e84]
+                - button "I" [ref=e85] [cursor=pointer]
+                - button "J" [ref=e86] [cursor=pointer]
+                - button "K" [ref=e87] [cursor=pointer]
+                - button "L" [ref=e88] [cursor=pointer]
+                - button "M" [ref=e89] [cursor=pointer]
+                - button "N" [ref=e90] [cursor=pointer]
+                - button "O" [ref=e91] [cursor=pointer]
+                - button "P" [ref=e92] [cursor=pointer]
+                - button "R" [disabled] [ref=e93]
+                - button "S" [ref=e94] [cursor=pointer]
+                - button "T" [ref=e95] [cursor=pointer]
+                - button "U" [ref=e96] [cursor=pointer]
+                - button "W" [ref=e97] [cursor=pointer]
+              - paragraph [ref=e98]: 190 of 190 words
+              - generic [ref=e99]:
+                - heading "A" [level=2] [ref=e100]
+                - generic [ref=e101]:
+                  - link "a particle particle(emphasis, emotion or confirmation)" [ref=e102] [cursor=pointer]:
+                    - /url: /dictionary/a
+                    - generic [ref=e103]:
+                      - heading "a" [level=3] [ref=e104]
+                      - generic [ref=e106]: particle
+                    - paragraph [ref=e108]: particle(emphasis, emotion or confirmation)
+                  - link "akesi noun nounreptile, amphibian hagedis ‘lizard’" [ref=e109] [cursor=pointer]:
+                    - /url: /dictionary/akesi
+                    - generic [ref=e110]:
+                      - heading "akesi" [level=3] [ref=e111]
+                      - generic [ref=e113]: noun
+                    - paragraph [ref=e115]: nounreptile, amphibian
+                    - paragraph [ref=e116]: hagedis ‘lizard’
+                  - link "ala adjective adjectiveno, not, zero; [~ ala ~] (used to form a yes-no question); nothing არა ara ‘no’" [ref=e117] [cursor=pointer]:
+                    - /url: /dictionary/ala
+                    - generic [ref=e118]:
+                      - heading "ala" [level=3] [ref=e119]
+                      - generic [ref=e121]: adjective
+                    - paragraph [ref=e123]: adjectiveno, not, zero; [~ ala ~] (used to form a yes-no question); nothing
+                    - paragraph [ref=e124]: არა ara ‘no’
+                  - link "alasa verb verbto hunt, forage, seek | ALT (pv.) try to, attempt à la chasse ‘hunting, (lit.) on the hunt’" [ref=e125] [cursor=pointer]:
+                    - /url: /dictionary/alasa
+                    - generic [ref=e126]:
+                      - heading "alasa" [level=3] [ref=e127]
+                      - generic [ref=e129]: verb
+                    - paragraph [ref=e131]: verbto hunt, forage, seek | ALT (pv.) try to, attempt
+                    - paragraph [ref=e132]: à la chasse ‘hunting, (lit.) on the hunt’
+                  - link "ale adjective adjectiveall; abundant, countless, bountiful, every, plentiful; abundance, everything, life, universe; one hundred | ALT 100 alle ‘all’" [ref=e133] [cursor=pointer]:
+                    - /url: /dictionary/ale
+                    - generic [ref=e134]:
+                      - heading "ale" [level=3] [ref=e135]
+                      - generic [ref=e137]: adjective
+                    - paragraph [ref=e139]: adjectiveall; abundant, countless, bountiful, every, plentiful; abundance, everything, life, universe; one hundred | ALT 100
+                    - paragraph [ref=e140]: alle ‘all’
+                  - link "ali word word[alternate form of ale] alle ‘all’" [ref=e141] [cursor=pointer]:
+                    - /url: /dictionary/ali
+                    - generic [ref=e142]:
+                      - heading "ali" [level=3] [ref=e143]
+                      - generic [ref=e145]: word
+                    - paragraph [ref=e147]: word[alternate form of ale]
+                    - paragraph [ref=e148]: alle ‘all’
+                  - link "anpa adjective adjectivebowing down, downward, humble, lowly, dependent | ALT bottom, lower part, under, below, floor, beneath; low, lower, bottom, down en bas ‘below’" [ref=e149] [cursor=pointer]:
+                    - /url: /dictionary/anpa
+                    - generic [ref=e150]:
+                      - heading "anpa" [level=3] [ref=e151]
+                      - generic [ref=e153]: adjective
+                    - paragraph [ref=e155]: adjectivebowing down, downward, humble, lowly, dependent | ALT bottom, lower part, under, below, floor, beneath; low, lower, bottom, down
+                    - paragraph [ref=e156]: en bas ‘below’
+                  - link "ante adjective adjectivedifferent, altered, changed, other ander ‘other, different’" [ref=e157] [cursor=pointer]:
+                    - /url: /dictionary/ante
+                    - generic [ref=e158]:
+                      - heading "ante" [level=3] [ref=e159]
+                      - generic [ref=e161]: adjective
+                    - paragraph [ref=e163]: adjectivedifferent, altered, changed, other
+                    - paragraph [ref=e164]: ander ‘other, different’
+                  - link "anu particle particleor | ALT choose, decide ან an ‘or’" [ref=e165] [cursor=pointer]:
+                    - /url: /dictionary/anu
+                    - generic [ref=e166]:
+                      - heading "anu" [level=3] [ref=e167]
+                      - generic [ref=e169]: particle
+                    - paragraph [ref=e171]: particleor | ALT choose, decide
+                    - paragraph [ref=e172]: ან an ‘or’
+                  - link "apeja word wordguilt, shame, shun, stigma, disgrace; to accuse, to single out, to expose, to dishonor, to embarrass häpeä ‘shame, disgrace, dishonor’" [ref=e173] [cursor=pointer]:
+                    - /url: /dictionary/apeja
+                    - generic [ref=e174]:
+                      - heading "apeja" [level=3] [ref=e175]
+                      - generic [ref=e177]: word
+                    - paragraph [ref=e179]: wordguilt, shame, shun, stigma, disgrace; to accuse, to single out, to expose, to dishonor, to embarrass
+                    - paragraph [ref=e180]: häpeä ‘shame, disgrace, dishonor’
+                  - link "awen adjective adjectiveenduring, kept, protected, safe, waiting, staying; (pv.) to continue to, to keep houden ‘keep, care for, hold (in a particular state)’" [ref=e181] [cursor=pointer]:
+                    - /url: /dictionary/awen
+                    - generic [ref=e182]:
+                      - heading "awen" [level=3] [ref=e183]
+                      - generic [ref=e185]: adjective
+                    - paragraph [ref=e187]: adjectiveenduring, kept, protected, safe, waiting, staying; (pv.) to continue to, to keep
+                    - paragraph [ref=e188]: houden ‘keep, care for, hold (in a particular state)’
+              - generic [ref=e189]:
+                - heading "E" [level=2] [ref=e190]
+                - generic [ref=e191]:
+                  - link "e particle particle(before the direct object)" [ref=e192] [cursor=pointer]:
+                    - /url: /dictionary/e
+                    - generic [ref=e193]:
+                      - heading "e" [level=3] [ref=e194]
+                      - generic [ref=e196]: particle
+                    - paragraph [ref=e198]: particle(before the direct object)
+                  - link "en particle particle(between multiple subjects) en ‘and’" [ref=e199] [cursor=pointer]:
+                    - /url: /dictionary/en
+                    - generic [ref=e200]:
+                      - heading "en" [level=3] [ref=e201]
+                      - generic [ref=e203]: particle
+                    - paragraph [ref=e205]: particle(between multiple subjects)
+                    - paragraph [ref=e206]: en ‘and’
+                  - link "epiku word wordepic, cool, awesome, amazing épique ‘epic’ ku suli" [ref=e207] [cursor=pointer]:
+                    - /url: /dictionary/epiku
+                    - generic [ref=e208]:
+                      - heading "epiku" [level=3] [ref=e209]
+                      - generic [ref=e211]: word
+                    - paragraph [ref=e213]: wordepic, cool, awesome, amazing
+                    - paragraph [ref=e214]: épique ‘epic’
+                    - generic [ref=e215]: ku suli
+                  - link "esun noun nounmarket, shop, fair, bazaar, business transaction unknown" [ref=e216] [cursor=pointer]:
+                    - /url: /dictionary/esun
+                    - generic [ref=e217]:
+                      - heading "esun" [level=3] [ref=e218]
+                      - generic [ref=e220]: noun
+                    - paragraph [ref=e222]: nounmarket, shop, fair, bazaar, business transaction
+                    - paragraph [ref=e223]: unknown
+                  - 'link "ete word wordbeyond, exceeding, outside of, more than Turkish: öte ‘beyond, further, over’; Quenya: ettë ‘outside’" [ref=e224] [cursor=pointer]':
+                    - /url: /dictionary/ete
+                    - generic [ref=e225]:
+                      - heading "ete" [level=3] [ref=e226]
+                      - generic [ref=e228]: word
+                    - paragraph [ref=e230]: wordbeyond, exceeding, outside of, more than
+                    - paragraph [ref=e231]: "Turkish: öte ‘beyond, further, over’; Quenya: ettë ‘outside’"
+                  - 'link "ewe word wordstone, gravel, rock, pebble, lava, magma Japanese: 岩 iwa ‘rock, boulder’; toki pona: kiwen" [ref=e232] [cursor=pointer]':
+                    - /url: /dictionary/ewe
+                    - generic [ref=e233]:
+                      - heading "ewe" [level=3] [ref=e234]
+                      - generic [ref=e236]: word
+                    - paragraph [ref=e238]: wordstone, gravel, rock, pebble, lava, magma
+                    - paragraph [ref=e239]: "Japanese: 岩 iwa ‘rock, boulder’; toki pona: kiwen"
+              - generic [ref=e240]:
+                - heading "I" [level=2] [ref=e241]
+                - generic [ref=e242]:
+                  - link "ijo noun nounthing, phenomenon, object, matter io ‘something’ ← Romance i- ‘(relative pronoun root)’" [ref=e243] [cursor=pointer]:
+                    - /url: /dictionary/ijo
+                    - generic [ref=e244]:
+                      - heading "ijo" [level=3] [ref=e245]
+                      - generic [ref=e247]: noun
+                    - paragraph [ref=e249]: nounthing, phenomenon, object, matter
+                    - paragraph [ref=e250]: io ‘something’ ← Romance i- ‘(relative pronoun root)’
+                  - link "ike adjective adjectivebad, negative; non-essential, irrelevant | ALT complicated, complex ilkeä ‘bad, mean, wicked’" [ref=e251] [cursor=pointer]:
+                    - /url: /dictionary/ike
+                    - generic [ref=e252]:
+                      - heading "ike" [level=3] [ref=e253]
+                      - generic [ref=e255]: adjective
+                    - paragraph [ref=e257]: adjectivebad, negative; non-essential, irrelevant | ALT complicated, complex
+                    - paragraph [ref=e258]: ilkeä ‘bad, mean, wicked’
+                  - 'link "ilo noun nountool, implement, machine, device ilo ‘tool’ ← German -el ‘(agent suffix)’ {cf. Schlüssel ‘key’ ~ schließen ‘lock, shut’}" [ref=e259] [cursor=pointer]':
+                    - /url: /dictionary/ilo
+                    - generic [ref=e260]:
+                      - heading "ilo" [level=3] [ref=e261]
+                      - generic [ref=e263]: noun
+                    - paragraph [ref=e265]: nountool, implement, machine, device
+                    - paragraph [ref=e266]: "ilo ‘tool’ ← German -el ‘(agent suffix)’ {cf. Schlüssel ‘key’ ~ schließen ‘lock, shut’}"
+                  - link "insa noun nouncentre, content, inside, between; internal organ, stomach insait ‘inside, center, stomach’ ← English inside" [ref=e267] [cursor=pointer]:
+                    - /url: /dictionary/insa
+                    - generic [ref=e268]:
+                      - heading "insa" [level=3] [ref=e269]
+                      - generic [ref=e271]: noun
+                    - paragraph [ref=e273]: nouncentre, content, inside, between; internal organ, stomach
+                    - paragraph [ref=e274]: insait ‘inside, center, stomach’ ← English inside
+                  - link "isipin word wordto think, brainstorm, rationalize, conclude, ponder isipin ‘to think’" [ref=e275] [cursor=pointer]:
+                    - /url: /dictionary/isipin
+                    - generic [ref=e276]:
+                      - heading "isipin" [level=3] [ref=e277]
+                      - generic [ref=e279]: word
+                    - paragraph [ref=e281]: wordto think, brainstorm, rationalize, conclude, ponder
+                    - paragraph [ref=e282]: isipin ‘to think’
+              - generic [ref=e283]:
+                - heading "J" [level=2] [ref=e284]
+                - generic [ref=e285]:
+                  - link "jaki adjective adjectivedisgusting, obscene, sickly, toxic, unclean, unsanitary yucky" [ref=e286] [cursor=pointer]:
+                    - /url: /dictionary/jaki
+                    - generic [ref=e287]:
+                      - heading "jaki" [level=3] [ref=e288]
+                      - generic [ref=e290]: adjective
+                    - paragraph [ref=e292]: adjectivedisgusting, obscene, sickly, toxic, unclean, unsanitary
+                    - paragraph [ref=e293]: yucky
+                  - link "jan noun nounhuman being, person, somebody 人 jan ‘person’" [ref=e294] [cursor=pointer]:
+                    - /url: /dictionary/jan
+                    - generic [ref=e295]:
+                      - heading "jan" [level=3] [ref=e296]
+                      - generic [ref=e298]: noun
+                    - paragraph [ref=e300]: nounhuman being, person, somebody
+                    - paragraph [ref=e301]: 人 jan ‘person’
+                  - link "jasima word wordreflect, resound, mirror, be on the opposite/polar end of yansıtmak ‘to reflect, reverberate’ ku suli" [ref=e302] [cursor=pointer]:
+                    - /url: /dictionary/jasima
+                    - generic [ref=e303]:
+                      - heading "jasima" [level=3] [ref=e304]
+                      - generic [ref=e306]: word
+                    - paragraph [ref=e308]: wordreflect, resound, mirror, be on the opposite/polar end of
+                    - paragraph [ref=e309]: yansıtmak ‘to reflect, reverberate’
+                    - generic [ref=e310]: ku suli
+                  - link "jelo adjective adjectiveyellow, yellowish yellow" [ref=e311] [cursor=pointer]:
+                    - /url: /dictionary/jelo
+                    - generic [ref=e312]:
+                      - heading "jelo" [level=3] [ref=e313]
+                      - generic [ref=e315]: adjective
+                    - paragraph [ref=e317]: adjectiveyellow, yellowish
+                    - paragraph [ref=e318]: yellow
+                  - link "jo verb verbto have, carry, contain, hold 有 yǒu ‘have’" [ref=e319] [cursor=pointer]:
+                    - /url: /dictionary/jo
+                    - generic [ref=e320]:
+                      - heading "jo" [level=3] [ref=e321]
+                      - generic [ref=e323]: verb
+                    - paragraph [ref=e325]: verbto have, carry, contain, hold
+                    - paragraph [ref=e326]: 有 yǒu ‘have’
+                  - link "ju word word(word reserved for future use by Sonja Lang)" [ref=e327] [cursor=pointer]:
+                    - /url: /dictionary/ju
+                    - generic [ref=e328]:
+                      - heading "ju" [level=3] [ref=e329]
+                      - generic [ref=e331]: word
+                    - paragraph [ref=e333]: word(word reserved for future use by Sonja Lang)
+              - generic [ref=e334]:
+                - heading "K" [level=2] [ref=e335]
+                - generic [ref=e336]:
+                  - link "kala noun nounfish, marine animal, sea creature kala ‘fish’" [ref=e337] [cursor=pointer]:
+                    - /url: /dictionary/kala
+                    - generic [ref=e338]:
+                      - heading "kala" [level=3] [ref=e339]
+                      - generic [ref=e341]: noun
+                    - paragraph [ref=e343]: nounfish, marine animal, sea creature
+                    - paragraph [ref=e344]: kala ‘fish’
+                  - 'link "kalamARR word wordpirate noise toki pona: kalama; English: arr ‘(imitation of pirates)’" [ref=e345] [cursor=pointer]':
+                    - /url: /dictionary/kalamARR
+                    - generic [ref=e346]:
+                      - heading "kalamARR" [level=3] [ref=e347]
+                      - generic [ref=e349]: word
+                    - paragraph [ref=e351]: wordpirate noise
+                    - paragraph [ref=e352]: "toki pona: kalama; English: arr ‘(imitation of pirates)’"
+                  - link "kalama verb verbto produce a sound; recite, utter aloud галама galama ‘noise of many human voices’" [ref=e353] [cursor=pointer]:
+                    - /url: /dictionary/kalama
+                    - generic [ref=e354]:
+                      - heading "kalama" [level=3] [ref=e355]
+                      - generic [ref=e357]: verb
+                    - paragraph [ref=e359]: verbto produce a sound; recite, utter aloud
+                    - paragraph [ref=e360]: галама galama ‘noise of many human voices’
+                  - link "kama adjective adjectivearriving, coming, future, summoned; (pv.) to become, manage to, succeed in kamap ‘event, arrive, happen, become, bring about, summon’ ← English come up" [ref=e361] [cursor=pointer]:
+                    - /url: /dictionary/kama
+                    - generic [ref=e362]:
+                      - heading "kama" [level=3] [ref=e363]
+                      - generic [ref=e365]: adjective
+                    - paragraph [ref=e367]: adjectivearriving, coming, future, summoned; (pv.) to become, manage to, succeed in
+                    - paragraph [ref=e368]: kamap ‘event, arrive, happen, become, bring about, summon’ ← English come up
+                  - link "kamalawala word wordanarchy, uprising, revolt, rebellion kama pi lawa ala" [ref=e369] [cursor=pointer]:
+                    - /url: /dictionary/kamalawala
+                    - generic [ref=e370]:
+                      - heading "kamalawala" [level=3] [ref=e371]
+                      - generic [ref=e373]: word
+                    - paragraph [ref=e375]: wordanarchy, uprising, revolt, rebellion
+                    - paragraph [ref=e376]: kama pi lawa ala
+                  - 'link "kan word wordwith, among, in the company of Finnish: kanssa ‘with’; Esperanto: kun ‘with’ (← Latin cum)" [ref=e377] [cursor=pointer]':
+                    - /url: /dictionary/kan
+                    - generic [ref=e378]:
+                      - heading "kan" [level=3] [ref=e379]
+                      - generic [ref=e381]: word
+                    - paragraph [ref=e383]: wordwith, among, in the company of
+                    - paragraph [ref=e384]: "Finnish: kanssa ‘with’; Esperanto: kun ‘with’ (← Latin cum)"
+                  - 'link "kapesi word wordbrown, gray Cantonese: 咖啡色 gaa³ fe¹ sik¹; Mandarin: 咖啡色 kāfēisè ‘brown, coffee (colour)’" [ref=e385] [cursor=pointer]':
+                    - /url: /dictionary/kapesi
+                    - generic [ref=e386]:
+                      - heading "kapesi" [level=3] [ref=e387]
+                      - generic [ref=e389]: word
+                    - paragraph [ref=e391]: wordbrown, gray
+                    - paragraph [ref=e392]: "Cantonese: 咖啡色 gaa³ fe¹ sik¹; Mandarin: 咖啡色 kāfēisè ‘brown, coffee (colour)’"
+                  - link "kasi noun nounplant, vegetation; herb, leaf kasvi ‘plant’" [ref=e393] [cursor=pointer]:
+                    - /url: /dictionary/kasi
+                    - generic [ref=e394]:
+                      - heading "kasi" [level=3] [ref=e395]
+                      - generic [ref=e397]: noun
+                    - paragraph [ref=e399]: nounplant, vegetation; herb, leaf
+                    - paragraph [ref=e400]: kasvi ‘plant’
+                  - link "ke word word(acknowledgement or acceptance) ’kay ← okay" [ref=e401] [cursor=pointer]:
+                    - /url: /dictionary/ke
+                    - generic [ref=e402]:
+                      - heading "ke" [level=3] [ref=e403]
+                      - generic [ref=e405]: word
+                    - paragraph [ref=e407]: word(acknowledgement or acceptance)
+                    - paragraph [ref=e408]: ’kay ← okay
+                  - link "ken pre-verb pre-verbto be able to, be allowed to, can, may; possible ken ← English can" [ref=e409] [cursor=pointer]:
+                    - /url: /dictionary/ken
+                    - generic [ref=e410]:
+                      - heading "ken" [level=3] [ref=e411]
+                      - generic [ref=e413]: pre-verb
+                    - paragraph [ref=e415]: pre-verbto be able to, be allowed to, can, may; possible
+                    - paragraph [ref=e416]: ken ← English can
+                  - link "kepeken preposition prepositionto use, with, by means of gebruiken ‘to use’" [ref=e417] [cursor=pointer]:
+                    - /url: /dictionary/kepeken
+                    - generic [ref=e418]:
+                      - heading "kepeken" [level=3] [ref=e419]
+                      - generic [ref=e421]: preposition
+                    - paragraph [ref=e423]: prepositionto use, with, by means of
+                    - paragraph [ref=e424]: gebruiken ‘to use’
+                  - link "kese word wordqueer, LGBT+ קֶשֶׁת kéšet ‘rainbow, bow, arc‘; named for the Jewish LGBT organization Keshet" [ref=e425] [cursor=pointer]:
+                    - /url: /dictionary/kese
+                    - generic [ref=e426]:
+                      - heading "kese" [level=3] [ref=e427]
+                      - generic [ref=e429]: word
+                    - paragraph [ref=e431]: wordqueer, LGBT+
+                    - paragraph [ref=e432]: קֶשֶׁת kéšet ‘rainbow, bow, arc‘; named for the Jewish LGBT organization Keshet
+                  - link "kijetesantakalu word wordany animal from the Procyonidae family, such as raccoons, coatis, kinkajous, olingos, ringtails and cacomistles | ALT any animal from the Musteloidea superfamily, including raccoons, weasels, otters, skunks, and red pandas kierteishäntäkarhu ‘kinkajou’ ← kierteis- ‘spiral’ + häntä ‘tail’ + karhu ‘bear’ ku suli" [ref=e433] [cursor=pointer]:
+                    - /url: /dictionary/kijetesantakalu
+                    - generic [ref=e434]:
+                      - heading "kijetesantakalu" [level=3] [ref=e435]
+                      - generic [ref=e437]: word
+                    - paragraph [ref=e439]: wordany animal from the Procyonidae family, such as raccoons, coatis, kinkajous, olingos, ringtails and cacomistles | ALT any animal from the Musteloidea superfamily, including raccoons, weasels, otters, skunks, and red pandas
+                    - paragraph [ref=e440]: kierteishäntäkarhu ‘kinkajou’ ← kierteis- ‘spiral’ + häntä ‘tail’ + karhu ‘bear’
+                    - generic [ref=e441]: ku suli
+                  - link "kiki word wordspiky, sharp, angle, point, triangular" [ref=e442] [cursor=pointer]:
+                    - /url: /dictionary/kiki
+                    - generic [ref=e443]:
+                      - heading "kiki" [level=3] [ref=e444]
+                      - generic [ref=e446]: word
+                    - paragraph [ref=e448]: wordspiky, sharp, angle, point, triangular
+                  - link "kili noun nounfruit, vegetable, mushroom ხილი xili ‘fruit’" [ref=e449] [cursor=pointer]:
+                    - /url: /dictionary/kili
+                    - generic [ref=e450]:
+                      - heading "kili" [level=3] [ref=e451]
+                      - generic [ref=e453]: noun
+                    - paragraph [ref=e455]: nounfruit, vegetable, mushroom
+                    - paragraph [ref=e456]: ხილი xili ‘fruit’
+                  - 'link "kin particle particle{see a} | ALT indeed, too, also, as well -kin ‘too, also, still’ ku suli" [ref=e457] [cursor=pointer]':
+                    - /url: /dictionary/kin
+                    - generic [ref=e458]:
+                      - heading "kin" [level=3] [ref=e459]
+                      - generic [ref=e461]: particle
+                    - paragraph [ref=e463]: "particle{see a} | ALT indeed, too, also, as well"
+                    - paragraph [ref=e464]: "-kin ‘too, also, still’"
+                    - generic [ref=e465]: ku suli
+                  - link "kipisi word wordsplit, cut, slice, sever; sharp kipisi- ‘to cut (intrans.)’ ku suli" [ref=e466] [cursor=pointer]:
+                    - /url: /dictionary/kipisi
+                    - generic [ref=e467]:
+                      - heading "kipisi" [level=3] [ref=e468]
+                      - generic [ref=e470]: word
+                    - paragraph [ref=e472]: wordsplit, cut, slice, sever; sharp
+                    - paragraph [ref=e473]: kipisi- ‘to cut (intrans.)’
+                    - generic [ref=e474]: ku suli
+                  - link "kiwen noun nounhard object, metal, rock, stone kiven, genitive of kivi ‘stone’" [ref=e475] [cursor=pointer]:
+                    - /url: /dictionary/kiwen
+                    - generic [ref=e476]:
+                      - heading "kiwen" [level=3] [ref=e477]
+                      - generic [ref=e479]: noun
+                    - paragraph [ref=e481]: nounhard object, metal, rock, stone
+                    - paragraph [ref=e482]: kiven, genitive of kivi ‘stone’
+                  - link "ko noun nounclay, clinging form, dough, semi-solid, paste, powder 膏 gou ‘cream, paste’" [ref=e483] [cursor=pointer]:
+                    - /url: /dictionary/ko
+                    - generic [ref=e484]:
+                      - heading "ko" [level=3] [ref=e485]
+                      - generic [ref=e487]: noun
+                    - paragraph [ref=e489]: nounclay, clinging form, dough, semi-solid, paste, powder
+                    - paragraph [ref=e490]: 膏 gou ‘cream, paste’
+                  - link "kokosila word wordto speak a non-Toki Pona language in an environment where Toki Pona is more appropriate krokodilas ‘[present of krokodili]’ ← krokodilo ‘crocodile’ ku suli" [ref=e491] [cursor=pointer]:
+                    - /url: /dictionary/kokosila
+                    - generic [ref=e492]:
+                      - heading "kokosila" [level=3] [ref=e493]
+                      - generic [ref=e495]: word
+                    - paragraph [ref=e497]: wordto speak a non-Toki Pona language in an environment where Toki Pona is more appropriate
+                    - paragraph [ref=e498]: krokodilas ‘[present of krokodili]’ ← krokodilo ‘crocodile’
+                    - generic [ref=e499]: ku suli
+                  - link "kon noun nounair, breath; essence, spirit; hidden reality, unseen agent 空氣 kōngqì ‘air, atmosphere, ambience, opinion’" [ref=e500] [cursor=pointer]:
+                    - /url: /dictionary/kon
+                    - generic [ref=e501]:
+                      - heading "kon" [level=3] [ref=e502]
+                      - generic [ref=e504]: noun
+                    - paragraph [ref=e506]: nounair, breath; essence, spirit; hidden reality, unseen agent
+                    - paragraph [ref=e507]: 空氣 kōngqì ‘air, atmosphere, ambience, opinion’
+                  - link "ku word wordinteracting with the Toki Pona Dictionary by Sonja Lang ku suli" [ref=e508] [cursor=pointer]:
+                    - /url: /dictionary/ku
+                    - generic [ref=e509]:
+                      - heading "ku" [level=3] [ref=e510]
+                      - generic [ref=e512]: word
+                    - paragraph [ref=e514]: wordinteracting with the Toki Pona Dictionary by Sonja Lang
+                    - generic [ref=e515]: ku suli
+                  - link "kule adjective adjectivecolorful, pigmented, painted | ALT of or relating to the LGBT+ community couleur ‘color’" [ref=e516] [cursor=pointer]:
+                    - /url: /dictionary/kule
+                    - generic [ref=e517]:
+                      - heading "kule" [level=3] [ref=e518]
+                      - generic [ref=e520]: adjective
+                    - paragraph [ref=e522]: adjectivecolorful, pigmented, painted | ALT of or relating to the LGBT+ community
+                    - paragraph [ref=e523]: couleur ‘color’
+                  - link "kulijo word word[interjection] casual expression of appreciation or acknowledgement; cool, fine, okay coolio" [ref=e524] [cursor=pointer]:
+                    - /url: /dictionary/kulijo
+                    - generic [ref=e525]:
+                      - heading "kulijo" [level=3] [ref=e526]
+                      - generic [ref=e528]: word
+                    - paragraph [ref=e530]: word[interjection] casual expression of appreciation or acknowledgement; cool, fine, okay
+                    - paragraph [ref=e531]: coolio
+                  - link "kulupu noun nouncommunity, company, group, nation, society, tribe kulupu ← English group" [ref=e532] [cursor=pointer]:
+                    - /url: /dictionary/kulupu
+                    - generic [ref=e533]:
+                      - heading "kulupu" [level=3] [ref=e534]
+                      - generic [ref=e536]: noun
+                    - paragraph [ref=e538]: nouncommunity, company, group, nation, society, tribe
+                    - paragraph [ref=e539]: kulupu ← English group
+                  - link "kuntu word wordlaughter, chuckle, laugh, comedy, humor k.m.t.u ← kalama musi tan uta" [ref=e540] [cursor=pointer]:
+                    - /url: /dictionary/kuntu
+                    - generic [ref=e541]:
+                      - heading "kuntu" [level=3] [ref=e542]
+                      - generic [ref=e544]: word
+                    - paragraph [ref=e546]: wordlaughter, chuckle, laugh, comedy, humor
+                    - paragraph [ref=e547]: k.m.t.u ← kalama musi tan uta
+                  - link "kute noun nounear; to hear, listen; pay attention to, obey écouter ‘listen’" [ref=e548] [cursor=pointer]:
+                    - /url: /dictionary/kute
+                    - generic [ref=e549]:
+                      - heading "kute" [level=3] [ref=e550]
+                      - generic [ref=e552]: noun
+                    - paragraph [ref=e554]: nounear; to hear, listen; pay attention to, obey
+                    - paragraph [ref=e555]: écouter ‘listen’
+              - generic [ref=e556]:
+                - heading "L" [level=2] [ref=e557]
+                - generic [ref=e558]:
+                  - 'link "la particle particle(between the context phrase and the main sentence) Esperanto: la ‘(definite article)’ (← Romance la ‘(feminine singular definite article)’); Acadian French: -la ‘(proximal & topical suffix)’" [ref=e559] [cursor=pointer]':
+                    - /url: /dictionary/la
+                    - generic [ref=e560]:
+                      - heading "la" [level=3] [ref=e561]
+                      - generic [ref=e563]: particle
+                    - paragraph [ref=e565]: particle(between the context phrase and the main sentence)
+                    - paragraph [ref=e566]: "Esperanto: la ‘(definite article)’ (← Romance la ‘(feminine singular definite article)’); Acadian French: -la ‘(proximal & topical suffix)’"
+                  - link "lanpan word wordtake, seize, catch, receive, get λαμβάνω lamváno ‘take, seize, grasp, receive’ ku suli" [ref=e567] [cursor=pointer]:
+                    - /url: /dictionary/lanpan
+                    - generic [ref=e568]:
+                      - heading "lanpan" [level=3] [ref=e569]
+                      - generic [ref=e571]: word
+                    - paragraph [ref=e573]: wordtake, seize, catch, receive, get
+                    - paragraph [ref=e574]: λαμβάνω lamváno ‘take, seize, grasp, receive’
+                    - generic [ref=e575]: ku suli
+                  - link "lape adjective adjectivesleeping, resting slapen ‘sleep’" [ref=e576] [cursor=pointer]:
+                    - /url: /dictionary/lape
+                    - generic [ref=e577]:
+                      - heading "lape" [level=3] [ref=e578]
+                      - generic [ref=e580]: adjective
+                    - paragraph [ref=e582]: adjectivesleeping, resting
+                    - paragraph [ref=e583]: slapen ‘sleep’
+                  - link "laso adjective adjectiveblue, green glas ‘blue, inexperienced’ ← Proto-Brythonic glas ‘green, blue’" [ref=e584] [cursor=pointer]:
+                    - /url: /dictionary/laso
+                    - generic [ref=e585]:
+                      - heading "laso" [level=3] [ref=e586]
+                      - generic [ref=e588]: adjective
+                    - paragraph [ref=e590]: adjectiveblue, green
+                    - paragraph [ref=e591]: glas ‘blue, inexperienced’ ← Proto-Brythonic glas ‘green, blue’
+                  - link "lawa noun nounhead, mind; to control, direct, guide, lead, own, plan, regulate, rule glava глава ‘head’" [ref=e592] [cursor=pointer]:
+                    - /url: /dictionary/lawa
+                    - generic [ref=e593]:
+                      - heading "lawa" [level=3] [ref=e594]
+                      - generic [ref=e596]: noun
+                    - paragraph [ref=e598]: nounhead, mind; to control, direct, guide, lead, own, plan, regulate, rule
+                    - paragraph [ref=e599]: glava глава ‘head’
+                  - 'link "leko word wordstairs, square, block, corner, cube English: Lego (← Danish Lego ← ‘leg godt’ ‘play well’); Finnish: lohko ‘block, section’ ku suli" [ref=e600] [cursor=pointer]':
+                    - /url: /dictionary/leko
+                    - generic [ref=e601]:
+                      - heading "leko" [level=3] [ref=e602]
+                      - generic [ref=e604]: word
+                    - paragraph [ref=e606]: wordstairs, square, block, corner, cube
+                    - paragraph [ref=e607]: "English: Lego (← Danish Lego ← ‘leg godt’ ‘play well’); Finnish: lohko ‘block, section’"
+                    - generic [ref=e608]: ku suli
+                  - link "len noun nouncloth, clothing, fabric, textile; cover, layer of privacy linge ‘clothing’" [ref=e609] [cursor=pointer]:
+                    - /url: /dictionary/len
+                    - generic [ref=e610]:
+                      - heading "len" [level=3] [ref=e611]
+                      - generic [ref=e613]: noun
+                    - paragraph [ref=e615]: nouncloth, clothing, fabric, textile; cover, layer of privacy
+                    - paragraph [ref=e616]: linge ‘clothing’
+                  - link "lete adjective adjectivecold, cool; uncooked, raw frette ‘cold’ ← Old French freit ‘cold’" [ref=e617] [cursor=pointer]:
+                    - /url: /dictionary/lete
+                    - generic [ref=e618]:
+                      - heading "lete" [level=3] [ref=e619]
+                      - generic [ref=e621]: adjective
+                    - paragraph [ref=e623]: adjectivecold, cool; uncooked, raw
+                    - paragraph [ref=e624]: frette ‘cold’ ← Old French freit ‘cold’
+                  - 'link "li particle particle(between any subject except mi alone or sina alone and its verb; also to introduce a new verb for the same subject) li ‘he’ ← Latin ille {cf. Tok Pisin i ← English he}" [ref=e625] [cursor=pointer]':
+                    - /url: /dictionary/li
+                    - generic [ref=e626]:
+                      - heading "li" [level=3] [ref=e627]
+                      - generic [ref=e629]: particle
+                    - paragraph [ref=e631]: particle(between any subject except mi alone or sina alone and its verb; also to introduce a new verb for the same subject)
+                    - paragraph [ref=e632]: "li ‘he’ ← Latin ille {cf. Tok Pisin i ← English he}"
+                  - link "likujo word wordcollection, assortment, menagerie, arrangement, handful, harvest; seven recueil ‘collection, ensemble, anthology’" [ref=e633] [cursor=pointer]:
+                    - /url: /dictionary/likujo
+                    - generic [ref=e634]:
+                      - heading "likujo" [level=3] [ref=e635]
+                      - generic [ref=e637]: word
+                    - paragraph [ref=e639]: wordcollection, assortment, menagerie, arrangement, handful, harvest; seven
+                    - paragraph [ref=e640]: recueil ‘collection, ensemble, anthology’
+                  - link "lili adjective adjectivelittle, small, short; few; a bit; young liklik ‘small, little’ ← Ramoaaina liklik" [ref=e641] [cursor=pointer]:
+                    - /url: /dictionary/lili
+                    - generic [ref=e642]:
+                      - heading "lili" [level=3] [ref=e643]
+                      - generic [ref=e645]: adjective
+                    - paragraph [ref=e647]: adjectivelittle, small, short; few; a bit; young
+                    - paragraph [ref=e648]: liklik ‘small, little’ ← Ramoaaina liklik
+                  - link "linja noun nounlong and flexible thing; cord, hair, rope, thread, yarn | ALT line, connection linja ‘line’ ← Old Swedish linia" [ref=e649] [cursor=pointer]:
+                    - /url: /dictionary/linja
+                    - generic [ref=e650]:
+                      - heading "linja" [level=3] [ref=e651]
+                      - generic [ref=e653]: noun
+                    - paragraph [ref=e655]: nounlong and flexible thing; cord, hair, rope, thread, yarn | ALT line, connection
+                    - paragraph [ref=e656]: linja ‘line’ ← Old Swedish linia
+                  - link "linluwi word wordnetwork, internet, connection; weave, braid, interlace rhyngrwyd ‘internet’ (← rhwng ‘between’ + rhwyd ‘net’)" [ref=e657] [cursor=pointer]:
+                    - /url: /dictionary/linluwi
+                    - generic [ref=e658]:
+                      - heading "linluwi" [level=3] [ref=e659]
+                      - generic [ref=e661]: word
+                    - paragraph [ref=e663]: wordnetwork, internet, connection; weave, braid, interlace
+                    - paragraph [ref=e664]: rhyngrwyd ‘internet’ (← rhwng ‘between’ + rhwyd ‘net’)
+                  - link "lipu noun nounflat object; book, document, card, paper, record, website lippu ‘flag, banner, ticket’" [ref=e665] [cursor=pointer]:
+                    - /url: /dictionary/lipu
+                    - generic [ref=e666]:
+                      - heading "lipu" [level=3] [ref=e667]
+                      - generic [ref=e669]: noun
+                    - paragraph [ref=e671]: nounflat object; book, document, card, paper, record, website
+                    - paragraph [ref=e672]: lippu ‘flag, banner, ticket’
+                  - link "loje adjective adjectivered, reddish rooie, inflected form of rood ‘red’" [ref=e673] [cursor=pointer]:
+                    - /url: /dictionary/loje
+                    - generic [ref=e674]:
+                      - heading "loje" [level=3] [ref=e675]
+                      - generic [ref=e677]: adjective
+                    - paragraph [ref=e679]: adjectivered, reddish
+                    - paragraph [ref=e680]: rooie, inflected form of rood ‘red’
+                  - link "loka word wordlimb luka & noka" [ref=e681] [cursor=pointer]:
+                    - /url: /dictionary/loka
+                    - generic [ref=e682]:
+                      - heading "loka" [level=3] [ref=e683]
+                      - generic [ref=e685]: word
+                    - paragraph [ref=e687]: wordlimb
+                    - paragraph [ref=e688]: luka & noka
+                  - link "lon preposition prepositionlocated at, present at, real, true, existing | ALT (affirmative response) long ‘at, in, on, (spacial particle)’ ← English along" [ref=e689] [cursor=pointer]:
+                    - /url: /dictionary/lon
+                    - generic [ref=e690]:
+                      - heading "lon" [level=3] [ref=e691]
+                      - generic [ref=e693]: preposition
+                    - paragraph [ref=e695]: prepositionlocated at, present at, real, true, existing | ALT (affirmative response)
+                    - paragraph [ref=e696]: long ‘at, in, on, (spacial particle)’ ← English along
+                  - link "lu word word(word reserved for future use by Sonja Lang)" [ref=e697] [cursor=pointer]:
+                    - /url: /dictionary/lu
+                    - generic [ref=e698]:
+                      - heading "lu" [level=3] [ref=e699]
+                      - generic [ref=e701]: word
+                    - paragraph [ref=e703]: word(word reserved for future use by Sonja Lang)
+                  - link "luka noun nounarm, hand, tactile organ; five | ALT touch/feel physically, interact, press рука ruka ‘hand, arm’" [ref=e704] [cursor=pointer]:
+                    - /url: /dictionary/luka
+                    - generic [ref=e705]:
+                      - heading "luka" [level=3] [ref=e706]
+                      - generic [ref=e708]: noun
+                    - paragraph [ref=e710]: nounarm, hand, tactile organ; five | ALT touch/feel physically, interact, press
+                    - paragraph [ref=e711]: рука ruka ‘hand, arm’
+                  - link "lukin noun nouneye; look at, see, examine, observe, read, watch; look for, seek; (pv.) try to lukim ‘see, look at’ ← luk ‘look’ (← English look) + -im ‘(transitive suffix)’ (← English him, ’em)" [ref=e712] [cursor=pointer]:
+                    - /url: /dictionary/lukin
+                    - generic [ref=e713]:
+                      - heading "lukin" [level=3] [ref=e714]
+                      - generic [ref=e716]: noun
+                    - paragraph [ref=e718]: nouneye; look at, see, examine, observe, read, watch; look for, seek; (pv.) try to
+                    - paragraph [ref=e719]: lukim ‘see, look at’ ← luk ‘look’ (← English look) + -im ‘(transitive suffix)’ (← English him, ’em)
+                  - link "lupa noun noundoor, hole, orifice, window clupa ‘loop’ (← Mandarin 圈 quān, English loop, Hindi पाश pāś, Arabic أنشوطة‏ ʾanšūṭa)" [ref=e720] [cursor=pointer]:
+                    - /url: /dictionary/lupa
+                    - generic [ref=e721]:
+                      - heading "lupa" [level=3] [ref=e722]
+                      - generic [ref=e724]: noun
+                    - paragraph [ref=e726]: noundoor, hole, orifice, window
+                    - paragraph [ref=e727]: clupa ‘loop’ (← Mandarin 圈 quān, English loop, Hindi पाश pāś, Arabic أنشوطة‏ ʾanšūṭa)
+              - generic [ref=e728]:
+                - heading "M" [level=2] [ref=e729]
+                - generic [ref=e730]:
+                  - link "ma noun nounearth, land; outdoors, world; country, territory; soil maa ‘earth, land’" [ref=e731] [cursor=pointer]:
+                    - /url: /dictionary/ma
+                    - generic [ref=e732]:
+                      - heading "ma" [level=3] [ref=e733]
+                      - generic [ref=e735]: noun
+                    - paragraph [ref=e737]: nounearth, land; outdoors, world; country, territory; soil
+                    - paragraph [ref=e738]: maa ‘earth, land’
+                  - link "majuna word wordold, aged, ancient maljuna ‘old’ ← mal- ‘(opposite of)’ (← Latin malus ‘bad’) + juna ‘young’ (← German jung & French jeune)" [ref=e739] [cursor=pointer]:
+                    - /url: /dictionary/majuna
+                    - generic [ref=e740]:
+                      - heading "majuna" [level=3] [ref=e741]
+                      - generic [ref=e743]: word
+                    - paragraph [ref=e745]: wordold, aged, ancient
+                    - paragraph [ref=e746]: maljuna ‘old’ ← mal- ‘(opposite of)’ (← Latin malus ‘bad’) + juna ‘young’ (← German jung & French jeune)
+                  - link "mama noun nounparent, ancestor; creator, originator; caretaker, sustainer მამა mama ‘father’" [ref=e747] [cursor=pointer]:
+                    - /url: /dictionary/mama
+                    - generic [ref=e748]:
+                      - heading "mama" [level=3] [ref=e749]
+                      - generic [ref=e751]: noun
+                    - paragraph [ref=e753]: nounparent, ancestor; creator, originator; caretaker, sustainer
+                    - paragraph [ref=e754]: მამა mama ‘father’
+                  - 'link "mani noun nounmoney, cash, savings, wealth; large domesticated animal money {cf. fee ← Proto-Germanic *fehu ‘livestock’, and pecuniary ← Latin pecū ‘cattle’}" [ref=e755] [cursor=pointer]':
+                    - /url: /dictionary/mani
+                    - generic [ref=e756]:
+                      - heading "mani" [level=3] [ref=e757]
+                      - generic [ref=e759]: noun
+                    - paragraph [ref=e761]: nounmoney, cash, savings, wealth; large domesticated animal
+                    - paragraph [ref=e762]: "money {cf. fee ← Proto-Germanic *fehu ‘livestock’, and pecuniary ← Latin pecū ‘cattle’}"
+                  - link "meli noun nounwoman, female, feminine person; wife meri ‘woman, wife, feminine’ ← Tolai mari ‘pretty’ & English Mary" [ref=e763] [cursor=pointer]:
+                    - /url: /dictionary/meli
+                    - generic [ref=e764]:
+                      - heading "meli" [level=3] [ref=e765]
+                      - generic [ref=e767]: noun
+                    - paragraph [ref=e769]: nounwoman, female, feminine person; wife
+                    - paragraph [ref=e770]: meri ‘woman, wife, feminine’ ← Tolai mari ‘pretty’ & English Mary
+                  - link "meso word wordmidpoint, medium, mediocre; neither one not the other, neither fully is nor isn't μέσος mésos ‘middle’ ku suli" [ref=e771] [cursor=pointer]:
+                    - /url: /dictionary/meso
+                    - generic [ref=e772]:
+                      - heading "meso" [level=3] [ref=e773]
+                      - generic [ref=e775]: word
+                    - paragraph [ref=e777]: wordmidpoint, medium, mediocre; neither one not the other, neither fully is nor isn't
+                    - paragraph [ref=e778]: μέσος mésos ‘middle’
+                    - generic [ref=e779]: ku suli
+                  - link "mi noun nounI, me, we, us mi ‘I, me’ ← Romance m- ‘(1st person singular oblique)’" [ref=e780] [cursor=pointer]:
+                    - /url: /dictionary/mi
+                    - generic [ref=e781]:
+                      - heading "mi" [level=3] [ref=e782]
+                      - generic [ref=e784]: noun
+                    - paragraph [ref=e786]: nounI, me, we, us
+                    - paragraph [ref=e787]: mi ‘I, me’ ← Romance m- ‘(1st person singular oblique)’
+                  - link "mije noun nounman, male, masculine person; husband mies ‘man, husband’" [ref=e788] [cursor=pointer]:
+                    - /url: /dictionary/mije
+                    - generic [ref=e789]:
+                      - heading "mije" [level=3] [ref=e790]
+                      - generic [ref=e792]: noun
+                    - paragraph [ref=e794]: nounman, male, masculine person; husband
+                    - paragraph [ref=e795]: mies ‘man, husband’
+                  - 'link "misa word wordGlires or Eulipotyphla; rat, mouse, squirrel, rabbit, rodent; {~ suli} capybara мишка myshka, diminutive of миша misha ''mouse''" [ref=e796] [cursor=pointer]':
+                    - /url: /dictionary/misa
+                    - generic [ref=e797]:
+                      - heading "misa" [level=3] [ref=e798]
+                      - generic [ref=e800]: word
+                    - paragraph [ref=e802]: "wordGlires or Eulipotyphla; rat, mouse, squirrel, rabbit, rodent; {~ suli} capybara"
+                    - paragraph [ref=e803]: мишка myshka, diminutive of миша misha 'mouse'
+                  - link "misikeke word wordmedicine, medical mashkiki ‘medicine, drug’ ku suli" [ref=e804] [cursor=pointer]:
+                    - /url: /dictionary/misikeke
+                    - generic [ref=e805]:
+                      - heading "misikeke" [level=3] [ref=e806]
+                      - generic [ref=e808]: word
+                    - paragraph [ref=e810]: wordmedicine, medical
+                    - paragraph [ref=e811]: mashkiki ‘medicine, drug’
+                    - generic [ref=e812]: ku suli
+                  - link "moku verb verbto eat, drink, consume, swallow, ingest モグモグ mogumogu ‘munching’" [ref=e813] [cursor=pointer]:
+                    - /url: /dictionary/moku
+                    - generic [ref=e814]:
+                      - heading "moku" [level=3] [ref=e815]
+                      - generic [ref=e817]: verb
+                    - paragraph [ref=e819]: verbto eat, drink, consume, swallow, ingest
+                    - paragraph [ref=e820]: モグモグ mogumogu ‘munching’
+                  - link "moli adjective adjectivedead, dying mourir ‘die’" [ref=e821] [cursor=pointer]:
+                    - /url: /dictionary/moli
+                    - generic [ref=e822]:
+                      - heading "moli" [level=3] [ref=e823]
+                      - generic [ref=e825]: adjective
+                    - paragraph [ref=e827]: adjectivedead, dying
+                    - paragraph [ref=e828]: mourir ‘die’
+                  - 'link "monsi noun nounback, behind, rear mon tchu ‘{vulgar} my ass’" [ref=e829] [cursor=pointer]':
+                    - /url: /dictionary/monsi
+                    - generic [ref=e830]:
+                      - heading "monsi" [level=3] [ref=e831]
+                      - generic [ref=e833]: noun
+                    - paragraph [ref=e835]: nounback, behind, rear
+                    - paragraph [ref=e836]: "mon tchu ‘{vulgar} my ass’"
+                  - link "monsuta word wordfear, dread; monster, predator; threat, danger モンスター monsutā ‘monster’ ← English monster ku suli" [ref=e837] [cursor=pointer]:
+                    - /url: /dictionary/monsuta
+                    - generic [ref=e838]:
+                      - heading "monsuta" [level=3] [ref=e839]
+                      - generic [ref=e841]: word
+                    - paragraph [ref=e843]: wordfear, dread; monster, predator; threat, danger
+                    - paragraph [ref=e844]: モンスター monsutā ‘monster’ ← English monster
+                    - generic [ref=e845]: ku suli
+                  - link "mu particle particle(animal noise or communication) | ALT (non-speech vocalization)" [ref=e846] [cursor=pointer]:
+                    - /url: /dictionary/mu
+                    - generic [ref=e847]:
+                      - heading "mu" [level=3] [ref=e848]
+                      - generic [ref=e850]: particle
+                    - paragraph [ref=e852]: particle(animal noise or communication) | ALT (non-speech vocalization)
+                  - link "mulapisu word wordpizza" [ref=e853] [cursor=pointer]:
+                    - /url: /dictionary/mulapisu
+                    - generic [ref=e854]:
+                      - heading "mulapisu" [level=3] [ref=e855]
+                      - generic [ref=e857]: word
+                    - paragraph [ref=e859]: wordpizza
+                  - link "mun noun nounmoon, night sky object, star | ALT glow, glowing light, light in the dark moon" [ref=e860] [cursor=pointer]:
+                    - /url: /dictionary/mun
+                    - generic [ref=e861]:
+                      - heading "mun" [level=3] [ref=e862]
+                      - generic [ref=e864]: noun
+                    - paragraph [ref=e866]: nounmoon, night sky object, star | ALT glow, glowing light, light in the dark
+                    - paragraph [ref=e867]: moon
+                  - link "musi adjective adjectiveartistic, entertaining, frivolous, playful, recreation amuzi ‘amuse, entertain’ ← French amuser" [ref=e868] [cursor=pointer]:
+                    - /url: /dictionary/musi
+                    - generic [ref=e869]:
+                      - heading "musi" [level=3] [ref=e870]
+                      - generic [ref=e872]: adjective
+                    - paragraph [ref=e874]: adjectiveartistic, entertaining, frivolous, playful, recreation
+                    - paragraph [ref=e875]: amuzi ‘amuse, entertain’ ← French amuser
+                  - link "mute adjective adjectivemany, a lot, more, much, several, very; quantity | ALT three (or more), 20 multe ‘a lot’ ← Latin multus" [ref=e876] [cursor=pointer]:
+                    - /url: /dictionary/mute
+                    - generic [ref=e877]:
+                      - heading "mute" [level=3] [ref=e878]
+                      - generic [ref=e880]: adjective
+                    - paragraph [ref=e882]: adjectivemany, a lot, more, much, several, very; quantity | ALT three (or more), 20
+                    - paragraph [ref=e883]: multe ‘a lot’ ← Latin multus
+              - generic [ref=e884]:
+                - heading "N" [level=2] [ref=e885]
+                - generic [ref=e886]:
+                  - link "n word word(indicates thinking, pondering, recognition, agreement, or humming) ku suli" [ref=e887] [cursor=pointer]:
+                    - /url: /dictionary/n
+                    - generic [ref=e888]:
+                      - heading "n" [level=3] [ref=e889]
+                      - generic [ref=e891]: word
+                    - paragraph [ref=e893]: word(indicates thinking, pondering, recognition, agreement, or humming)
+                    - generic [ref=e894]: ku suli
+                  - 'link "namako adjective adjective{see sin} | ALT embellishment, spice; extra, additional Hindi: नमक namak ‘salt’ (← Persian نمک namak ‘salt’); Persian: نمک namak ‘salt’ ku suli" [ref=e895] [cursor=pointer]':
+                    - /url: /dictionary/namako
+                    - generic [ref=e896]:
+                      - heading "namako" [level=3] [ref=e897]
+                      - generic [ref=e899]: adjective
+                    - paragraph [ref=e901]: "adjective{see sin} | ALT embellishment, spice; extra, additional"
+                    - paragraph [ref=e902]: "Hindi: नमक namak ‘salt’ (← Persian نمک namak ‘salt’); Persian: نمک namak ‘salt’"
+                    - generic [ref=e903]: ku suli
+                  - link "nanpa particle particle-th (ordinal number); numbers namba ‘number, (ordinal marker)’ ← English number" [ref=e904] [cursor=pointer]:
+                    - /url: /dictionary/nanpa
+                    - generic [ref=e905]:
+                      - heading "nanpa" [level=3] [ref=e906]
+                      - generic [ref=e908]: particle
+                    - paragraph [ref=e910]: particle-th (ordinal number); numbers
+                    - paragraph [ref=e911]: namba ‘number, (ordinal marker)’ ← English number
+                  - link "nasa adjective adjectiveunusual, strange; silly; drunk, intoxicated nasau ‘dunderhead’" [ref=e912] [cursor=pointer]:
+                    - /url: /dictionary/nasa
+                    - generic [ref=e913]:
+                      - heading "nasa" [level=3] [ref=e914]
+                      - generic [ref=e916]: adjective
+                    - paragraph [ref=e918]: adjectiveunusual, strange; silly; drunk, intoxicated
+                    - paragraph [ref=e919]: nasau ‘dunderhead’
+                  - link "nasin noun nounway, custom, doctrine, method, path, road начин način ‘way, method’" [ref=e920] [cursor=pointer]:
+                    - /url: /dictionary/nasin
+                    - generic [ref=e921]:
+                      - heading "nasin" [level=3] [ref=e922]
+                      - generic [ref=e924]: noun
+                    - paragraph [ref=e926]: nounway, custom, doctrine, method, path, road
+                    - paragraph [ref=e927]: начин način ‘way, method’
+                  - link "neja word wordfour neljä ‘four’" [ref=e928] [cursor=pointer]:
+                    - /url: /dictionary/neja
+                    - generic [ref=e929]:
+                      - heading "neja" [level=3] [ref=e930]
+                      - generic [ref=e932]: word
+                    - paragraph [ref=e934]: wordfour
+                    - paragraph [ref=e935]: neljä ‘four’
+                  - link "nena noun nounbump, button, hill, mountain, nose, protuberance nenä ‘nose’" [ref=e936] [cursor=pointer]:
+                    - /url: /dictionary/nena
+                    - generic [ref=e937]:
+                      - heading "nena" [level=3] [ref=e938]
+                      - generic [ref=e940]: noun
+                    - paragraph [ref=e942]: nounbump, button, hill, mountain, nose, protuberance
+                    - paragraph [ref=e943]: nenä ‘nose’
+                  - link "ni adjective adjectivethat, this 呢 ni¹ ‘this’ ← substrate, cf. Tai, Mon-Khmer, Hmong-Mien, Austronesian; 哩 le¹ ‘[continuation of a state/action]’" [ref=e944] [cursor=pointer]:
+                    - /url: /dictionary/ni
+                    - generic [ref=e945]:
+                      - heading "ni" [level=3] [ref=e946]
+                      - generic [ref=e948]: adjective
+                    - paragraph [ref=e950]: adjectivethat, this
+                    - paragraph [ref=e951]: 呢 ni¹ ‘this’ ← substrate, cf. Tai, Mon-Khmer, Hmong-Mien, Austronesian; 哩 le¹ ‘[continuation of a state/action]’
+                  - link "nimi noun nounname, word nimi ‘name’" [ref=e952] [cursor=pointer]:
+                    - /url: /dictionary/nimi
+                    - generic [ref=e953]:
+                      - heading "nimi" [level=3] [ref=e954]
+                      - generic [ref=e956]: noun
+                    - paragraph [ref=e958]: nounname, word
+                    - paragraph [ref=e959]: nimi ‘name’
+                  - link "noka noun nounfoot, leg, organ of locomotion; bottom, lower part нога noga ‘foot, leg’" [ref=e960] [cursor=pointer]:
+                    - /url: /dictionary/noka
+                    - generic [ref=e961]:
+                      - heading "noka" [level=3] [ref=e962]
+                      - generic [ref=e964]: noun
+                    - paragraph [ref=e966]: nounfoot, leg, organ of locomotion; bottom, lower part
+                    - paragraph [ref=e967]: нога noga ‘foot, leg’
+                  - link "nu word word(word reserved for future use by Sonja Lang)" [ref=e968] [cursor=pointer]:
+                    - /url: /dictionary/nu
+                    - generic [ref=e969]:
+                      - heading "nu" [level=3] [ref=e970]
+                      - generic [ref=e972]: word
+                    - paragraph [ref=e974]: word(word reserved for future use by Sonja Lang)
+              - generic [ref=e975]:
+                - heading "O" [level=2] [ref=e976]
+                - generic [ref=e977]:
+                  - link "o particle particlehey! O! (vocative, imperative, or optative) -ო -o ‘(vocative suffix)’" [ref=e978] [cursor=pointer]:
+                    - /url: /dictionary/o
+                    - generic [ref=e979]:
+                      - heading "o" [level=3] [ref=e980]
+                      - generic [ref=e982]: particle
+                    - paragraph [ref=e984]: particlehey! O! (vocative, imperative, or optative)
+                    - paragraph [ref=e985]: "-ო -o ‘(vocative suffix)’"
+                  - link "oke word word(acknowledgement or acceptance) okay" [ref=e986] [cursor=pointer]:
+                    - /url: /dictionary/oke
+                    - generic [ref=e987]:
+                      - heading "oke" [level=3] [ref=e988]
+                      - generic [ref=e990]: word
+                    - paragraph [ref=e992]: word(acknowledgement or acceptance)
+                    - paragraph [ref=e993]: okay
+                  - 'link "oko noun noun{see lukin} | ALT eye, ocular, visual {cf. lukin} оko око ‘eye’ ku suli" [ref=e994] [cursor=pointer]':
+                    - /url: /dictionary/oko
+                    - generic [ref=e995]:
+                      - heading "oko" [level=3] [ref=e996]
+                      - generic [ref=e998]: noun
+                    - paragraph [ref=e1000]: "noun{see lukin} | ALT eye, ocular, visual {cf. lukin}"
+                    - paragraph [ref=e1001]: оko око ‘eye’
+                    - generic [ref=e1002]: ku suli
+                  - link "olin verb verblove, have compassion for, respect, show affection to волим volim ‘I love’" [ref=e1003] [cursor=pointer]:
+                    - /url: /dictionary/olin
+                    - generic [ref=e1004]:
+                      - heading "olin" [level=3] [ref=e1005]
+                      - generic [ref=e1007]: verb
+                    - paragraph [ref=e1009]: verblove, have compassion for, respect, show affection to
+                    - paragraph [ref=e1010]: волим volim ‘I love’
+                  - link "ona noun nounhe, she, it, they она ona ‘she’" [ref=e1011] [cursor=pointer]:
+                    - /url: /dictionary/ona
+                    - generic [ref=e1012]:
+                      - heading "ona" [level=3] [ref=e1013]
+                      - generic [ref=e1015]: noun
+                    - paragraph [ref=e1017]: nounhe, she, it, they
+                    - paragraph [ref=e1018]: она ona ‘she’
+                  - link "open verb verbbegin, start; open; turn on open" [ref=e1019] [cursor=pointer]:
+                    - /url: /dictionary/open
+                    - generic [ref=e1020]:
+                      - heading "open" [level=3] [ref=e1021]
+                      - generic [ref=e1023]: verb
+                    - paragraph [ref=e1025]: verbbegin, start; open; turn on
+                    - paragraph [ref=e1026]: open
+              - generic [ref=e1027]:
+                - heading "P" [level=2] [ref=e1028]
+                - generic [ref=e1029]:
+                  - link "Pingo word wordcar" [ref=e1030] [cursor=pointer]:
+                    - /url: /dictionary/Pingo
+                    - generic [ref=e1031]:
+                      - heading "Pingo" [level=3] [ref=e1032]
+                      - generic [ref=e1034]: word
+                    - paragraph [ref=e1036]: wordcar
+                  - link "pakala adjective adjectivebotched, broken, damaged, harmed, messed up | ALT (curse expletive, e.g. fuck!) bagarap ‘accident’ ← English bugger up" [ref=e1037] [cursor=pointer]:
+                    - /url: /dictionary/pakala
+                    - generic [ref=e1038]:
+                      - heading "pakala" [level=3] [ref=e1039]
+                      - generic [ref=e1041]: adjective
+                    - paragraph [ref=e1043]: adjectivebotched, broken, damaged, harmed, messed up | ALT (curse expletive, e.g. fuck!)
+                    - paragraph [ref=e1044]: bagarap ‘accident’ ← English bugger up
+                  - link "pake word wordstop, cease, halt; to block the way, to interrupt; to prevent block" [ref=e1045] [cursor=pointer]:
+                    - /url: /dictionary/pake
+                    - generic [ref=e1046]:
+                      - heading "pake" [level=3] [ref=e1047]
+                      - generic [ref=e1049]: word
+                    - paragraph [ref=e1051]: wordstop, cease, halt; to block the way, to interrupt; to prevent
+                    - paragraph [ref=e1052]: block
+                  - link "pali verb verbdo, take action on, work on; build, make, prepare fari ‘do, make’" [ref=e1053] [cursor=pointer]:
+                    - /url: /dictionary/pali
+                    - generic [ref=e1054]:
+                      - heading "pali" [level=3] [ref=e1055]
+                      - generic [ref=e1057]: verb
+                    - paragraph [ref=e1059]: verbdo, take action on, work on; build, make, prepare
+                    - paragraph [ref=e1060]: fari ‘do, make’
+                  - link "palisa noun nounlong hard thing; branch, rod, stick палица palica ‘bat, rod, cane’" [ref=e1061] [cursor=pointer]:
+                    - /url: /dictionary/palisa
+                    - generic [ref=e1062]:
+                      - heading "palisa" [level=3] [ref=e1063]
+                      - generic [ref=e1065]: noun
+                    - paragraph [ref=e1067]: nounlong hard thing; branch, rod, stick
+                    - paragraph [ref=e1068]: палица palica ‘bat, rod, cane’
+                  - 'link "pan noun nouncereal, grain; barley, corn, oat, rice, wheat; bread, pasta Romance: pan ‘bread’; Japanese: パン pan ‘bread’ (← Portuguese pão)" [ref=e1069] [cursor=pointer]':
+                    - /url: /dictionary/pan
+                    - generic [ref=e1070]:
+                      - heading "pan" [level=3] [ref=e1071]
+                      - generic [ref=e1073]: noun
+                    - paragraph [ref=e1075]: nouncereal, grain; barley, corn, oat, rice, wheat; bread, pasta
+                    - paragraph [ref=e1076]: "Romance: pan ‘bread’; Japanese: パン pan ‘bread’ (← Portuguese pão)"
+                  - 'link "pana verb verbgive, send, emit, provide, put, release Finnish: panna ‘put, set, place’; Swahili: pana ‘give to each other’" [ref=e1077] [cursor=pointer]':
+                    - /url: /dictionary/pana
+                    - generic [ref=e1078]:
+                      - heading "pana" [level=3] [ref=e1079]
+                      - generic [ref=e1081]: verb
+                    - paragraph [ref=e1083]: verbgive, send, emit, provide, put, release
+                    - paragraph [ref=e1084]: "Finnish: panna ‘put, set, place’; Swahili: pana ‘give to each other’"
+                  - 'link "pata word wordbrother, sister, sibling Serbo-Croatian: брат brat ‘brother’; Tok Pisin: brata ‘sibling or cousin of the same gender’ (← English brother)" [ref=e1085] [cursor=pointer]':
+                    - /url: /dictionary/pata
+                    - generic [ref=e1086]:
+                      - heading "pata" [level=3] [ref=e1087]
+                      - generic [ref=e1089]: word
+                    - paragraph [ref=e1091]: wordbrother, sister, sibling
+                    - paragraph [ref=e1092]: "Serbo-Croatian: брат brat ‘brother’; Tok Pisin: brata ‘sibling or cousin of the same gender’ (← English brother)"
+                  - link "peto word wordcry, tears; sad, sadness p.e.t.o. ← pana e telo oko" [ref=e1093] [cursor=pointer]:
+                    - /url: /dictionary/peto
+                    - generic [ref=e1094]:
+                      - heading "peto" [level=3] [ref=e1095]
+                      - generic [ref=e1097]: word
+                    - paragraph [ref=e1099]: wordcry, tears; sad, sadness
+                    - paragraph [ref=e1100]: p.e.t.o. ← pana e telo oko
+                  - link "pi particle particleof (used to divide a second noun group that describes a first noun group) | ALT (introduces a genitive noun) bilong ‘of’ ← English belong" [ref=e1101] [cursor=pointer]:
+                    - /url: /dictionary/pi
+                    - generic [ref=e1102]:
+                      - heading "pi" [level=3] [ref=e1103]
+                      - generic [ref=e1105]: particle
+                    - paragraph [ref=e1107]: particleof (used to divide a second noun group that describes a first noun group) | ALT (introduces a genitive noun)
+                    - paragraph [ref=e1108]: bilong ‘of’ ← English belong
+                  - link "pilin noun nounheart (physical or emotional); feeling (an emotion, a direct experience) pilim ‘feel’ ← pil ‘feel’ (← English feel) + -im ‘(transitive suffix)’ (← English him, ’em)" [ref=e1109] [cursor=pointer]:
+                    - /url: /dictionary/pilin
+                    - generic [ref=e1110]:
+                      - heading "pilin" [level=3] [ref=e1111]
+                      - generic [ref=e1113]: noun
+                    - paragraph [ref=e1115]: nounheart (physical or emotional); feeling (an emotion, a direct experience)
+                    - paragraph [ref=e1116]: pilim ‘feel’ ← pil ‘feel’ (← English feel) + -im ‘(transitive suffix)’ (← English him, ’em)
+                  - link "pimeja adjective adjectiveblack, dark, unlit pimeä ‘dark’" [ref=e1117] [cursor=pointer]:
+                    - /url: /dictionary/pimeja
+                    - generic [ref=e1118]:
+                      - heading "pimeja" [level=3] [ref=e1119]
+                      - generic [ref=e1121]: adjective
+                    - paragraph [ref=e1123]: adjectiveblack, dark, unlit
+                    - paragraph [ref=e1124]: pimeä ‘dark’
+                  - 'link "pini adjective adjectiveago, completed, ended, finished, past Acadian French: fini ‘finished, completed’; Tok Pisin: pinis ‘(perfective aspect)’(← English finish)" [ref=e1125] [cursor=pointer]':
+                    - /url: /dictionary/pini
+                    - generic [ref=e1126]:
+                      - heading "pini" [level=3] [ref=e1127]
+                      - generic [ref=e1129]: adjective
+                    - paragraph [ref=e1131]: adjectiveago, completed, ended, finished, past
+                    - paragraph [ref=e1132]: "Acadian French: fini ‘finished, completed’; Tok Pisin: pinis ‘(perfective aspect)’(← English finish)"
+                  - link "pipi noun nounbug, insect, ant, spider bibitte ‘bug’" [ref=e1133] [cursor=pointer]:
+                    - /url: /dictionary/pipi
+                    - generic [ref=e1134]:
+                      - heading "pipi" [level=3] [ref=e1135]
+                      - generic [ref=e1137]: noun
+                    - paragraph [ref=e1139]: nounbug, insect, ant, spider
+                    - paragraph [ref=e1140]: bibitte ‘bug’
+                  - link "po word wordfour four" [ref=e1141] [cursor=pointer]:
+                    - /url: /dictionary/po
+                    - generic [ref=e1142]:
+                      - heading "po" [level=3] [ref=e1143]
+                      - generic [ref=e1145]: word
+                    - paragraph [ref=e1147]: wordfour
+                    - paragraph [ref=e1148]: four
+                  - link "poka noun nounhip, side; next to, nearby, vicinity | ALT along with (comitative), beside boka бока, genitive of bok бок ‘side, flank’" [ref=e1149] [cursor=pointer]:
+                    - /url: /dictionary/poka
+                    - generic [ref=e1150]:
+                      - heading "poka" [level=3] [ref=e1151]
+                      - generic [ref=e1153]: noun
+                    - paragraph [ref=e1155]: nounhip, side; next to, nearby, vicinity | ALT along with (comitative), beside
+                    - paragraph [ref=e1156]: boka бока, genitive of bok бок ‘side, flank’
+                  - 'link "poki noun nouncontainer, bag, bowl, box, cup, cupboard, drawer, vessel bokis ‘box, {vulgar} female genitalia’ ← English box" [ref=e1157] [cursor=pointer]':
+                    - /url: /dictionary/poki
+                    - generic [ref=e1158]:
+                      - heading "poki" [level=3] [ref=e1159]
+                      - generic [ref=e1161]: noun
+                    - paragraph [ref=e1163]: nouncontainer, bag, bowl, box, cup, cupboard, drawer, vessel
+                    - paragraph [ref=e1164]: "bokis ‘box, {vulgar} female genitalia’ ← English box"
+                  - link "polinpin word wordbowling pin bowling pin" [ref=e1165] [cursor=pointer]:
+                    - /url: /dictionary/polinpin
+                    - generic [ref=e1166]:
+                      - heading "polinpin" [level=3] [ref=e1167]
+                      - generic [ref=e1169]: word
+                    - paragraph [ref=e1171]: wordbowling pin
+                    - paragraph [ref=e1172]: bowling pin
+                  - link "pomotolo word wordeffective, useful, give good results pomodoro ‘tomato’" [ref=e1173] [cursor=pointer]:
+                    - /url: /dictionary/pomotolo
+                    - generic [ref=e1174]:
+                      - heading "pomotolo" [level=3] [ref=e1175]
+                      - generic [ref=e1177]: word
+                    - paragraph [ref=e1179]: wordeffective, useful, give good results
+                    - paragraph [ref=e1180]: pomodoro ‘tomato’
+                  - link "pona adjective adjectivegood, positive, useful; friendly, peaceful; simple bona ‘good’" [ref=e1181] [cursor=pointer]:
+                    - /url: /dictionary/pona
+                    - generic [ref=e1182]:
+                      - heading "pona" [level=3] [ref=e1183]
+                      - generic [ref=e1185]: adjective
+                    - paragraph [ref=e1187]: adjectivegood, positive, useful; friendly, peaceful; simple
+                    - paragraph [ref=e1188]: bona ‘good’
+                  - link "powe word wordunreal, false, untrue; pretend; deceive, trick pas vrai ‘not true’" [ref=e1189] [cursor=pointer]:
+                    - /url: /dictionary/powe
+                    - generic [ref=e1190]:
+                      - heading "powe" [level=3] [ref=e1191]
+                      - generic [ref=e1193]: word
+                    - paragraph [ref=e1195]: wordunreal, false, untrue; pretend; deceive, trick
+                    - paragraph [ref=e1196]: pas vrai ‘not true’
+                  - 'link "pu adjective adjectiveinteracting with the official Toki Pona book Mandarin: 樸 pǔ ‘unworked wood; sincere, honest; inherent quality; simple’; English: book" [ref=e1197] [cursor=pointer]':
+                    - /url: /dictionary/pu
+                    - generic [ref=e1198]:
+                      - heading "pu" [level=3] [ref=e1199]
+                      - generic [ref=e1201]: adjective
+                    - paragraph [ref=e1203]: adjectiveinteracting with the official Toki Pona book
+                    - paragraph [ref=e1204]: "Mandarin: 樸 pǔ ‘unworked wood; sincere, honest; inherent quality; simple’; English: book"
+              - generic [ref=e1205]:
+                - heading "S" [level=2] [ref=e1206]
+                - generic [ref=e1207]:
+                  - 'link "sama adjective adjectivesame, similar; each other; sibling, peer, fellow; as, like Finnish: sama ‘same’ (← Proto-Germanic *samaz ‘same, alike’); Esperanto: sama ‘same’ (← English same)" [ref=e1208] [cursor=pointer]':
+                    - /url: /dictionary/sama
+                    - generic [ref=e1209]:
+                      - heading "sama" [level=3] [ref=e1210]
+                      - generic [ref=e1212]: adjective
+                    - paragraph [ref=e1214]: adjectivesame, similar; each other; sibling, peer, fellow; as, like
+                    - paragraph [ref=e1215]: "Finnish: sama ‘same’ (← Proto-Germanic *samaz ‘same, alike’); Esperanto: sama ‘same’ (← English same)"
+                  - link "samu word wordwanting to create new words jan Samu" [ref=e1216] [cursor=pointer]:
+                    - /url: /dictionary/samu
+                    - generic [ref=e1217]:
+                      - heading "samu" [level=3] [ref=e1218]
+                      - generic [ref=e1220]: word
+                    - paragraph [ref=e1222]: wordwanting to create new words
+                    - paragraph [ref=e1223]: jan Samu
+                  - 'link "san word wordthree Japanese: 三 san ‘three’; Cantonese: 三/叁 sāam" [ref=e1224] [cursor=pointer]':
+                    - /url: /dictionary/san
+                    - generic [ref=e1225]:
+                      - heading "san" [level=3] [ref=e1226]
+                      - generic [ref=e1228]: word
+                    - paragraph [ref=e1230]: wordthree
+                    - paragraph [ref=e1231]: "Japanese: 三 san ‘three’; Cantonese: 三/叁 sāam"
+                  - link "seli adjective adjectivefire; cooking element, chemical reaction, heat source ცხელი cxeli ‘hot’" [ref=e1232] [cursor=pointer]:
+                    - /url: /dictionary/seli
+                    - generic [ref=e1233]:
+                      - heading "seli" [level=3] [ref=e1234]
+                      - generic [ref=e1236]: adjective
+                    - paragraph [ref=e1238]: adjectivefire; cooking element, chemical reaction, heat source
+                    - paragraph [ref=e1239]: ცხელი cxeli ‘hot’
+                  - link "selo noun nounouter form, outer layer; bark, peel, shell, skin; boundary ŝelo ‘skin, peel’ ← German Schale ‘peel, husk, shell’" [ref=e1240] [cursor=pointer]:
+                    - /url: /dictionary/selo
+                    - generic [ref=e1241]:
+                      - heading "selo" [level=3] [ref=e1242]
+                      - generic [ref=e1244]: noun
+                    - paragraph [ref=e1246]: nounouter form, outer layer; bark, peel, shell, skin; boundary
+                    - paragraph [ref=e1247]: ŝelo ‘skin, peel’ ← German Schale ‘peel, husk, shell’
+                  - link "seme particle particlewhat? which? 什麼 shénme ‘what, something’" [ref=e1248] [cursor=pointer]:
+                    - /url: /dictionary/seme
+                    - generic [ref=e1249]:
+                      - heading "seme" [level=3] [ref=e1250]
+                      - generic [ref=e1252]: particle
+                    - paragraph [ref=e1254]: particlewhat? which?
+                    - paragraph [ref=e1255]: 什麼 shénme ‘what, something’
+                  - link "sewi noun nounarea above, highest part, something elevated; awe-inspiring, divine, sacred, supernatural ზევით zevit ‘upwards’" [ref=e1256] [cursor=pointer]:
+                    - /url: /dictionary/sewi
+                    - generic [ref=e1257]:
+                      - heading "sewi" [level=3] [ref=e1258]
+                      - generic [ref=e1260]: noun
+                    - paragraph [ref=e1262]: nounarea above, highest part, something elevated; awe-inspiring, divine, sacred, supernatural
+                    - paragraph [ref=e1263]: ზევით zevit ‘upwards’
+                  - link "sijelo noun nounbody (of person or animal), physical state, torso тијело tijelo ‘body’" [ref=e1264] [cursor=pointer]:
+                    - /url: /dictionary/sijelo
+                    - generic [ref=e1265]:
+                      - heading "sijelo" [level=3] [ref=e1266]
+                      - generic [ref=e1268]: noun
+                    - paragraph [ref=e1270]: nounbody (of person or animal), physical state, torso
+                    - paragraph [ref=e1271]: тијело tijelo ‘body’
+                  - link "sike noun nounround or circular thing; ball, circle, cycle, sphere, wheel; of one year circle" [ref=e1272] [cursor=pointer]:
+                    - /url: /dictionary/sike
+                    - generic [ref=e1273]:
+                      - heading "sike" [level=3] [ref=e1274]
+                      - generic [ref=e1276]: noun
+                    - paragraph [ref=e1278]: nounround or circular thing; ball, circle, cycle, sphere, wheel; of one year
+                    - paragraph [ref=e1279]: circle
+                  - link "sin adjective adjectivenew, fresh; additional, another, extra 新 xīn ‘new, fresh’" [ref=e1280] [cursor=pointer]:
+                    - /url: /dictionary/sin
+                    - generic [ref=e1281]:
+                      - heading "sin" [level=3] [ref=e1282]
+                      - generic [ref=e1284]: adjective
+                    - paragraph [ref=e1286]: adjectivenew, fresh; additional, another, extra
+                    - paragraph [ref=e1287]: 新 xīn ‘new, fresh’
+                  - link "sina noun nounyou sinä ‘you’" [ref=e1288] [cursor=pointer]:
+                    - /url: /dictionary/sina
+                    - generic [ref=e1289]:
+                      - heading "sina" [level=3] [ref=e1290]
+                      - generic [ref=e1292]: noun
+                    - paragraph [ref=e1294]: nounyou
+                    - paragraph [ref=e1295]: sinä ‘you’
+                  - link "sinpin noun nounface, foremost, front, wall 前邊 tsin bin ‘in front’" [ref=e1296] [cursor=pointer]:
+                    - /url: /dictionary/sinpin
+                    - generic [ref=e1297]:
+                      - heading "sinpin" [level=3] [ref=e1298]
+                      - generic [ref=e1300]: noun
+                    - paragraph [ref=e1302]: nounface, foremost, front, wall
+                    - paragraph [ref=e1303]: 前邊 tsin bin ‘in front’
+                  - link "sitelen noun nounimage, picture, representation, symbol, mark, writing schilderen ‘paint’" [ref=e1304] [cursor=pointer]:
+                    - /url: /dictionary/sitelen
+                    - generic [ref=e1305]:
+                      - heading "sitelen" [level=3] [ref=e1306]
+                      - generic [ref=e1308]: noun
+                    - paragraph [ref=e1310]: nounimage, picture, representation, symbol, mark, writing
+                    - paragraph [ref=e1311]: schilderen ‘paint’
+                  - link "soko word wordfungus, fungi სოკო sok’o ‘mushroom’ ku suli" [ref=e1312] [cursor=pointer]:
+                    - /url: /dictionary/soko
+                    - generic [ref=e1313]:
+                      - heading "soko" [level=3] [ref=e1314]
+                      - generic [ref=e1316]: word
+                    - paragraph [ref=e1318]: wordfungus, fungi
+                    - paragraph [ref=e1319]: სოკო sok’o ‘mushroom’
+                    - generic [ref=e1320]: ku suli
+                  - link "sona verb verbknow, be skilled in, be wise about, have information on; (pv.) know how to ცოდნა codna ‘knowledge’" [ref=e1321] [cursor=pointer]:
+                    - /url: /dictionary/sona
+                    - generic [ref=e1322]:
+                      - heading "sona" [level=3] [ref=e1323]
+                      - generic [ref=e1325]: verb
+                    - paragraph [ref=e1327]: verbknow, be skilled in, be wise about, have information on; (pv.) know how to
+                    - paragraph [ref=e1328]: ცოდნა codna ‘knowledge’
+                  - link "soto word wordleft, left side, port side shoto ‘left side’" [ref=e1329] [cursor=pointer]:
+                    - /url: /dictionary/soto
+                    - generic [ref=e1330]:
+                      - heading "soto" [level=3] [ref=e1331]
+                      - generic [ref=e1333]: word
+                    - paragraph [ref=e1335]: wordleft, left side, port side
+                    - paragraph [ref=e1336]: shoto ‘left side’
+                  - link "soweli noun nounanimal, beast, land mammal ცხოველი cxoveli ‘beastly animal, lively, passionate’" [ref=e1337] [cursor=pointer]:
+                    - /url: /dictionary/soweli
+                    - generic [ref=e1338]:
+                      - heading "soweli" [level=3] [ref=e1339]
+                      - generic [ref=e1341]: noun
+                    - paragraph [ref=e1343]: nounanimal, beast, land mammal
+                    - paragraph [ref=e1344]: ცხოველი cxoveli ‘beastly animal, lively, passionate’
+                  - link "su word wordinteracting with a book from the illustrated story book series that began with The Wonderful Wizard of Oz, produced by Sonja Lang" [ref=e1345] [cursor=pointer]:
+                    - /url: /dictionary/su
+                    - generic [ref=e1346]:
+                      - heading "su" [level=3] [ref=e1347]
+                      - generic [ref=e1349]: word
+                    - paragraph [ref=e1351]: wordinteracting with a book from the illustrated story book series that began with The Wonderful Wizard of Oz, produced by Sonja Lang
+                  - link "suke word word[typo of sike] typo of sike" [ref=e1352] [cursor=pointer]:
+                    - /url: /dictionary/suke
+                    - generic [ref=e1353]:
+                      - heading "suke" [level=3] [ref=e1354]
+                      - generic [ref=e1356]: word
+                    - paragraph [ref=e1358]: word[typo of sike]
+                    - paragraph [ref=e1359]: typo of sike
+                  - link "suli adjective adjectivebig, heavy, large, long, tall; important; adult suuri ‘big, large, great’" [ref=e1360] [cursor=pointer]:
+                    - /url: /dictionary/suli
+                    - generic [ref=e1361]:
+                      - heading "suli" [level=3] [ref=e1362]
+                      - generic [ref=e1364]: adjective
+                    - paragraph [ref=e1366]: adjectivebig, heavy, large, long, tall; important; adult
+                    - paragraph [ref=e1367]: suuri ‘big, large, great’
+                  - link "suno noun nounsun; light, brightness, glow, radiance, shine; light source suno ‘sun’" [ref=e1368] [cursor=pointer]:
+                    - /url: /dictionary/suno
+                    - generic [ref=e1369]:
+                      - heading "suno" [level=3] [ref=e1370]
+                      - generic [ref=e1372]: noun
+                    - paragraph [ref=e1374]: nounsun; light, brightness, glow, radiance, shine; light source
+                    - paragraph [ref=e1375]: suno ‘sun’
+                  - link "supa noun nounhorizontal surface, thing to put or rest something on surfaco ‘surface’ ← Acadian French & English surface" [ref=e1376] [cursor=pointer]:
+                    - /url: /dictionary/supa
+                    - generic [ref=e1377]:
+                      - heading "supa" [level=3] [ref=e1378]
+                      - generic [ref=e1380]: noun
+                    - paragraph [ref=e1382]: nounhorizontal surface, thing to put or rest something on
+                    - paragraph [ref=e1383]: surfaco ‘surface’ ← Acadian French & English surface
+                  - link "sutopatikuna word wordplatypus čudnovati kljunaš ‘platypus, lit. strange beak’" [ref=e1384] [cursor=pointer]:
+                    - /url: /dictionary/sutopatikuna
+                    - generic [ref=e1385]:
+                      - heading "sutopatikuna" [level=3] [ref=e1386]
+                      - generic [ref=e1388]: word
+                    - paragraph [ref=e1390]: wordplatypus
+                    - paragraph [ref=e1391]: čudnovati kljunaš ‘platypus, lit. strange beak’
+                  - link "suwi adjective adjectivesweet, fragrant; cute, innocent, adorable swit ← English sweet" [ref=e1392] [cursor=pointer]:
+                    - /url: /dictionary/suwi
+                    - generic [ref=e1393]:
+                      - heading "suwi" [level=3] [ref=e1394]
+                      - generic [ref=e1396]: adjective
+                    - paragraph [ref=e1398]: adjectivesweet, fragrant; cute, innocent, adorable
+                    - paragraph [ref=e1399]: swit ← English sweet
+              - generic [ref=e1400]:
+                - heading "T" [level=2] [ref=e1401]
+                - generic [ref=e1402]:
+                  - link "taki word wordsticky, magnetic; bond, attract, attach, clip 탁 tag ‘(onomatopoeia) the sound of two magnets hitting each other’" [ref=e1403] [cursor=pointer]:
+                    - /url: /dictionary/taki
+                    - generic [ref=e1404]:
+                      - heading "taki" [level=3] [ref=e1405]
+                      - generic [ref=e1407]: word
+                    - paragraph [ref=e1409]: wordsticky, magnetic; bond, attract, attach, clip
+                    - paragraph [ref=e1410]: 탁 tag ‘(onomatopoeia) the sound of two magnets hitting each other’
+                  - link "tan preposition prepositionby, from, because of; origin, cause 從 tsung ‘from’" [ref=e1411] [cursor=pointer]:
+                    - /url: /dictionary/tan
+                    - generic [ref=e1412]:
+                      - heading "tan" [level=3] [ref=e1413]
+                      - generic [ref=e1415]: preposition
+                    - paragraph [ref=e1417]: prepositionby, from, because of; origin, cause
+                    - paragraph [ref=e1418]: 從 tsung ‘from’
+                  - link "taso particle particlebut, however; only tasol ‘just, only, but, however’ ← English that’s all" [ref=e1419] [cursor=pointer]:
+                    - /url: /dictionary/taso
+                    - generic [ref=e1420]:
+                      - heading "taso" [level=3] [ref=e1421]
+                      - generic [ref=e1423]: particle
+                    - paragraph [ref=e1425]: particlebut, however; only
+                    - paragraph [ref=e1426]: tasol ‘just, only, but, however’ ← English that’s all
+                  - link "tawa preposition prepositiongoing to, toward; for; from the perspective of; moving | ALT (pv.) going to toward(s)" [ref=e1427] [cursor=pointer]:
+                    - /url: /dictionary/tawa
+                    - generic [ref=e1428]:
+                      - heading "tawa" [level=3] [ref=e1429]
+                      - generic [ref=e1431]: preposition
+                    - paragraph [ref=e1433]: prepositiongoing to, toward; for; from the perspective of; moving | ALT (pv.) going to
+                    - paragraph [ref=e1434]: toward(s)
+                  - link "te word word(particle introducing a quote) って tte ‘quotative’" [ref=e1435] [cursor=pointer]:
+                    - /url: /dictionary/te
+                    - generic [ref=e1436]:
+                      - heading "te" [level=3] [ref=e1437]
+                      - generic [ref=e1439]: word
+                    - paragraph [ref=e1441]: word(particle introducing a quote)
+                    - paragraph [ref=e1442]: って tte ‘quotative’
+                  - link "teje word wordright, right side, starboard de (/deː/) ‘right’" [ref=e1443] [cursor=pointer]:
+                    - /url: /dictionary/teje
+                    - generic [ref=e1444]:
+                      - heading "teje" [level=3] [ref=e1445]
+                      - generic [ref=e1447]: word
+                    - paragraph [ref=e1449]: wordright, right side, starboard
+                    - paragraph [ref=e1450]: de (/deː/) ‘right’
+                  - link "telo noun nounwater, liquid, fluid, wet substance; beverages de l’eau ‘(some) water’" [ref=e1451] [cursor=pointer]:
+                    - /url: /dictionary/telo
+                    - generic [ref=e1452]:
+                      - heading "telo" [level=3] [ref=e1453]
+                      - generic [ref=e1455]: noun
+                    - paragraph [ref=e1457]: nounwater, liquid, fluid, wet substance; beverages
+                    - paragraph [ref=e1458]: de l’eau ‘(some) water’
+                  - link "tenpo noun nountime, duration, moment, occasion, period, situation tempo ‘time’ ← Latin tempus" [ref=e1459] [cursor=pointer]:
+                    - /url: /dictionary/tenpo
+                    - generic [ref=e1460]:
+                      - heading "tenpo" [level=3] [ref=e1461]
+                      - generic [ref=e1463]: noun
+                    - paragraph [ref=e1465]: nountime, duration, moment, occasion, period, situation
+                    - paragraph [ref=e1466]: tempo ‘time’ ← Latin tempus
+                  - link "to word word(particle closing a quote) と to ‘quotative’" [ref=e1467] [cursor=pointer]:
+                    - /url: /dictionary/to
+                    - generic [ref=e1468]:
+                      - heading "to" [level=3] [ref=e1469]
+                      - generic [ref=e1471]: word
+                    - paragraph [ref=e1473]: word(particle closing a quote)
+                    - paragraph [ref=e1474]: と to ‘quotative’
+                  - link "toki verb verbcommunicate, say, speak, talk, use language, think; hello tok ← English talk" [ref=e1475] [cursor=pointer]:
+                    - /url: /dictionary/toki
+                    - generic [ref=e1476]:
+                      - heading "toki" [level=3] [ref=e1477]
+                      - generic [ref=e1479]: verb
+                    - paragraph [ref=e1481]: verbcommunicate, say, speak, talk, use language, think; hello
+                    - paragraph [ref=e1482]: tok ← English talk
+                  - link "toma word word[typo of tomo] typo of tomo" [ref=e1483] [cursor=pointer]:
+                    - /url: /dictionary/toma
+                    - generic [ref=e1484]:
+                      - heading "toma" [level=3] [ref=e1485]
+                      - generic [ref=e1487]: word
+                    - paragraph [ref=e1489]: word[typo of tomo]
+                    - paragraph [ref=e1490]: typo of tomo
+                  - link "tomo noun nounindoor space; building, home, house, room domo ‘house’ ← Polish dom, Latin domus, Ancient Greek δόμος" [ref=e1491] [cursor=pointer]:
+                    - /url: /dictionary/tomo
+                    - generic [ref=e1492]:
+                      - heading "tomo" [level=3] [ref=e1493]
+                      - generic [ref=e1495]: noun
+                    - paragraph [ref=e1497]: nounindoor space; building, home, house, room
+                    - paragraph [ref=e1498]: domo ‘house’ ← Polish dom, Latin domus, Ancient Greek δόμος
+                  - link "tonsi word wordnon-binary, gender-non-conforming | ALT trans, non-cisgender 同志 tóngzhì ‘comrade (same will/purpose); LGBT+’ ku suli" [ref=e1499] [cursor=pointer]:
+                    - /url: /dictionary/tonsi
+                    - generic [ref=e1500]:
+                      - heading "tonsi" [level=3] [ref=e1501]
+                      - generic [ref=e1503]: word
+                    - paragraph [ref=e1505]: wordnon-binary, gender-non-conforming | ALT trans, non-cisgender
+                    - paragraph [ref=e1506]: 同志 tóngzhì ‘comrade (same will/purpose); LGBT+’
+                    - generic [ref=e1507]: ku suli
+                  - 'link "tu number numbertwo | ALT separate, cut English: two; Esperanto: du" [ref=e1508] [cursor=pointer]':
+                    - /url: /dictionary/tu
+                    - generic [ref=e1509]:
+                      - heading "tu" [level=3] [ref=e1510]
+                      - generic [ref=e1512]: number
+                    - paragraph [ref=e1514]: numbertwo | ALT separate, cut
+                    - paragraph [ref=e1515]: "English: two; Esperanto: du"
+                  - link "tuli word wordthree three" [ref=e1516] [cursor=pointer]:
+                    - /url: /dictionary/tuli
+                    - generic [ref=e1517]:
+                      - heading "tuli" [level=3] [ref=e1518]
+                      - generic [ref=e1520]: word
+                    - paragraph [ref=e1522]: wordthree
+                    - paragraph [ref=e1523]: three
+              - generic [ref=e1524]:
+                - heading "U" [level=2] [ref=e1525]
+                - generic [ref=e1526]:
+                  - link "u word word(word reserved for future use by Sonja Lang)" [ref=e1527] [cursor=pointer]:
+                    - /url: /dictionary/u
+                    - generic [ref=e1528]:
+                      - heading "u" [level=3] [ref=e1529]
+                      - generic [ref=e1531]: word
+                    - paragraph [ref=e1533]: word(word reserved for future use by Sonja Lang)
+                  - link "umesu word wordamaze people by being on the top of the leaderboard of a toki pona game Umeyz ‘to amaze (someone); surprise; impress’" [ref=e1534] [cursor=pointer]:
+                    - /url: /dictionary/umesu
+                    - generic [ref=e1535]:
+                      - heading "umesu" [level=3] [ref=e1536]
+                      - generic [ref=e1538]: word
+                    - paragraph [ref=e1540]: wordamaze people by being on the top of the leaderboard of a toki pona game
+                    - paragraph [ref=e1541]: Umeyz ‘to amaze (someone); surprise; impress’
+                  - link "unpa verb verbhave sexual relations with" [ref=e1542] [cursor=pointer]:
+                    - /url: /dictionary/unpa
+                    - generic [ref=e1543]:
+                      - heading "unpa" [level=3] [ref=e1544]
+                      - generic [ref=e1546]: verb
+                    - paragraph [ref=e1548]: verbhave sexual relations with
+                  - link "unu word wordpurple ungu ‘purple’" [ref=e1549] [cursor=pointer]:
+                    - /url: /dictionary/unu
+                    - generic [ref=e1550]:
+                      - heading "unu" [level=3] [ref=e1551]
+                      - generic [ref=e1553]: word
+                    - paragraph [ref=e1555]: wordpurple
+                    - paragraph [ref=e1556]: ungu ‘purple’
+                  - link "usawi word wordmagic, sorcery; enchant; magical, supernatural, occult, incomprehensible uchawi ‘witchcraft, sorcery’" [ref=e1557] [cursor=pointer]:
+                    - /url: /dictionary/usawi
+                    - generic [ref=e1558]:
+                      - heading "usawi" [level=3] [ref=e1559]
+                      - generic [ref=e1561]: word
+                    - paragraph [ref=e1563]: wordmagic, sorcery; enchant; magical, supernatural, occult, incomprehensible
+                    - paragraph [ref=e1564]: uchawi ‘witchcraft, sorcery’
+                  - link "uta noun nounmouth, lips, oral cavity, jaw уста usta ‘mouth’" [ref=e1565] [cursor=pointer]:
+                    - /url: /dictionary/uta
+                    - generic [ref=e1566]:
+                      - heading "uta" [level=3] [ref=e1567]
+                      - generic [ref=e1569]: noun
+                    - paragraph [ref=e1571]: nounmouth, lips, oral cavity, jaw
+                    - paragraph [ref=e1572]: уста usta ‘mouth’
+                  - link "utala verb verbbattle, challenge, compete against, struggle against ударати udarati ‘strike, hit, beat’" [ref=e1573] [cursor=pointer]:
+                    - /url: /dictionary/utala
+                    - generic [ref=e1574]:
+                      - heading "utala" [level=3] [ref=e1575]
+                      - generic [ref=e1577]: verb
+                    - paragraph [ref=e1579]: verbbattle, challenge, compete against, struggle against
+                    - paragraph [ref=e1580]: ударати udarati ‘strike, hit, beat’
+              - generic [ref=e1581]:
+                - heading "W" [level=2] [ref=e1582]
+                - generic [ref=e1583]:
+                  - link "wa word word[interjection] indicating awe or amazement" [ref=e1584] [cursor=pointer]:
+                    - /url: /dictionary/wa
+                    - generic [ref=e1585]:
+                      - heading "wa" [level=3] [ref=e1586]
+                      - generic [ref=e1588]: word
+                    - paragraph [ref=e1590]: word[interjection] indicating awe or amazement
+                  - link "waleja word wordcontext, topic, salience, pertinent, topical, pertain to, be relevant valdea ‘of moment, important’ ← valda ‘worth, worthy, dear’" [ref=e1591] [cursor=pointer]:
+                    - /url: /dictionary/waleja
+                    - generic [ref=e1592]:
+                      - heading "waleja" [level=3] [ref=e1593]
+                      - generic [ref=e1595]: word
+                    - paragraph [ref=e1597]: wordcontext, topic, salience, pertinent, topical, pertain to, be relevant
+                    - paragraph [ref=e1598]: valdea ‘of moment, important’ ← valda ‘worth, worthy, dear’
+                  - link "walo adjective adjectivewhite, whitish; light-coloured, pale valko- ‘white’" [ref=e1599] [cursor=pointer]:
+                    - /url: /dictionary/walo
+                    - generic [ref=e1600]:
+                      - heading "walo" [level=3] [ref=e1601]
+                      - generic [ref=e1603]: adjective
+                    - paragraph [ref=e1605]: adjectivewhite, whitish; light-coloured, pale
+                    - paragraph [ref=e1606]: valko- ‘white’
+                  - link "wan adjective adjectiveunique, united; one one" [ref=e1607] [cursor=pointer]:
+                    - /url: /dictionary/wan
+                    - generic [ref=e1608]:
+                      - heading "wan" [level=3] [ref=e1609]
+                      - generic [ref=e1611]: adjective
+                    - paragraph [ref=e1613]: adjectiveunique, united; one
+                    - paragraph [ref=e1614]: one
+                  - link "waso noun nounbird, flying creature, winged animal oiseau ‘bird’" [ref=e1615] [cursor=pointer]:
+                    - /url: /dictionary/waso
+                    - generic [ref=e1616]:
+                      - heading "waso" [level=3] [ref=e1617]
+                      - generic [ref=e1619]: noun
+                    - paragraph [ref=e1621]: nounbird, flying creature, winged animal
+                    - paragraph [ref=e1622]: oiseau ‘bird’
+                  - link "wasoweli word wordanimal with qualities of both waso & soweli waso + soweli" [ref=e1623] [cursor=pointer]:
+                    - /url: /dictionary/wasoweli
+                    - generic [ref=e1624]:
+                      - heading "wasoweli" [level=3] [ref=e1625]
+                      - generic [ref=e1627]: word
+                    - paragraph [ref=e1629]: wordanimal with qualities of both waso & soweli
+                    - paragraph [ref=e1630]: waso + soweli
+                  - link "wawa adjective adjectivestrong, powerful; confident, sure; energetic, intense vahva ‘strong, powerful, thick’" [ref=e1631] [cursor=pointer]:
+                    - /url: /dictionary/wawa
+                    - generic [ref=e1632]:
+                      - heading "wawa" [level=3] [ref=e1633]
+                      - generic [ref=e1635]: adjective
+                    - paragraph [ref=e1637]: adjectivestrong, powerful; confident, sure; energetic, intense
+                    - paragraph [ref=e1638]: vahva ‘strong, powerful, thick’
+                  - link "weka adjective adjectiveabsent, away, ignored weg ‘away, gone’" [ref=e1639] [cursor=pointer]:
+                    - /url: /dictionary/weka
+                    - generic [ref=e1640]:
+                      - heading "weka" [level=3] [ref=e1641]
+                      - generic [ref=e1643]: adjective
+                    - paragraph [ref=e1645]: adjectiveabsent, away, ignored
+                    - paragraph [ref=e1646]: weg ‘away, gone’
+                  - link "wile pre-verb pre-verbmust, need, require, should, want, wish willen ‘want, desire’" [ref=e1647] [cursor=pointer]:
+                    - /url: /dictionary/wile
+                    - generic [ref=e1648]:
+                      - heading "wile" [level=3] [ref=e1649]
+                      - generic [ref=e1651]: pre-verb
+                    - paragraph [ref=e1653]: pre-verbmust, need, require, should, want, wish
+                    - paragraph [ref=e1654]: willen ‘want, desire’
+              - generic [ref=e1655]:
+                - heading "Y" [level=2] [ref=e1656]
+                - link "yupekosi word wordto behave like George Lucas and revise your old creative works and actually make them worse" [ref=e1658] [cursor=pointer]:
+                  - /url: /dictionary/yupekosi
+                  - generic [ref=e1659]:
+                    - heading "yupekosi" [level=3] [ref=e1660]
+                    - generic [ref=e1662]: word
+                  - paragraph [ref=e1664]: wordto behave like George Lucas and revise your old creative works and actually make them worse
+          - paragraph [ref=e1667]: toki pona dojo - 2026
+        - complementary [ref=e1669]:
+          - generic [ref=e1670]:
+            - generic [ref=e1671]:
+              - generic [ref=e1672]:
+                - generic [ref=e1673]: jan sona
+                - generic [ref=e1674]: ready
+              - generic [ref=e1675]:
+                - button "Clear chat" [disabled]:
+                  - img
+                - button "Close chat" [ref=e1676] [cursor=pointer]:
+                  - img
+            - group "Chat mode" [ref=e1677]:
+              - generic [ref=e1678]: Chat mode
+              - button "free chat" [pressed] [ref=e1679] [cursor=pointer]
+              - button "grammar" [ref=e1680] [cursor=pointer]
+              - button "translate" [ref=e1681] [cursor=pointer]
+            - generic [ref=e1684]:
+              - img [ref=e1685]
+              - paragraph [ref=e1687]: toki! mi jan sona.
+              - paragraph [ref=e1688]: Ask me anything about toki pona.
+            - generic [ref=e1690]:
+              - textbox "toki..." [ref=e1691]
+              - button [disabled]:
+                - img
+  - region "Notifications alt+T"

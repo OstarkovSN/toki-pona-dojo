@@ -598,10 +598,14 @@ export const UnitSummarySchema = {
             },
             type: 'array',
             title: 'Requires'
+        },
+        lesson_count: {
+            type: 'integer',
+            title: 'Lesson Count'
         }
     },
     type: 'object',
-    required: ['id', 'name', 'topic', 'words', 'exercise_types', 'requires'],
+    required: ['id', 'name', 'topic', 'words', 'exercise_types', 'requires', 'lesson_count'],
     title: 'UnitSummary',
     description: 'Unit metadata returned by the units list endpoint.'
 } as const;
@@ -746,6 +750,18 @@ export const UserRegisterSchema = {
                 }
             ],
             title: 'Full Name'
+        },
+        invite_token: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 64
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Invite Token'
         }
     },
     type: 'object',

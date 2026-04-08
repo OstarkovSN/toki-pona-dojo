@@ -223,3 +223,4 @@ __marimo__/
 tmp/
 tmp_test.py
 .claude/ralph-loop.local.md
+frontend/certs/

@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import secrets
 from datetime import datetime, timedelta, timezone
@@ -343,29 +344,8 @@ async def handle_update(session: Session, update: dict[str, Any]) -> None:
         await handle_callback_query(session, update["callback_query"])
 
 
-async def set_webhook(webhook_url: str) -> bool:
-    """Register the webhook URL with Telegram, including secret_token."""
-    if not settings.TG_BOT_TOKEN:
-        return False
-    try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.post(
-                f"{TELEGRAM_API_BASE}{settings.TG_BOT_TOKEN}/setWebhook",
-                json={
-                    "url": webhook_url,
-                    "secret_token": get_webhook_secret(),
-                },
-            )
-            response.raise_for_status()
-            logger.info("Telegram webhook set to %s", webhook_url)
-            return True
-    except httpx.HTTPError:
-        logger.exception("Failed to set Telegram webhook")
-        return False
-
-
 async def delete_webhook() -> bool:
-    """Remove the webhook on shutdown."""
+    """Remove any registered webhook so polling can work."""
     if not settings.TG_BOT_TOKEN:
         return False
     try:
@@ -379,3 +359,34 @@ async def delete_webhook() -> bool:
     except httpx.HTTPError:
         logger.exception("Failed to delete Telegram webhook")
         return False
+
+
+async def poll_updates(session_factory: Any) -> None:
+    """Long-poll Telegram for updates and dispatch them. Runs until cancelled."""
+    offset: int = 0
+    logger.info("Telegram polling started")
+    while True:
+        try:
+            async with httpx.AsyncClient(timeout=35.0) as client:
+                response = await client.post(
+                    f"{TELEGRAM_API_BASE}{settings.TG_BOT_TOKEN}/getUpdates",
+                    json={"offset": offset, "timeout": 30, "limit": 100},
+                )
+                response.raise_for_status()
+                data = response.json()
+        except Exception:
+            logger.exception("Telegram getUpdates error — retrying in 5s")
+            await asyncio.sleep(5)
+            continue
+
+        for update in data.get("result", []):
+            offset = update["update_id"] + 1
+            try:
+                with session_factory() as session:
+                    await handle_update(session, update)
+            except Exception:
+                logger.exception(
+                    "Error handling Telegram update %s", update.get("update_id")
+                )
+
+
