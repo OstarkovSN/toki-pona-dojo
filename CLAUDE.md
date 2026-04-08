@@ -117,13 +117,14 @@ CROWDSEC_BOUNCER_KEY=  # After running: cscli bouncers add my-bouncer (Phase 9)
 
 | Service | URL |
 |---------|-----|
-| Frontend | http://localhost:5173 |
-| Backend API | http://localhost:8000 |
-| Swagger UI | http://localhost:8000/docs |
-| ReDoc | http://localhost:8000/redoc |
-| Adminer (DB UI) | http://localhost:8080 |
-| Traefik UI | http://localhost:8090 |
-| MailCatcher | http://localhost:1080 |
+| Frontend | http://localhost:4173 |
+| Backend API | http://localhost:8001 |
+| Swagger UI | http://localhost:8001/docs |
+| ReDoc | http://localhost:8001/redoc |
+| Adminer (DB UI) | http://localhost:8083 |
+| Traefik UI | http://localhost:8086 |
+| Traefik HTTP | http://localhost:8085 |
+| MailCatcher | http://localhost:1081 |
 | LangFuse UI (Phase 4) | http://localhost:3100 |
 
 ## Pre-commit Hooks
@@ -136,9 +137,9 @@ Hooks: check TOML/YAML, check large files, fix EOF/trailing whitespace, `ruff` l
 
 ## Port Constraints (this dev machine)
 
-**All standard ports are occupied.** Occupied: 22, 53, 80, 1025, 1080, 5173, 5432, 6379, 8000, 8052, 8080, 8081, 8082, 8090, 8100, 8200, 8300, 9092, 9093, 9323.
+**All standard ports are occupied by itmo-chemcrow2 or other services.** Occupied by itmo-chemcrow2: 22, 53, 80, 1025, 1080, 5173, 5432, 6379, 8000, 8051, 8052, 8080, 8081, 8082, 8090, 8100, 8200, 8300, 9090, 9092, 9093, 9323.
 
-New services must use non-standard ports. LangFuse: 3100 (UI), 9190 (MinIO). CrowdSec: no host port exposure (container-only).
+toki-pona-dojo uses offset ports to avoid conflicts: traefik 8085, traefik dashboard 8086, postgres 5433, adminer 8083, backend 8001, frontend 4173, mailcatcher UI 1081, mailcatcher SMTP 1026, playwright 9324. LangFuse: 3100 (UI), 9190 (MinIO). CrowdSec: no host port exposure (container-only).
 
 ## Key Non-obvious Patterns
 
