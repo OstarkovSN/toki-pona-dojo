@@ -74,7 +74,7 @@ export function ExerciseWordBank({ exercise, onComplete }: ExerciseProps) {
             key={`bank-${i}`}
             word={word}
             className="text-sm px-3 py-1.5 hover:bg-primary/10"
-            onSelect={() => handleTapBank(word, i)}
+            onSelect={(w) => handleTapBank(w, i)}
           />
         ))}
       </div>

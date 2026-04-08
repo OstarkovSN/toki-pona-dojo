@@ -44,7 +44,7 @@ function ChatPanelContent({ onClose }: { onClose?: () => void }) {
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [])
+  }, [messages])
 
   // Auto-resize textarea
   const adjustTextarea = useCallback(() => {
